@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up - Crowd Recipe Collection</title>
+  <style>
+    /* Basic reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: url('{{ url_for("static", filename="images/background.jpg") }}') no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+      padding: 20px;
+    }
+
+    .signup-container {
+      background: rgba(255, 255, 255, 0.95);
+      width: 400px;
+      margin: 50px auto;
+      padding: 25px 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .signup-container h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #444;
+    }
+
+    .signup-container label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .signup-container input[type="text"],
+    .signup-container input[type="email"],
+    .signup-container input[type="password"],
+    .signup-container input[type="file"],
+    .signup-container textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .signup-container input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background: #28a745;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .signup-container input[type="submit"]:hover {
+      background: #218838;
+    }
+
+    /* Flash messages styling */
+    .flash-messages ul {
+      list-style-type: none;
+      padding: 5px;
+      margin-bottom: 15px;
+      background: #ffe6e6;
+      border: 1px solid #ff4d4d;
+      border-radius: 5px;
+      color: #d8000c;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <h1>Create an Account</h1>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-messages">
+          <ul>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    {% endwith %}
+    <form action="{{ url_for('signup') }}" method="POST" enctype="multipart/form-data">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Enter your username" required>
+
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+      <label for="full_name">Full Name / Display Name</label>
+      <input type="text" id="full_name" name="full_name" placeholder="Your full name or nickname" required>
+
+      <label for="profile_pic">Profile Picture</label>
+      <input type="file" id="profile_pic" name="profile_pic" accept="image/*">
+
+      <label for="bio">Short Bio</label>
+      <textarea id="bio" name="bio" rows="4" placeholder="Tell us a bit about yourself..."></textarea>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter a strong password" required>
+
+      <label for="confirm_password">Confirm Password</label>
+      <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter your password" required>
+
+      <input type="submit" value="Sign Up">
+    </form>
+  </div>
+</body>
+</html>
