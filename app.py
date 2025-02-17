@@ -135,10 +135,23 @@ def logout():
     return redirect(url_for('index'))
 
 # Protected home page route: displays posted recipes.
-@app.route('/home')
+@app.route('/home', methods=['GET'])
 @login_required
 def home():
-    recipes = mongo.db.recipes.find()
+    search_term = request.args.get('search', '').strip()
+
+    if search_term:
+        recipes_cursor = mongo.db.recipes.find({
+            "$or": [
+                {"title": {"$regex": search_term, "$options": "i"}},
+                {"ingredients": {"$regex": search_term, "$options": "i"}}
+            ]
+        })
+    else:
+        recipes_cursor = mongo.db.recipes.find()
+
+    recipes = list(recipes_cursor)
+
     return render_template('home.html', recipes=recipes)
 
 # Route to post a new recipe.
