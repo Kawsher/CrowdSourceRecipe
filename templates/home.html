@@ -203,8 +203,41 @@
 .recipe-card button:hover {
   background: #ccc;
 }
+.star-rating {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
 
+.star {
+  font-size: 1.5rem;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
 
+.star.active {
+  color: black;
+}
+
+.average-rating {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+button {
+  background: #ddd;
+  border: none;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: #333;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #ccc;
+}
 
   </style>
 </head>
@@ -239,29 +272,77 @@
           {% for recipe in recipes %}
           <div class="recipe-card">
             <h3>{{ recipe.title }}</h3>
-            <p class="posted-by">by {{ recipe.posted_by }}</p> <!-- Added this to display like in the reference image -->
-            <button onclick="toggleRecipe('{{ recipe.title }}')">Read More</button>
-            <div class="recipe-details" id="{{ recipe.title }}">
-              <p>{{ recipe.description }}</p>
+            <p class="posted-by">by {{ recipe.posted_by }}</p>
+          
+            <!-- Star Rating System -->
+            <div class="star-rating" data-recipe="{{ recipe._id }}">
+              {% for i in range(1, 6) %}
+                <span class="star {% if recipe.average_rating >= i %}active{% endif %}" data-value="{{ i }}">&#9733;</span>
+              {% endfor %}
+            </div>
+          
+            <p class="average-rating">Average Rating: {{ "%.1f"|format(recipe.average_rating) if recipe.average_rating else "No ratings yet" }}</p>
+          
+            <button onclick="toggleRecipe('{{ recipe._id }}')">Read More</button>
+          
+            <!-- Recipe Details (Initially Hidden) -->
+            <div class="recipe-details" id="recipe-{{ recipe._id }}" style="display: none;">
+              <p><strong>Description:</strong> {{ recipe.description }}</p>
               <p><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
               <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
             </div>
           </div>
+          
+          
+          
           {% endfor %}
         {% endif %}
       </div>
     </section>
   </div>
   <script>
-    function toggleRecipe(title) {
-      var recipeDetails = document.getElementById(title);
-      if (recipeDetails.style.display === "none" || recipeDetails.style.display === "") {
-        recipeDetails.style.display = "block"; // Show the recipe details
-      } else {
-        recipeDetails.style.display = "none"; // Hide the recipe details
-      }
+    function toggleRecipe(recipeId) {
+        var recipeDetails = document.getElementById("recipe-" + recipeId);
+        if (recipeDetails.style.display === "none" || recipeDetails.style.display === "") {
+            recipeDetails.style.display = "block"; // Show details
+        } else {
+            recipeDetails.style.display = "none"; // Hide details
+        }
     }
+    </script>
+    
   </script>
-  
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".star").forEach(star => {
+            star.addEventListener("click", function () {
+                let value = this.getAttribute("data-value");
+                let parent = this.parentElement;
+                let recipeId = parent.getAttribute("data-recipe");
+    
+                console.log("Clicked rating:", value, "for Recipe ID:", recipeId);  // Debugging print
+    
+                // Send rating to backend
+                fetch("/rate_recipe", {
+                    method: "POST",
+                    body: JSON.stringify({ recipe_id: recipeId, rating: value }),
+                    headers: { "Content-Type": "application/json" }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Response from server:", data); // Debugging print
+                    if (data.success) {
+                        //alert("Rating saved!");
+                        location.reload(); // Refresh page to show updated rating
+                    } else {
+                        alert("Error: " + data.message);
+                    }
+                });
+            });
+        });
+    });
+    </script>
+    
+      
 </body>
 </html>
