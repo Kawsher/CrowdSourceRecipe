@@ -152,6 +152,16 @@ def home():
 
     recipes = list(recipes_cursor)
 
+    # Calculate average rating for each recipe
+    for recipe in recipes:
+        if 'ratings' in recipe and len(recipe['ratings']) > 0:
+            recipe['average_rating'] = sum(recipe['ratings']) / len(recipe['ratings'])
+        else:
+            recipe['average_rating'] = 0  # Default if no ratings
+
+    return render_template('home.html', recipes=recipes)
+
+
     return render_template('home.html', recipes=recipes)
 
 # Route to post a new recipe.
@@ -176,6 +186,40 @@ def post_recipe():
         return redirect(url_for('home'))
     
     return render_template('post_recipe.html')
+from flask import jsonify, request
+from bson import ObjectId
+
+@app.route('/rate_recipe', methods=['POST'])
+@login_required
+def rate_recipe():
+    data = request.json
+    print("Received Data:", data)  # Debugging print
+
+    if not data or "recipe_id" not in data or "rating" not in data:
+        return jsonify({"success": False, "message": "Invalid request"}), 400
+
+    recipe_id = data.get('recipe_id')
+    try:
+        rating = int(data.get('rating'))  # Convert rating to integer
+        if not (1 <= rating <= 5):  # Ensure rating is between 1 and 5
+            return jsonify({"success": False, "message": "Invalid rating value"}), 400
+    except ValueError:
+        return jsonify({"success": False, "message": "Rating must be a number"}), 400
+
+    recipe = mongo.db.recipes.find_one({"_id": ObjectId(recipe_id)})
+    print("Found Recipe:", recipe)  # Debugging print
+
+    if recipe:
+        # Append rating to the `ratings` array
+        mongo.db.recipes.update_one(
+            {"_id": ObjectId(recipe_id)},
+            {"$push": {"ratings": rating}}
+        )
+        print(f"Saved Rating {rating} for Recipe {recipe_id}")  # Debugging print
+
+        return jsonify({"success": True, "message": "Rating saved!"})
+
+    return jsonify({"success": False, "message": "Recipe not found"}), 404
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
