@@ -81,6 +81,23 @@
       border-radius: 5px;
       color: #d8000c;
     }
+    .go-button {
+  width: 100%;
+  padding: 12px;
+  background: #007bff; /* Green color */
+  color: #fff;
+  border: none;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 10px;
+}
+
+.go-button:hover {
+  background: #0056b3; /* Darker green on hover */
+}
+
   </style>
 </head>
 <body>
@@ -111,7 +128,15 @@
       <textarea id="instructions" name="instructions" rows="5" placeholder="Step by step instructions" required></textarea>
       
       <input type="submit" value="Post Recipe">
+      <input type="button" value="Go Back" onclick="goToHome()" class="go-button">
+
     </form>
+    <script>
+      function goToHome() {
+        window.location.href = "{{ url_for('home') }}"; // Redirects to the home page
+      }
+    </script>
+    
   </div>
 </body>
 </html>
