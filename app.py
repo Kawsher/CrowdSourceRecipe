@@ -11,18 +11,18 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-app.secret_key = 'your_secret_key'  # Use a strong secret in production!
+app.secret_key = 'your_secret_key' 
 
-# Use your MongoDB Atlas connection string and specify the database name.
+
 app.config['MONGO_URI'] = (
     "mongodb+srv://kawsher11:mahbub960@cluster0.fysvg.mongodb.net/crowd_recipe_db?"
     "retryWrites=true&w=majority&appName=Cluster0"
 )
 
-# Pass the CA file to PyMongo to help verify the SSL certificate
+
 mongo = PyMongo(app, tlsCAFile=certifi.where())
 
-# Helper decorator to require login for protected routes.
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
