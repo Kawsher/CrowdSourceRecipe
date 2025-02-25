@@ -42,7 +42,8 @@
     }
 
     .post-recipe-container input[type="text"],
-    .post-recipe-container textarea {
+    .post-recipe-container textarea,
+    .post-recipe-container input[type="file"] {
       width: 100%;
       padding: 10px;
       margin-bottom: 15px;
@@ -71,6 +72,23 @@
       background: #0056b3;
     }
 
+    .go-button {
+      width: 100%;
+      padding: 12px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .go-button:hover {
+      background: #0056b3;
+    }
+
     /* Styling for flash messages */
     .flash-messages ul {
       list-style-type: none;
@@ -81,23 +99,6 @@
       border-radius: 5px;
       color: #d8000c;
     }
-    .go-button {
-  width: 100%;
-  padding: 12px;
-  background: #007bff; /* Green color */
-  color: #fff;
-  border: none;
-  font-size: 1.2rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  margin-top: 10px;
-}
-
-.go-button:hover {
-  background: #0056b3; /* Darker green on hover */
-}
-
   </style>
 </head>
 <body>
@@ -114,7 +115,7 @@
         </div>
       {% endif %}
     {% endwith %}
-    <form action="{{ url_for('post_recipe') }}" method="POST">
+    <form action="{{ url_for('post_recipe') }}" method="POST" enctype="multipart/form-data">
       <label for="title">Title:</label>
       <input type="text" id="title" name="title" placeholder="Recipe title" required>
       
@@ -127,16 +128,17 @@
       <label for="instructions">Instructions:</label>
       <textarea id="instructions" name="instructions" rows="5" placeholder="Step by step instructions" required></textarea>
       
+      <label for="picture">Picture:</label>
+      <input type="file" id="picture" name="picture" accept="image/*">
+      
       <input type="submit" value="Post Recipe">
       <input type="button" value="Go Back" onclick="goToHome()" class="go-button">
-
     </form>
     <script>
       function goToHome() {
-        window.location.href = "{{ url_for('home') }}"; // Redirects to the home page
+        window.location.href = "{{ url_for('home') }}";
       }
     </script>
-    
   </div>
 </body>
 </html>
