@@ -206,7 +206,8 @@
             <button type="submit">Search</button>
             <button type="button" onclick="resetSearch()">Reset</button>
           </div>
-        </form> 
+        </form>
+        <a href="{{ url_for('high_rated_recipes') }}" class="cta-button">View High-Rated Recipes (4.5+ Stars)</a>
         <script>
           function resetSearch() {
             document.querySelector('input[name="search"]').value = "";
