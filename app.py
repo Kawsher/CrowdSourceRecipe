@@ -213,5 +213,21 @@ def rate_recipe():
         return jsonify({"success": True, "message": "Rating saved!"})
     return jsonify({"success": False, "message": "Recipe not found"}), 404
 
+@app.route('/high_rated_recipes', methods=['GET'])
+@login_required
+def high_rated_recipes():
+    # Retrieve recipes with an average rating of 4.5 or above
+    recipes_cursor = mongo.db.recipes.find()
+    high_rated_recipes = []
+    
+    for recipe in recipes_cursor:
+        if 'ratings' in recipe and len(recipe['ratings']) > 0:
+            average_rating = sum(recipe['ratings']) / len(recipe['ratings'])
+            if average_rating >= 4.5:
+                recipe['average_rating'] = average_rating
+                high_rated_recipes.append(recipe)
+    
+    return render_template('high_rated_recipes.html', recipes=high_rated_recipes)
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

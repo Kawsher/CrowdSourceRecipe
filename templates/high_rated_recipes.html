@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>High Rated Recipes - Crowd Recipe Collection</title>
+    <style>
+    /* We want to keep the same layout as the home page */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: url('{{ url_for("static", filename="images/landingpage.jpg") }}') no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+      padding: 20px;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      opacity: 0.6;
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      color: #444;
+      margin-bottom: 10px;
+    }
+
+    header nav {
+      margin-bottom: 10px;
+    }
+
+    header nav a {
+      margin-left: 15px;
+      text-decoration: none;
+      color: white;
+      padding: 8px 15px;
+      background: #28a745;
+      border-radius: 5px;
+      transition: background 0.3s ease;
+    }
+
+    header nav a:hover {
+      background: #218838;
+    }
+
+    section h2 {
+      margin-bottom: 15px;
+      color: #444;
+    }
+
+    .recipe-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .recipe-card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      width: calc(33.333% - 20px);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .recipe-card:hover {
+      transform: scale(1.02);
+    }
+
+    .recipe-card h3 {
+      color: black;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .recipe-card .posted-by {
+      font-style: italic;
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .recipe-photo {
+      width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+      border-radius: 8px;
+    }
+
+    .search-form {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 20px;
+    }
+
+    .search-form input {
+      padding: 8px;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: 1px solid #cccccc26;
+      width: 250px;
+      margin-right: 10px;
+    }
+
+    .search-form button {
+      padding: 8px 15px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .search-form button[type='submit']{
+      background-color: #28a745;
+    }
+
+    .search-form button:hover {
+      background-color: #28a745;
+    }
+
+    .star-rating {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0;
+    }
+
+    .star {
+      font-size: 1.5rem;
+      color: #ccc;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .star.active {
+      color: black;
+    }
+
+    .average-rating {
+      font-size: 0.9rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background: #ddd;
+      border: none;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      color: #333;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #ccc;
+    }
+  </style>
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>High Rated Recipes</h1>
+        <nav>
+          <a href="{{ url_for('home') }}">Home</a>
+          <form action="javascript:void(0);" class="search-form" onsubmit="filterRecipes()">
+            <input type="text" id="searchInput" placeholder="Search by title or ingredients">
+            <div class="button-group">
+              <button type="submit">Search</button>
+              <button type="button" onclick="resetSearch()">Reset</button>
+            </div>
+          </form> 
+          <script>
+            function resetSearch() {
+              document.getElementById('searchInput').value = "";
+              filterRecipes(); // reset the filter
+            }
+  
+            function filterRecipes() {
+              let searchTerm = document.getElementById('searchInput').value.toLowerCase();
+              let recipeCards = document.querySelectorAll('.recipe-card');
+              
+              recipeCards.forEach(function(card) {
+                let title = card.querySelector('h3').innerText.toLowerCase();
+                let ingredients = card.querySelector('.ingredients-text').innerText.toLowerCase();
+                
+                // If the title or ingredients contains the search term, show the card; otherwise, hide it.
+                if (title.includes(searchTerm) || ingredients.includes(searchTerm)) {
+                  card.style.display = "block";
+                } else {
+                  card.style.display = "none";
+                }
+              });
+            }
+          </script>
+        </nav>
+      </header>
+  
+      <section>
+        <h2>Recipes with 4.5+ Star Ratings</h2>
+        <div class="recipe-list">
+          {% if recipes|length == 0 %}
+            <p>No recipes found with 4.5 stars or above. <a href="{{ url_for('home') }}">See all recipes</a></p>
+          {% else %}
+            {% for recipe in recipes %}
+            <div class="recipe-card">
+              {% if recipe.picture %}
+                <img src="{{ url_for('static', filename='uploads/' ~ recipe.picture) }}" alt="{{ recipe.title }} Photo" class="recipe-photo">
+              {% endif %}
+              <h3>{{ recipe.title }}</h3>
+              <p class="posted-by">by {{ recipe.posted_by }}</p>
+            
+              <div class="star-rating" data-recipe="{{ recipe._id }}">
+                {% for i in range(1, 6) %}
+                  <span class="star {% if recipe.average_rating >= i %}active{% endif %}" data-value="{{ i }}">&#9733;</span>
+                {% endfor %}
+              </div>
+            
+              <p class="average-rating">Average Rating: {{ "%.1f"|format(recipe.average_rating) if recipe.average_rating else "No ratings yet" }}</p>
+            
+              <button onclick="toggleRecipe('{{ recipe._id }}')">Read More</button>
+            
+              <div class="recipe-details" id="recipe-{{ recipe._id }}" style="display: none;">
+                <p><strong>Description:</strong> {{ recipe.description }}</p>
+                <p><strong>Ingredients:</strong> <span class="ingredients-text">{{ recipe.ingredients }}</span></p>
+                <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
+              </div>
+            </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </section>
+    </div>
+    <script>
+      function toggleRecipe(recipeId) {
+        var recipeDetails = document.getElementById("recipe-" + recipeId);
+        if (recipeDetails.style.display === "none" || recipeDetails.style.display === "") {
+          recipeDetails.style.display = "block";
+        } else {
+          recipeDetails.style.display = "none";
+        }
+      }
+    </script>
+  </body>
+  </html>
