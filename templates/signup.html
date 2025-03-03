@@ -68,16 +68,6 @@
       background: #218838;
     }
 
-    /* Flash messages styling */
-    .flash-messages ul {
-      list-style-type: none;
-      padding: 5px;
-      margin-bottom: 15px;
-      background: #ffe6e6;
-      border: 1px solid #ff4d4d;
-      border-radius: 5px;
-      color: #d8000c;
-    }
     .links a {
       color: #007bff;
       text-decoration: none;
@@ -91,17 +81,6 @@
 <body>
   <div class="signup-container">
     <h1>Create an Account</h1>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div class="flash-messages">
-          <ul>
-            {% for message in messages %}
-              <li>{{ message }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-      {% endif %}
-    {% endwith %}
     <form action="{{ url_for('signup') }}" method="POST" enctype="multipart/form-data">
       <label for="username">Username</label>
       <input type="text" id="username" name="username" placeholder="Enter your username" required>
