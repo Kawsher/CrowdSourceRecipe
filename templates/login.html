@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Login - Crowd Recipe Collection</title>
   <style>
-    /* Reset some default styles */
+
     * {
       margin: 0;
       padding: 0;
@@ -78,11 +78,28 @@
     .links a:hover {
       text-decoration: underline;
     }
+
+    .error-message {
+      color: red;
+      margin-bottom: 15px;
+      text-align: center;
+      font-weight: bold;
+      padding: 10px;
+      border: 1px solid red;
+      border-radius: 5px;
+      background-color: #f8d7da;
+      font-size: 0.9em;
+    }
   </style>
 </head>
 <body>
   <div class="login-container">
     <h1>Login</h1>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="error-message">{{ messages[0] }}</div>
+      {% endif %}
+    {% endwith %}
     <form action="{{ url_for('login') }}" method="POST">
       <label for="username">Username</label>
       <input type="text" id="username" name="username" placeholder="Enter your username" required>

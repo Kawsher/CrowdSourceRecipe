@@ -117,14 +117,15 @@ def login():
         password = request.form.get('password')
         user_data = mongo.db.users.find_one({'username': username})
         
+        # Check if user exists and password is correct
         if user_data and check_password_hash(user_data['password'], password):
-            # Create a user instance and log them in with Flask-Login
             user_instance = User(id=str(user_data["_id"]), username=user_data["username"], password=user_data["password"])
             login_user(user_instance)
-            flash('You have been logged in!')
-            return redirect(url_for('home'))
-        flash('Invalid username or password.')
-        return redirect(url_for('login'))
+            return redirect(url_for('home'))  # Redirect to home after successful login
+        
+        flash('Invalid username or password.', 'error')
+        return redirect(url_for('login'))  # Redirect to login page if login fails
+
     return render_template('login.html')
 
 # Logout route
@@ -132,7 +133,6 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out.')
     return redirect(url_for('index'))
 
 # Home route: displays recipes and a welcome message.
