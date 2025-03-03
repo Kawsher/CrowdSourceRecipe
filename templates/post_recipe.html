@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Post a Recipe - Crowd Recipe Collection</title>
   <style>
-    /* Reset default styles */
+
     * {
       margin: 0;
       padding: 0;
@@ -89,32 +89,11 @@
       background: #0056b3;
     }
 
-    /* Styling for flash messages */
-    .flash-messages ul {
-      list-style-type: none;
-      padding: 10px;
-      margin-bottom: 15px;
-      background: #ffe6e6;
-      border: 1px solid #ff4d4d;
-      border-radius: 5px;
-      color: #d8000c;
-    }
   </style>
 </head>
 <body>
   <div class="post-recipe-container">
     <h1>Post a Recipe</h1>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div class="flash-messages">
-          <ul>
-            {% for message in messages %}
-              <li>{{ message }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-      {% endif %}
-    {% endwith %}
     <form action="{{ url_for('post_recipe') }}" method="POST" enctype="multipart/form-data">
       <label for="title">Title:</label>
       <input type="text" id="title" name="title" placeholder="Recipe title" required>
