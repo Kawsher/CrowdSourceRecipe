@@ -42,6 +42,7 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
+    /* Header Navigation Styles */
     header {
       display: flex;
       flex-wrap: wrap;
@@ -57,21 +58,79 @@
     }
 
     header nav {
-      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
     }
 
-    header nav a {
-      margin-left: 15px;
-      text-decoration: none;
-      color: white;
+    .nav-left,
+    .nav-right {
+      display: flex;
+      gap: 15px;
+    }
+
+    .nav-button {
       padding: 8px 15px;
       background: #28a745;
+      color: white;
+      border: none;
       border-radius: 5px;
+      text-decoration: none;
       transition: background 0.3s ease;
     }
 
-    header nav a:hover {
+    .nav-button:hover {
       background: #218838;
+    }
+
+    .nav-center {
+      flex: 1;
+    }
+
+    .search-form {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-form input {
+      padding: 8px;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: 1px solid #cccccc26;
+      width: 250px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-form button {
+      padding: 8px 15px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .search-form button:hover {
+      background-color: #218838;
+    }
+
+    .cta-button {
+      background: #28a745;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+
+    .cta-button:hover {
+      background: #28a745;
     }
 
     section h2 {
@@ -116,69 +175,34 @@
 
     .recipe-photo {
       width: 100%;
-      height: auto;
-      margin-bottom: 10px;
+      height: 200px;
+      object-fit: cover;
       border-radius: 8px;
     }
 
-    .search-form {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 20px;
-      padding: 20px;
-    }
-
-    .search-form input {
-      padding: 8px;
-      font-size: 1rem;
-      border-radius: 5px;
-      border: 1px solid #cccccc26;
-      width: 250px;
-      margin-right: 10px;
-    }
-
-    .search-form button {
-      padding: 8px 15px;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    .search-form button[type='submit']{
-      background-color: #28a745;
-    }
-    .search-form button:hover {
-      background-color: #28a745;
-    }
-    .search-form button[type="button"]{
-      background-color: #28a745;
-      margin-left: 10px;
-    }
-    .search-form button[type="button"]:hover{
-      background-color: #28a745;
-    }
     .star-rating {
       display: flex;
       justify-content: center;
       margin: 10px 0;
     }
+
     .star {
       font-size: 1.5rem;
       color: #ccc;
       cursor: pointer;
       transition: color 0.3s ease;
     }
+
     .star.active {
       color: black;
     }
+
     .average-rating {
       font-size: 0.9rem;
       font-weight: bold;
       margin-bottom: 10px;
     }
+
     button {
       background: #ddd;
       border: none;
@@ -188,32 +212,38 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
     button:hover {
       background: #ccc;
     }
+    
+
+  
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>Welcome, {{ session['username'] }}!</h1>
+      <h1>Welcome, {{ username }}!!</h1>
       <nav>
-        <a href="{{ url_for('post_recipe') }}">Post a New Recipe</a>
-        <a href="{{ url_for('logout') }}">Logout</a>
-        <form action="{{ url_for('home') }}" method="GET" class="search-form">
-          <input type="text" name="search" placeholder="Search by title or ingredients" value="{{ request.args.get('search', '') }}">
-          <div class="button-group">
-            <button type="submit">Search</button>
-            <button type="button" onclick="resetSearch()">Reset</button>
-          </div>
-        </form>
-        <a href="{{ url_for('high_rated_recipes') }}" class="cta-button">View High-Rated Recipes (4.5+ Stars)</a>
-        <script>
-          function resetSearch() {
-            document.querySelector('input[name="search"]').value = "";
-            window.location.href = "{{ url_for('home') }}";
-          }
-        </script>       
+        <div class="nav-left">
+          <a href="{{ url_for('post_recipe') }}" class="nav-button">Post a New Recipe</a>
+        </div>
+        
+        <div class="nav-center">
+          <form action="{{ url_for('home') }}" method="GET" class="search-form">
+            <input type="text" name="search" placeholder="Search by title or ingredients" value="{{ request.args.get('search', '') }}">
+            <div class="button-group">
+              <button type="submit">Search</button>
+              <button type="button" onclick="resetSearch()">Reset</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="nav-right">
+          <a href="{{ url_for('logout') }}" class="nav-button">Logout</a>
+          <a href="{{ url_for('high_rated_recipes') }}" class="cta-button">High-Rated Recipes</a>
+        </div>
       </nav>
     </header>
     <section>
@@ -228,7 +258,7 @@
               <img src="{{ url_for('static', filename='uploads/' ~ recipe.picture) }}" alt="{{ recipe.title }} Photo" class="recipe-photo">
             {% endif %}
             <h3>{{ recipe.title }}</h3>
-            <p class="posted-by">by {{ recipe.posted_by }}</p>
+            <!-- <p class="posted-by">by {{ recipe.posted_by }}</p>-->
           
             <!-- Star Rating System -->
             <div class="star-rating" data-recipe="{{ recipe._id }}">
@@ -251,8 +281,17 @@
           {% endfor %}
         {% endif %}
       </div>
+      
     </section>
   </div>
+  
+  
+  <script>
+    function resetSearch() {
+      document.querySelector('input[name="search"]').value = "";
+      window.location.href = "{{ url_for('home') }}";
+    }
+  </script>
   <script>
     function toggleRecipe(recipeId) {
       var recipeDetails = document.getElementById("recipe-" + recipeId);
@@ -288,5 +327,6 @@
       });
     });
   </script>
+  
 </body>
 </html>

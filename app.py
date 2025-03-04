@@ -1,6 +1,6 @@
 import os
 import certifi
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, session,redirect, url_for, flash, jsonify
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -9,7 +9,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from bson import ObjectId
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
+app.secret_key = 'crowdrecipe@1233'
 
 # Load additional config from config.py if available
 app.config.from_object('config')
@@ -155,7 +155,7 @@ def home():
             recipe['average_rating'] = sum(recipe['ratings']) / len(recipe['ratings'])
         else:
             recipe['average_rating'] = 0
-    return render_template('home.html', recipes=recipes)
+    return render_template('home.html', recipes=recipes,username=current_user.username)
 
 # Route to post a new recipe.
 @app.route('/post_recipe', methods=['GET', 'POST'])
