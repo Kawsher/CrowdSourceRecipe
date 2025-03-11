@@ -7,6 +7,8 @@ from werkzeug.utils import secure_filename
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from bson import ObjectId
+import re
+from fractions import Fraction 
 
 app = Flask(__name__)
 app.secret_key = 'crowdrecipe@1233'
@@ -216,18 +218,108 @@ def rate_recipe():
 @app.route('/high_rated_recipes', methods=['GET'])
 @login_required
 def high_rated_recipes():
-    # Retrieve recipes with an average rating of 4.5 or above
+    rating_filter = float(request.args.get('rating', 4.5))
+
     recipes_cursor = mongo.db.recipes.find()
     high_rated_recipes = []
-    
+
     for recipe in recipes_cursor:
         if 'ratings' in recipe and len(recipe['ratings']) > 0:
-            average_rating = sum(recipe['ratings']) / len(recipe['ratings'])
-            if average_rating >= 4.5:
+            # Calculate the average rating
+            average_rating = round(sum(recipe['ratings']) / len(recipe['ratings']), 1)
+
+            # Check if the average rating is equal to the filter
+            if average_rating == rating_filter:
                 recipe['average_rating'] = average_rating
                 high_rated_recipes.append(recipe)
+
+    return render_template('high_rated_recipes.html',
+                           recipes=high_rated_recipes,
+                           selected_rating=rating_filter)
+
+
+@app.route('/recipe/<recipe_id>')
+def recipe_detail(recipe_id):
+    recipe = mongo.db.recipes.find_one({'_id': ObjectId(recipe_id)})
+    if not recipe:
+        flash('Recipe not found', 'error')
+        return redirect(url_for('home'))
     
-    return render_template('high_rated_recipes.html', recipes=high_rated_recipes)
+    # Fetch reviews for this recipe
+    reviews = list(mongo.db.reviews.find({'recipe_id': recipe_id}))
+    
+    return render_template('recipe_detail.html', recipe=recipe, reviews=reviews)
+
+@app.route('/add_review/<recipe_id>', methods=['POST'])
+@login_required
+def add_review(recipe_id):
+    review_text = request.form.get('review_text')
+    if review_text:
+        review = {
+            'text': review_text,
+            'author': current_user.username,
+            'recipe_id': recipe_id
+        }
+        mongo.db.reviews.insert_one(review)
+        return jsonify({'success': True, 'review': review})
+    return jsonify({'success': False, 'message': 'Review text is required'}), 400
+@app.route('/recipe/<recipe_id>/scale', methods=['GET'])
+def scale_ingredients(recipe_id):
+    recipe = mongo.db.recipes.find_one({"_id": ObjectId(recipe_id)})
+    if not recipe:
+        return jsonify({'success': False, 'message': 'Recipe not found.'})
+
+    scale = float(request.args.get('scale', 1))
+
+    ingredients_string = recipe.get('ingredients', '')
+    ingredients = [ing.strip() for ing in ingredients_string.splitlines()]
+
+    scaled_ingredients = []
+    
+    for ingredient in ingredients:
+        # Use regex to find quantity at start of ingredient
+        match = re.match(r'^(\d+/\d+|\d+\.\d+|\d+\s+\d+/\d+|\d+)\s*', ingredient)
+        if not match:
+            scaled_ingredients.append(ingredient)
+            continue
+
+        quantity_str = match.group(1)
+        rest = ingredient[len(quantity_str):].lstrip()
+
+        # Convert mixed numbers and fractions to float
+        if ' ' in quantity_str:
+            whole, fraction = quantity_str.split(' ', 1)
+            whole = float(whole)
+            fraction = float(Fraction(fraction))
+            quantity = whole + fraction
+        elif '/' in quantity_str:
+            quantity = float(Fraction(quantity_str))
+        else:
+            quantity = float(quantity_str)
+
+        scaled_quantity = quantity * scale
+
+        # Convert back to fraction format if applicable
+        if scaled_quantity.is_integer():
+            scaled_str = str(int(scaled_quantity))
+        else:
+            # Try to convert to common fraction
+            frac = Fraction(scaled_quantity).limit_denominator(8)
+            if frac.denominator == 1:
+                scaled_str = str(frac.numerator)
+            else:
+                scaled_str = f"{frac.numerator}/{frac.denominator}"
+                # Handle mixed numbers
+                if frac.numerator > frac.denominator:
+                    whole = frac.numerator // frac.denominator
+                    remainder = frac.numerator % frac.denominator
+                    scaled_str = f"{whole} {remainder}/{frac.denominator}"
+
+        scaled_ingredient = f"{scaled_str} {rest}"
+        scaled_ingredients.append(scaled_ingredient)
+
+    return jsonify({'success': True, 'ingredients': scaled_ingredients})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
+

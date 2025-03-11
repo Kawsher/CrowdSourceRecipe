@@ -238,9 +238,7 @@
               <button type="button" onclick="resetSearch()">Reset</button>
             </div>
           </form>
-        </div>
-
-        <div class="nav-right">
+        </div> <div class="nav-right">
           <a href="{{ url_for('logout') }}" class="nav-button">Logout</a>
           <a href="{{ url_for('high_rated_recipes') }}" class="cta-button">High-Rated Recipes</a>
         </div>
@@ -269,14 +267,10 @@
           
             <p class="average-rating">Average Rating: {{ "%.1f"|format(recipe.average_rating) if recipe.average_rating else "No ratings yet" }}</p>
           
-            <button onclick="toggleRecipe('{{ recipe._id }}')">Read More</button>
+            <a href="{{ url_for('recipe_detail', recipe_id=recipe._id) }}">Read More</a>
           
             <!-- Recipe Details (Initially Hidden) -->
-            <div class="recipe-details" id="recipe-{{ recipe._id }}" style="display: none;">
-              <p><strong>Description:</strong> {{ recipe.description }}</p>
-              <p><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
-              <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
-            </div>
+          
           </div>
           {% endfor %}
         {% endif %}
@@ -292,16 +286,7 @@
       window.location.href = "{{ url_for('home') }}";
     }
   </script>
-  <script>
-    function toggleRecipe(recipeId) {
-      var recipeDetails = document.getElementById("recipe-" + recipeId);
-      if (recipeDetails.style.display === "none" || recipeDetails.style.display === "") {
-        recipeDetails.style.display = "block";
-      } else {
-        recipeDetails.style.display = "none";
-      }
-    }
-  </script>
+  
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       document.querySelectorAll(".star").forEach(star => {

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ recipe.title }} - Recipe Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+        }
+
+        .recipe-image {
+            width: 200px;
+            margin-right: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .recipe-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .recipe-content {
+            flex: 1;
+        }
+
+        h1 {
+            color: #444;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        strong {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .back-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #5cb85c;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .back-link:hover {
+            background-color: #4cae4c;
+        }
+
+        .ingredient-list {
+            list-style-type: none; /* Remove bullet points */
+            padding: 0;
+        }
+
+        .ingredient-list li {
+            margin-bottom: 5px; /* Add some spacing between ingredients */
+        }
+
+        .scaling-buttons {
+            margin-bottom: 10px;
+        }
+
+        .scaling-buttons button {
+            padding: 5px 10px;
+            margin-right: 5px;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+
+        .scaling-buttons button.active {
+            background-color: #ddd;
+        }
+
+        .review-form {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .review-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical; /* Allow vertical resizing */
+        }
+
+        .review-form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .review-form button:hover {
+            background-color: #45a049;
+        }
+
+        .review-list {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .review-item {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .review-item p {
+            margin: 0;
+        }
+
+        .review-item .author {
+            font-style: italic;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="recipe-image">
+            {% if recipe.picture %}
+                <img src="{{ url_for('static', filename='uploads/' + recipe.picture) }}" alt="{{ recipe.title }} Photo">
+            {% else %}
+                <img src="{{ url_for('static', filename='images/default_recipe.jpg') }}" alt="Default Recipe Photo">
+            {% endif %}
+        </div>
+        <div class="recipe-content">
+            <h1>{{ recipe.title }}</h1>
+            <p><strong>Description:</strong> {{ recipe.description }}</p>
+            
+
+            <!-- Scaling Options -->
+            <div class="scaling-buttons">
+                <strong>Serving Size: Makes <span id="serving-size">4</span> servings</strong>
+                <button onclick="setScale(1)" id="scale-1x">1x</button>
+                <button onclick="setScale(2)" id="scale-2x">2x</button>
+                <button onclick="setScale(4)" id="scale-4x">4x</button>
+            </div>
+
+            <!-- Ingredients -->
+            <p><strong>Ingredients:</strong></p>
+            <ul class="ingredient-list" id="ingredient-list">
+                {% for ingredient in ingredients %}
+                    <li>{{ ingredient }}</li>
+                {% endfor %}
+            </ul>
+            <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
+            <a href="{{ url_for('home') }}" class="back-link">Back to Home</a><!-- Review Form -->
+            <div class="review-form">
+                <h3>Add Your Review</h3>
+                <form method="POST" action="{{ url_for('add_review', recipe_id=recipe._id) }}">
+                    <textarea name="review_text" rows="4" placeholder="Write your review here"></textarea>
+                    <button type="submit">Submit Review</button>
+                </form>
+            </div> <!-- Review List -->
+            <div class="review-list">
+                <h3>Reviews</h3>
+                {% if reviews %}
+                    {% for review in reviews %}
+                        <div class="review-item">
+                            <p>{{ review.text }}</p>
+                            <p class="author">By: {{ review.author }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No reviews yet.</p>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+    
+<script>
+    let baseServingSize = 4; // Default serving size
+    let currentScale = 1; // Default scale
+    const scaleButtons = document.querySelectorAll('.scaling-buttons button');
+    const ingredientList = document.getElementById('ingredient-list');
+    const servingSizeElement = document.getElementById('serving-size');
+
+    function setScale(scale) {
+        currentScale = scale;
+        
+        // Update button styles
+        scaleButtons.forEach(button => button.classList.remove('active'));
+        document.getElementById(`scale-${scale}x`).classList.add('active');
+        
+        // Update serving size
+        servingSizeElement.textContent = baseServingSize * scale;
+        
+        // Update ingredient list
+        updateIngredientList();
+    }
+
+
+
+        function updateIngredientList() {
+             fetch(`/recipe/{{ recipe._id }}/scale?scale=${currentScale}`) // Correct URL
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        ingredientList.innerHTML = ''; // Clear existing list
+                        data.ingredients.forEach(ingredient => {
+                            const li = document.createElement('li');
+                            li.textContent = ingredient;
+                            ingredientList.appendChild(li);
+                        });
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching scaled ingredients:', error);
+                });
+        }
+
+        // Call updateIngredientList() on page load to display initial ingredients
+        window.onload = updateIngredientList;
+
+        // Handle review form submission using AJAX
+        const reviewForm = document.querySelector('.review-form form');
+        const reviewList = document.querySelector('.review-list');
+
+        reviewForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(reviewForm);
+            const reviewText = formData.get('review_text');
+
+            if (!reviewText.trim()) {
+                alert('Please enter a review.');
+                return;
+            }
+
+            fetch(reviewForm.action, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Add the new review to the review list dynamically
+                    const newReview = document.createElement('div');
+                    newReview.classList.add('review-item');
+                    newReview.innerHTML = `
+                        <p>${data.review.text}</p>
+                        <p class="author">By: ${data.review.author}</p>
+                    `;
+                    reviewList.appendChild(newReview);
+
+                    // Clear the textarea
+                    reviewForm.reset();
+                } else {
+                    alert(data.message || 'Failed to add review.');
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting review:', error);
+                alert('An error occurred while submitting your review.');
+            });
+        });
+    </script>
+
+</body>
+</html>
