@@ -1,312 +1,417 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>High Rated Recipes - Crowd Recipe Collection</title>
-  <style>
-    /* Basic Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <title>High Rated Recipes - Crowd Recipe Collection</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      font-family: Arial, sans-serif;
-      background: url('{{ url_for("static", filename="images/landingpage.jpg") }}') no-repeat center center fixed;
-      background-size: cover;
-      color: #333;
-      padding: 20px;
-      position: relative;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            background: url('{{ url_for("static", filename="images/landingpage.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+            padding: 20px;
+            position: relative;
+        }
 
-    /* Overlay to tone down the background */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #ffffff;
-      opacity: 0.6;
-      z-index: -1;
-    }
+        /* Overlay to tone down the background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            opacity: 0.6;
+            z-index: -1;
+        }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
 
-    /* Header Navigation Styles */
-    header {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
+        /* Header Navigation Styles */
+        header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-    header h1 {
-      font-size: 2rem;
-      color: #444;
-      margin-bottom: 10px;
-    }
+        header h1 {
+            font-size: 2rem;
+            color: #444;
+            margin-bottom: 10px;
+        }
 
-    header nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-    }
+        header nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
 
-    .nav-left,
-    .nav-right {
-      display: flex;
-      gap: 15px;
-    }
+        .nav-left,
+        .nav-right {
+            display: flex;
+            gap: 15px;
+        }
 
-    .nav-button {
-      padding: 8px 15px;
-      background: #28a745;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      text-decoration: none;
-      transition: background 0.3s ease;
-    }
+        .nav-button {
+            padding: 8px 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
 
-    .nav-button:hover {
-      background: #218838;
-    }
+        .nav-button:hover {
+            background: #218838;
+        }
 
-    .nav-center {
-      flex: 1;
-    }
+        .nav-center {
+            flex: 1;
+        }
 
-    .search-form {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+        .search-form {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    .search-form input {
-      padding: 8px;
-      font-size: 1rem;
-      border-radius: 5px;
-      border: 1px solid #cccccc26;
-      width: 250px;
-    }
+        .search-form input {
+            padding: 8px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #cccccc26;
+            width: 250px;
+        }
 
-    .button-group {
-      display: flex;
-      gap: 10px;
-    }
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
 
-    .search-form button {
-      padding: 8px 15px;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+        .search-form button {
+            padding: 8px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-    .search-form button:hover {
-      background-color: #218838;
-    }
+        .search-form button:hover {
+            background-color: #218838;
+        }
 
-    .cta-button {
-      background: #007bff;
-      color: white;
-      padding: 8px 15px;
-      border-radius: 5px;
-      text-decoration: none;
-    }
+        .cta-button {
+            background: #007bff;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
 
-    .cta-button:hover {
-      background: #0056b3;
-    }
+        .cta-button:hover {
+            background: #0056b3;
+        }
 
-    section h2 {
-      margin-bottom: 15px;
-      color: #444;
-    }
+        section h2 {
+            margin-bottom: 15px;
+            color: #444;
+        }
 
-    .recipe-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
+        .recipe-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
 
-    .recipe-card {
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 15px;
-      text-align: center;
-      width: calc(33.333% - 20px);
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease;
-    }
+        .recipe-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            width: calc(33.333% - 20px);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
 
-    .recipe-card:hover {
-      transform: scale(1.02);
-    }
+        .recipe-card:hover {
+            transform: scale(1.02);
+        }
 
-    .recipe-card h3 {
-      color: black;
-      font-size: 1.2rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
+        .recipe-card h3 {
+            color: black;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
 
-    .recipe-card .posted-by {
-      font-style: italic;
-      font-size: 0.9rem;
-      color: #555;
-      margin-bottom: 10px;
-    }
+        .recipe-card .posted-by {
+            font-style: italic;
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 10px;
+        }
 
-    .recipe-photo {
-      width: 100%;
-      height: 200px; /* Matched home page height */
-      object-fit: cover;
-      border-radius: 8px;
-    }
+        .recipe-photo {
+            width: 100%;
+            height: 200px; /* Matched home page height */
+            object-fit: cover;
+            border-radius: 8px;
+        }
 
-    .star-rating {
-      display: flex;
-      justify-content: center;
-      margin: 10px 0;
-    }
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
 
-    .star {
-      font-size: 1.5rem;
-      color: #ccc;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
+        .star {
+            font-size: 1.5rem;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
 
-    .star.active {
-      color: black;
-    }
+        .star.active {
+            color: black;
+        }
 
-    .average-rating {
-      font-size: 0.9rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
+        .average-rating {
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
 
-    button {
-      background: #ddd;
-      border: none;
-      padding: 8px 12px;
-      font-size: 0.9rem;
-      color: #333;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+        button {
+            background: #ddd;
+            border: none;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            color: #333;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-    button:hover {
-      background: #ccc;
-    }
-  </style>
+        button:hover {
+            background: #ccc;
+        }
+
+        /* Style for the combined search input and dropdown */
+        .rating-filter-container {
+            display: flex;
+            align-items: center;
+            position: relative; /* Add relative positioning */
+        }
+
+        .rating-filter-container input[type="number"] {
+            width: 120px; /* Adjust as needed */
+            padding: 8px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        #ratingSuggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: none; /* Initially hidden */
+            z-index: 10;
+        }
+
+        #ratingSuggestions a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        #ratingSuggestions a:hover {
+            background-color: #f0f0f0;
+        }
+
+        #filterButton {
+            padding: 8px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-left: 10px; /* Add some space between the input and button */
+        }
+
+        #filterButton:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
+<div class="container">
     <header>
-      <h1>High Rated Recipes</h1>
-      <nav>
-        <div class="nav-left">
-          <a href="{{ url_for('home') }}" class="nav-button">Home</a>
-        </div>
-        
-        <div class="nav-center">
-          <form action="javascript:void(0);" class="search-form" onsubmit="filterRecipes()">
-            <input type="text" id="searchInput" placeholder="Search by title or ingredients">
-            <div class="button-group">
-              <button type="submit">Search</button>
-              <button type="button" onclick="resetSearch()">Reset</button>
+        <h1>High Rated Recipes</h1>
+        <nav>
+            <div class="nav-left">
+                <a href="{{ url_for('home') }}" class="nav-button">Home</a>
             </div>
-          </form>
-        </div>
-
-        <div class="nav-right">
-          <!-- Add any additional buttons here -->
-        </div>
-      </nav>
+            <div class="nav-center">
+                <form method="GET" action="{{ url_for('high_rated_recipes') }}" id="ratingForm">
+                    <label for="ratingSearch">Filter by Rating:</label>
+                    <div class="rating-filter-container">
+                        <input type="number" id="ratingSearch" placeholder="Enter rating" step="0.1"
+                               oninput="filterRatingOptions()" autocomplete="off">
+                        <div id="ratingSuggestions"></div>
+                        <button type="button" id="filterButton" onclick="applyRatingFilter()">Filter</button>
+                        <input type="hidden" name="rating" id="selectedRating">
+                    </div>
+                </form>
+            </div>
+            <div class="nav-right">
+                <!-- Add any additional buttons here -->
+            </div>
+        </nav>
     </header>
 
     <section>
-      <h2>Recipes with 4.5+ Star Ratings</h2>
-      <div class="recipe-list">
-        {% if recipes|length == 0 %}
-          <p>No recipes found with 4.5 stars or above. <a href="{{ url_for('home') }}">See all recipes</a></p>
-        {% else %}
-          {% for recipe in recipes %}
-          <div class="recipe-card">
-            {% if recipe.picture %}
-              <img src="{{ url_for('static', filename='uploads/' ~ recipe.picture) }}" alt="{{ recipe.title }} Photo" class="recipe-photo">
-            {% endif %}
-            <h3>{{ recipe.title }}</h3>
-            <!--<p class="posted-by">by {{ recipe.posted_by }}</p>-->
-          
-            <div class="star-rating" data-recipe="{{ recipe._id }}">
-              {% for i in range(1, 6) %}
-                <span class="star {% if recipe.average_rating >= i %}active{% endif %}" data-value="{{ i }}">&#9733;</span>
-              {% endfor %}
-            </div>
-          
-            <p class="average-rating">Average Rating: {{ "%.1f"|format(recipe.average_rating) if recipe.average_rating else "No ratings yet" }}</p>
-          
-            <button onclick="toggleRecipe('{{ recipe._id }}')">Read More</button>
-          
-            <div class="recipe-details" id="recipe-{{ recipe._id }}" style="display: none;">
-              <p><strong>Description:</strong> {{ recipe.description }}</p>
-              <p><strong>Ingredients:</strong> <span class="ingredients-text">{{ recipe.ingredients }}</span></p>
-              <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
-            </div>
-          </div>
-          {% endfor %}
-        {% endif %}
-      </div>
-    </section>
-  </div>
+        <h2>Recipes with {{ selected_rating|float }}+ Star Ratings</h2>
+        <div class="recipe-list">
+            {% if recipes|length == 0 %}
+                <p>No recipes found with {{ selected_rating|float }}+ stars <a href="{{ url_for('home') }}">See all
+                    recipes</a></p>
+            {% else %}
+                {% for recipe in recipes %}
+                    <div class="recipe-card">
+                        {% if recipe.picture %}
+                            <img src="{{ url_for('static', filename='uploads/' ~ recipe.picture) }}"
+                                 alt="{{ recipe.title }} Photo" class="recipe-photo">
+                        {% endif %}
+                        <h3>{{ recipe.title }}</h3>
+                        <!--<p class="posted-by">by {{ recipe.posted_by }}</p>-->
 
-  <script>
+                        <div class="star-rating" data-recipe="{{ recipe._id }}">
+                            {% for i in range(1, 6) %}
+                                <span class="star {% if recipe.average_rating >= i %}active{% endif %}"
+                                      data-value="{{ i }}">&#9733;</span>
+                            {% endfor %}
+                        </div>
+                        <p class="average-rating">Average Rating: {{ "%.1f"|format(recipe.average_rating) if recipe.average_rating else "No ratings yet" }}</p>
+
+                        <a href="{{ url_for('recipe_detail', recipe_id=recipe._id) }}">Read More</a>
+
+                        <div class="recipe-details" id="recipe-{{ recipe._id }}" style="display: none;">
+                            <p><strong>Description:</strong> {{ recipe.description }}</p>
+                            <p><strong>Ingredients:</strong> <span class="ingredients-text">{{ recipe.ingredients }}</span></p>
+                            <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </section>
+</div>
+
+<script>
     function resetSearch() {
-      document.getElementById('searchInput').value = "";
-      filterRecipes();
+        document.getElementById('searchInput').value = "";
+        filterRecipes();
     }
 
     function filterRecipes() {
-      let searchTerm = document.getElementById('searchInput').value.toLowerCase();
-      let recipeCards = document.querySelectorAll('.recipe-card');
-      
-      recipeCards.forEach(function(card) {
-        let title = card.querySelector('h3').innerText.toLowerCase();
-        let ingredients = card.querySelector('.ingredients-text').innerText.toLowerCase();
-        
-        if (title.includes(searchTerm) || ingredients.includes(searchTerm)) {
-          card.style.display = "block";
-        } else {
-          card.style.display = "none";
-        }
-      });
-    }
-  </script>
+        let searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        let recipeCards = document.querySelectorAll('.recipe-card');
+        recipeCards.forEach(function (card) {
+            let title = card.querySelector('h3').innerText.toLowerCase();
+            let ingredients = card.querySelector('.ingredients-text').innerText.toLowerCase();
 
-  <script>
-    function toggleRecipe(recipeId) {
-      var recipeDetails = document.getElementById("recipe-" + recipeId);
-      recipeDetails.style.display = recipeDetails.style.display === "none" ? "block" : "none";
+            if (title.includes(searchTerm) || ingredients.includes(searchTerm)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
     }
-  </script>
+</script>
+
+<script>
+    function toggleRecipe(recipeId) {
+        var recipeDetails = document.getElementById("recipe-" + recipeId);
+        recipeDetails.style.display = recipeDetails.style.display === "none" ? "block" : "none";
+    }
+
+    function filterRatingOptions() {
+        let searchTerm = document.getElementById('ratingSearch').value;
+        let ratingSuggestions = document.getElementById('ratingSuggestions');
+        ratingSuggestions.innerHTML = ''; // Clear previous suggestions
+
+        // Define your rating options here.  This could also come from the server.
+        const allRatings = ["5", "4.9", "4.8", "4.7", "4.6", "4.5", "4.4", "4.3", "4.2", "4.1", "4", "3.9", "3.8", "3.7", "3.6", "3.5", "3.4", "3.3", "3.2", "3.1", "3", "2.9", "2.8", "2.7", "2.6", "2.5", "2.4", "2.3", "2.2", "2.1", "2", "1.9", "1.8", "1.7", "1.6", "1.5", "1.4", "1.3", "1.2", "1.1", "1"];
+
+        const filteredRatings = allRatings.filter(rating => rating.startsWith(searchTerm));
+
+        if (searchTerm && filteredRatings.length > 0) {
+            filteredRatings.forEach(rating => {
+                let suggestion = document.createElement('a');
+                suggestion.textContent = rating + " Stars";
+                suggestion.href = '#'; // Prevent navigation
+                suggestion.onclick = function(event) {
+                    event.preventDefault(); // Stop the default action
+                    document.getElementById('ratingSearch').value = rating;
+                    document.getElementById('selectedRating').value = rating; // Update hidden field
+                    ratingSuggestions.style.display = 'none';
+                }
+                ratingSuggestions.appendChild(suggestion);
+            });
+            ratingSuggestions.style.display = 'block';
+        } else {
+            ratingSuggestions.style.display = 'none';
+        }
+    }
+
+    function applyRatingFilter() {
+        const rating = document.getElementById('ratingSearch').value;
+
+        if (!rating) {
+            alert("Please enter a rating");
+            return; // Stop form submission
+        }
+
+        document.getElementById('selectedRating').value = rating;
+        document.getElementById('ratingForm').submit();
+    }
+
+    // Close the suggestion box if the user clicks outside the input
+    window.addEventListener('click', function(event) {
+        if (!event.target.matches('#ratingSearch')) {
+            document.getElementById('ratingSuggestions').style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>
