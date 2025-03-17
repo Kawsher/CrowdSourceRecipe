@@ -15,7 +15,7 @@
             font-family: Arial, sans-serif;
             background: url('{{ url_for("static", filename="images/landingpage.jpg") }}') no-repeat center center fixed;
             background-size: cover;
-            color: #333;
+            color:black;
             padding: 20px;
             position: relative;
         }
@@ -42,100 +42,142 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
-        /* Header Navigation Styles */
+        /* Improved Header Navigation Styles */
         header {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
+            margin-bottom: 30px;
+        }
+
+        .header-top {
+            display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         header h1 {
             font-size: 2rem;
-            color: #444;
-            margin-bottom: 10px;
+            color:black;
+            font-weight: bold;
         }
 
-        header nav {
+        .user-controls {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            gap: 20px;
-        }
-
-        .nav-left,
-        .nav-right {
-            display: flex;
             gap: 15px;
         }
 
+        nav {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .nav-button {
-            padding: 8px 15px;
-            background: #28a745;
+            padding: 10px 16px;
+            background: black;
             color: white;
             border: none;
             border-radius: 5px;
             text-decoration: none;
-            transition: background 0.3s ease;
+            font-weight: bold;
+            transition: all 0.3s ease;
         }
 
         .nav-button:hover {
-            background: #218838;
+            background: black;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .nav-center {
-            flex: 1;
-        }
-
-        .search-form {
+        .rating-filter-form {
             display: flex;
             align-items: center;
             gap: 10px;
+            flex: 1;
+            max-width: 500px;
+            margin: 0 20px;
         }
 
-        .search-form input {
-            padding: 8px;
-            font-size: 1rem;
-            border-radius: 5px;
-            border: 1px solid #cccccc26;
-            width: 250px;
-        }
-
-        .button-group {
+        .rating-filter-container {
             display: flex;
-            gap: 10px;
+            align-items: center;
+            position: relative;
+            width: 100%;
         }
 
-        .search-form button {
-            padding: 8px 15px;
-            background-color: #28a745;
+        .rating-filter-container input[type="number"] {
+            padding: 10px 15px;
+            font-size: 1rem;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .rating-filter-container input[type="number"]:focus {
+            outline: none;
+            border-color:black;
+            box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25);
+        }
+
+        #filterButton {
+            padding: 10px 16px;
+            background-color: black;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-left: 10px;
         }
 
-        .search-form button:hover {
-            background-color: #218838;
+        #filterButton:hover {
+            background-color: black;
+            transform: translateY(-2px);
         }
 
-        .cta-button {
-            background: #007bff;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
+        #ratingSuggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 10;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        #ratingSuggestions a {
+            display: block;
+            padding: 10px 16px;
             text-decoration: none;
+            color: #333;
+            transition: background-color 0.2s ease;
         }
 
-        .cta-button:hover {
-            background: #0056b3;
+        #ratingSuggestions a:hover {
+            background-color: #f0f0f0;
         }
 
         section h2 {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             color: #444;
+            font-size: 1.5rem;
         }
 
         .recipe-list {
@@ -175,7 +217,7 @@
 
         .recipe-photo {
             width: 100%;
-            height: 200px; /* Matched home page height */
+            height: 200px;
             object-fit: cover;
             border-radius: 8px;
         }
@@ -217,84 +259,45 @@
             background: #ccc;
         }
 
-        /* Style for the combined search input and dropdown */
-        .rating-filter-container {
-            display: flex;
-            align-items: center;
-            position: relative; /* Add relative positioning */
-        }
-
-        .rating-filter-container input[type="number"] {
-            width: 120px; /* Adjust as needed */
-            padding: 8px;
-            font-size: 1rem;
+        .recipe-details {
+            margin-top: 15px;
+            text-align: left;
+            padding: 10px;
+            background-color: #f9f9f9;
             border-radius: 5px;
-            border: 1px solid #ccc;
         }
 
-        #ratingSuggestions {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background-color: white;
-            border: 1px solid #ccc;
-            border-top: none;
-            border-radius: 0 0 5px 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            display: none; /* Initially hidden */
-            z-index: 10;
-        }
-
-        #ratingSuggestions a {
-            display: block;
-            padding: 8px 12px;
-            text-decoration: none;
-            color: #333;
-        }
-
-        #ratingSuggestions a:hover {
-            background-color: #f0f0f0;
-        }
-
-        #filterButton {
-            padding: 8px 15px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-left: 10px; /* Add some space between the input and button */
-        }
-
-        #filterButton:hover {
-            background-color: #218838;
+        .recipe-details p {
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
 <div class="container">
     <header>
-        <h1>High Rated Recipes</h1>
-        <nav>
-            <div class="nav-left">
-                <a href="{{ url_for('home') }}" class="nav-button">Home</a>
+        <div class="header-top">
+            <h1>Crowd Recipe Collection</h1>
+            <div class="user-controls">
+               <!---<span>High-Rated Recipes</span>-->
             </div>
-            <div class="nav-center">
-                <form method="GET" action="{{ url_for('high_rated_recipes') }}" id="ratingForm">
-                    <label for="ratingSearch">Filter by Rating:</label>
+        </div>
+        
+        <nav>
+            <div class="nav-container">
+              <!--- <a href="{{ url_for('home') }}" class="nav-button">Back to Home</a>-->
+                
+                <form method="GET" action="{{ url_for('high_rated_recipes') }}" id="ratingForm" class="rating-filter-form">
+                  <!--  <label for="ratingSearch">Filter by Rating:</label>-->
                     <div class="rating-filter-container">
-                        <input type="number" id="ratingSearch" placeholder="Enter rating" step="0.1"
+                        <input type="number" id="ratingSearch" placeholder="Enter rating (1-5)" step="0.1"
                                oninput="filterRatingOptions()" autocomplete="off">
                         <div id="ratingSuggestions"></div>
                         <button type="button" id="filterButton" onclick="applyRatingFilter()">Filter</button>
                         <input type="hidden" name="rating" id="selectedRating">
                     </div>
                 </form>
-            </div>
-            <div class="nav-right">
-                <!-- Add any additional buttons here -->
+                
+                <a href="{{ url_for('home') }}" class="nav-button">Back to Home</a>
             </div>
         </nav>
     </header>
@@ -338,33 +341,6 @@
 </div>
 
 <script>
-    function resetSearch() {
-        document.getElementById('searchInput').value = "";
-        filterRecipes();
-    }
-
-    function filterRecipes() {
-        let searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        let recipeCards = document.querySelectorAll('.recipe-card');
-        recipeCards.forEach(function (card) {
-            let title = card.querySelector('h3').innerText.toLowerCase();
-            let ingredients = card.querySelector('.ingredients-text').innerText.toLowerCase();
-
-            if (title.includes(searchTerm) || ingredients.includes(searchTerm)) {
-                card.style.display = "block";
-            } else {
-                card.style.display = "none";
-            }
-        });
-    }
-</script>
-
-<script>
-    function toggleRecipe(recipeId) {
-        var recipeDetails = document.getElementById("recipe-" + recipeId);
-        recipeDetails.style.display = recipeDetails.style.display === "none" ? "block" : "none";
-    }
-
     function filterRatingOptions() {
         let searchTerm = document.getElementById('ratingSearch').value;
         let ratingSuggestions = document.getElementById('ratingSuggestions');
@@ -412,6 +388,11 @@
             document.getElementById('ratingSuggestions').style.display = 'none';
         }
     });
+
+    function toggleRecipe(recipeId) {
+        var recipeDetails = document.getElementById("recipe-" + recipeId);
+        recipeDetails.style.display = recipeDetails.style.display === "none" ? "block" : "none";
+    }
 </script>
 </body>
 </html>
