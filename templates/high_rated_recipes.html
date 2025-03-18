@@ -303,7 +303,7 @@
     </header>
 
     <section>
-        <h2>Recipes with {{ selected_rating|float }}+ Star Ratings</h2>
+        <h2>Recipes with {{ selected_rating|float }} Star Ratings</h2>
         <div class="recipe-list">
             {% if recipes|length == 0 %}
                 <p>No recipes found with {{ selected_rating|float }}+ stars <a href="{{ url_for('home') }}">See all
