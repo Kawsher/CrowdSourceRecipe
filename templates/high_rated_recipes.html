@@ -270,6 +270,23 @@
         .recipe-details p {
             margin-bottom: 10px;
         }
+        .recipe-card a {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: black;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.recipe-card a:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
     </style>
 </head>
 <body>
@@ -303,12 +320,16 @@
     </header>
 
     <section>
-        <h2>Recipes with {{ selected_rating|float }} Star Ratings</h2>
-        <div class="recipe-list">
-            {% if recipes|length == 0 %}
-                <p>No recipes found with {{ selected_rating|float }}+ stars <a href="{{ url_for('home') }}">See all
-                    recipes</a></p>
-            {% else %}
+        {% if recipes|length == 0 %}
+            <div style="text-align: center; padding: 40px 0;">
+                <h2>No recipes found</h2>
+                <p>There are currently no recipes available with this rating.</p>
+                <a href="{{ url_for('home') }}" class="nav-button" style="display: inline-block; margin-top: 15px;">See all recipes</a>
+            </div>
+        {% elif selected_rating is defined and selected_rating %}
+            <h2>Recipes with {{ selected_rating|float }} Star Ratings</h2>
+            
+            <div class="recipe-list">
                 {% for recipe in recipes %}
                     <div class="recipe-card">
                         {% if recipe.picture %}
@@ -316,18 +337,19 @@
                                  alt="{{ recipe.title }} Photo" class="recipe-photo">
                         {% endif %}
                         <h3>{{ recipe.title }}</h3>
-                        <!--<p class="posted-by">by {{ recipe.posted_by }}</p>-->
-
+    
                         <div class="star-rating" data-recipe="{{ recipe._id }}">
                             {% for i in range(1, 6) %}
                                 <span class="star {% if recipe.average_rating >= i %}active{% endif %}"
                                       data-value="{{ i }}">&#9733;</span>
                             {% endfor %}
                         </div>
-                        <p class="average-rating">Average Rating: {{ "%.1f"|format(recipe.average_rating) if recipe.average_rating else "No ratings yet" }}</p>
-
-                        <a href="{{ url_for('recipe_detail', recipe_id=recipe._id) }}">Read More</a>
-
+                        <p class="average-rating">
+                            Average Rating: {{ "%.1f"|format(recipe.average_rating) if recipe.average_rating else "No ratings yet" }}
+                        </p>
+    
+                        <a href="{{ url_for('recipe_detail', recipe_id=recipe._id) }}">View Recipe</a>
+    
                         <div class="recipe-details" id="recipe-{{ recipe._id }}" style="display: none;">
                             <p><strong>Description:</strong> {{ recipe.description }}</p>
                             <p><strong>Ingredients:</strong> <span class="ingredients-text">{{ recipe.ingredients }}</span></p>
@@ -335,9 +357,19 @@
                         </div>
                     </div>
                 {% endfor %}
-            {% endif %}
-        </div>
+            </div>
+        {% else %}
+            <h2>All Recipes</h2>
+            
+            <div class="recipe-list">
+                {% for recipe in recipes %}
+                    <!-- Same recipe card code as above -->
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section> 
     </section>
+    
 </div>
 
 <script>

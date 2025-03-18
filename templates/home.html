@@ -249,6 +249,7 @@
       border-radius: 5px;
       cursor: pointer;
     }
+    
 
     button:hover {
       background: #ccc;
@@ -306,7 +307,7 @@
           
             <p class="average-rating">Average Rating: {{ "%.1f"|format(recipe.average_rating) if recipe.average_rating else "No ratings yet" }}</p>
           
-            <a href="{{ url_for('recipe_detail', recipe_id=recipe._id) }}">Read More</a>
+            <a href="{{ url_for('recipe_detail', recipe_id=recipe._id) }}">View Recipe</a>
           </div>
           {% endfor %}
         {% endif %}
