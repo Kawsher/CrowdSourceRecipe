@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ recipe.title }} - Recipe Details</title>
     <style>
-        /* Basic Reset */
         * {
             margin: 0;
             padding: 0;
@@ -21,7 +20,6 @@
             position: relative;
         }
 
-        /* Overlay to tone down the background */
         body::before {
             content: "";
             position: fixed;
@@ -64,27 +62,30 @@
             color: #555;
         }
 
+        /* Back to Home button styling inside the container */
         .back-link {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #5cb85c;
+            background-color: #000000;
             color: white;
             text-decoration: none;
             border-radius: 5px;
-            margin-top: 20px;
+            margin-bottom: 20px; /* Space between button and recipe description */
         }
 
         .back-link:hover {
-            background-color: #4cae4c;
+            background-color: #000000;
         }
 
-        .ingredient-list {
-            list-style-type: none; /* Remove bullet points */
-            padding: 0;
+        .ingredient-list,
+        .instruction-list {
+            list-style-type: disc;
+            padding-left: 20px;
         }
 
-        .ingredient-list li {
-            margin-bottom: 5px; /* Add some spacing between ingredients */
+        .ingredient-list li,
+        .instruction-list li {
+            margin-bottom: 10px;
         }
 
         .scaling-buttons {
@@ -116,11 +117,11 @@
             margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            resize: vertical; /* Allow vertical resizing */
+            resize: vertical;
         }
 
         .review-form button {
-            background-color: #4CAF50;
+            background-color: #000000;
             color: white;
             padding: 10px 15px;
             border: none;
@@ -129,7 +130,7 @@
         }
 
         .review-form button:hover {
-            background-color: #45a049;
+            background-color: #000000;
         }
 
         .review-list {
@@ -153,15 +154,36 @@
             font-style: italic;
             color: #777;
         }
+
+        /* Recipe Image */
+        .recipe-image {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    
+        .recipe-image img {
+            width: 350px;
+            height: 350px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        {% if recipe.picture %}
+            <div class="recipe-image">
+                <img src="{{ url_for('static', filename='uploads/' + recipe.picture) }}" alt="{{ recipe.title }}">
+            </div>
+        {% endif %}
+
+        <!-- Back to Home button -->
+        <a href="{{ url_for('home') }}" class="back-link">Back to Home</a>
+        
         <div class="recipe-content">
             <h1>{{ recipe.title }}</h1>
             <p><strong>Description:</strong> {{ recipe.description }}</p>
 
-            <!-- Scaling Options -->
             <div class="scaling-buttons">
                 <strong>Serving Size: Makes <span id="serving-size">4</span> servings</strong>
                 <button onclick="setScale(1)" id="scale-1x">1x</button>
@@ -176,15 +198,25 @@
                     <li>{{ ingredient }}</li>
                 {% endfor %}
             </ul>
-            <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
-            <a href="{{ url_for('home') }}" class="back-link">Back to Home</a><!-- Review Form -->
+
+            <!-- Instructions -->
+            <p><strong>Instructions:</strong></p>
+            <ul class="instruction-list">
+                {% for instruction in recipe.instructions.split('. ') %}
+                    <li>{{ instruction }}.</li>
+                {% endfor %}
+            </ul>
+
+            <!-- Review Form -->
             <div class="review-form">
                 <h3>Add Your Review</h3>
                 <form method="POST" action="{{ url_for('add_review', recipe_id=recipe._id) }}">
                     <textarea name="review_text" rows="4" placeholder="Write your review here"></textarea>
                     <button type="submit">Submit Review</button>
                 </form>
-            </div> <!-- Review List -->
+            </div>
+
+            <!-- Review List -->
             <div class="review-list">
                 <h3>Reviews</h3>
                 {% if reviews %}
@@ -202,8 +234,8 @@
     </div>
 
     <script>
-        let baseServingSize = 4; // Default serving size
-        let currentScale = 1; // Default scale
+        let baseServingSize = 4;
+        let currentScale = 1;
         const scaleButtons = document.querySelectorAll('.scaling-buttons button');
         const ingredientList = document.getElementById('ingredient-list');
         const servingSizeElement = document.getElementById('serving-size');
@@ -223,11 +255,11 @@
         }
 
         function updateIngredientList() {
-            fetch(`/recipe/{{ recipe._id }}/scale?scale=${currentScale}`) // Correct URL
+            fetch(`/recipe/{{ recipe._id }}/scale?scale=${currentScale}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        ingredientList.innerHTML = ''; // Clear existing list
+                        ingredientList.innerHTML = '';
                         data.ingredients.forEach(ingredient => {
                             const li = document.createElement('li');
                             li.textContent = ingredient;
@@ -250,7 +282,7 @@
         const reviewList = document.querySelector('.review-list');
 
         reviewForm.addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent default form submission
+            event.preventDefault();
 
             const formData = new FormData(reviewForm);
             const reviewText = formData.get('review_text');
@@ -267,16 +299,14 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Add the new review to the review list dynamically
                     const newReview = document.createElement('div');
                     newReview.classList.add('review-item');
-                    newReview.innerHTML = `
+                    newReview.innerHTML = ` 
                         <p>${data.review.text}</p>
                         <p class="author">By: ${data.review.author}</p>
                     `;
                     reviewList.appendChild(newReview);
 
-                    // Clear the textarea
                     reviewForm.reset();
                 } else {
                     alert(data.message || 'Failed to add review.');
