@@ -5,298 +5,331 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ recipe.title }} - Recipe Details</title>
     <style>
-        /* Add these styles to your existing CSS section */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.recipe-content {
-    flex: 1;
-    padding: 20px 0;
-}
+        body {
+            font-family: Arial, sans-serif;
+            background: url('{{ url_for("static", filename="images/landingpage.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+            padding: 20px;
+            position: relative;
+        }
 
-h1 {
-    color: #333;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 15px;
-    margin-bottom: 25px;
-    font-size: 2.2rem;
-    text-align: center;
-}
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            opacity: 0.6;
+            z-index: -1;
+        }
 
-h2 {
-    color: #333;
-    margin: 30px 0 15px;
-    font-size: 1.8rem;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 8px;
-}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
 
-h3 {
-    color: #444;
-    margin: 20px 0 10px;
-    font-size: 1.3rem;
-}
+        .recipe-content {
+            flex: 1;
+            padding: 20px 0;
+        }
 
-.recipe-description {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 25px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            font-size: 2.2rem;
+            text-align: center;
+        }
 
-.recipe-details {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 30px;
-    margin-bottom: 30px;
-}
+        h2 {
+            color: #333;
+            margin: 30px 0 15px;
+            font-size: 1.8rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
 
-@media (min-width: 768px) {
-    .recipe-details {
-        grid-template-columns: 1fr 1fr;
-    }
-    
-    .instructions-section {
-        grid-column: span 2;
-    }
-}
+        h3 {
+            color: #444;
+            margin: 20px 0 10px;
+            font-size: 1.3rem;
+        }
 
-/* Updated image styles */
-.recipe-image {
-    width: 100%;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    display: flex;
-    justify-content: center;
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    background-color: #f9f9f9;
-}
+        .recipe-description {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
 
-.recipe-image img {
-    max-width: 120%;
-    max-height: 400px;
-    object-fit: contain;
-    border-radius: 6px;
-    display: block;
-}
+        .recipe-details {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
 
-.scale-controls {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-    margin-bottom: 15px;
-}
+        @media (min-width: 768px) {
+            .recipe-details {
+                grid-template-columns: 1fr 1fr;
+            }
 
-.scale-btn {
-    padding: 8px 16px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
+            .instructions-section {
+                grid-column: span 2;
+            }
+        }
 
-.scale-btn:hover {
-    background-color: #f0f0f0;
-}
+        .recipe-image {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
 
-.scale-btn.active {
-    background-color: #000;
-    color: #fff;
-}
+        .recipe-image img {
+            max-width: 120%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 6px;
+            display: block;
+        }
 
-.ingredients-section, .instructions-section {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
+        .scale-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
 
-.ingredient-list {
-    list-style-type: disc;
-    padding-left: 20px;
-}
+        .scale-btn {
+            padding: 8px 16px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
 
-.instruction-list {
-    list-style-type: decimal;
-    padding-left: 25px;
-}
+        .scale-btn:hover {
+            background-color: #f0f0f0;
+        }
 
-.ingredient-list li, .instruction-list li {
-    margin-bottom: 12px;
-    line-height: 1.6;
-}
+        .scale-btn.active {
+            background-color: #000;
+            color: #fff;
+        }
 
-.reviews-section {
-    margin-top: 40px;
-    padding-top: 20px;
-    border-top: 2px solid #eee;
-}
+        .ingredients-section, .instructions-section {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
 
-.review-form {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 25px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
+        .ingredient-list {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
 
-.review-form textarea {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    resize: vertical;
-    font-family: Arial, sans-serif;
-}
+        .instruction-list {
+            list-style-type: decimal;
+            padding-left: 25px;
+        }
 
-.review-form button {
-    background-color: #000;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
+        .ingredient-list li, .instruction-list li {
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
 
-.review-form button:hover {
-    background-color: #333;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+        .reviews-section {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
 
-.review-list {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
+        .review-form {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
 
-.review-item {
-    padding: 15px;
-    margin-bottom: 15px;
-    background-color: #fff;
-    border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
+        .review-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            font-family: Arial, sans-serif;
+        }
 
-.review-item p {
-    margin: 0 0 8px 0;
-}
+        .review-form button {
+            background-color: #000;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
 
-.review-item .author {
-    font-style: italic;
-    color: #777;
-    font-size: 0.9rem;
-    text-align: right;
-}
+        .review-form button:hover {
+            background-color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
-.back-link {
-    display: inline-block;
-    padding: 12px 24px;
-    background-color: #000;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    margin-top: 30px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
+        .review-list {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
 
-.back-link:hover {
-    background-color: #333;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
+        .review-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fff;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-item p {
+            margin: 0 0 8px 0;
+        }
+
+        .review-item .author {
+            font-style: italic;
+            color: #777;
+            font-size: 0.9rem;
+            text-align: right;
+        }
+
+        .back-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #000;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 30px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background-color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
-    <div class="recipe-content">
-        <h1>{{ recipe.title }}</h1>
-        
-        <div class="recipe-description">
-            <h3>Description</h3>
-            <p>{{ recipe.description }}</p>
-        </div>
-    
-        <div class="recipe-details">
-            <!-- Recipe Image with fixed image tag -->
-            <div class="recipe-image">
-                <img src="{{ url_for('static', filename='uploads/' + recipe.picture) }}" alt="{{ recipe.title }}">
-            </div>
-    
-            <!-- Ingredients with integrated scaling controls -->
-            <div class="ingredients-section">
-                <h3>Ingredients</h3>
-                <div>
-                    <p>Serving Size: <span id="serving-size">4</span> servings</p>
-                    <div class="scale-controls">
-                        <button onclick="setScale(1)" id="scale-1x" class="scale-btn">1x</button>
-                        <button onclick="setScale(2)" id="scale-2x" class="scale-btn">2x</button>
-                        <button onclick="setScale(4)" id="scale-4x" class="scale-btn active">4x</button>
-                    </div>
-                </div>
-                <ul class="ingredient-list" id="ingredient-list">
-                    {% for ingredient in ingredients %}
-                        <li>{{ ingredient }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-    
-            <!-- Instructions -->
-            <div class="instructions-section">
-                <h3>Instructions</h3>
-                <ol class="instruction-list">
-                    {% for instruction in recipe.instructions.split('. ') %}
-                        {% if instruction.strip() %}
-                            <li>{{ instruction }}.</li>
-                        {% endif %}
-                    {% endfor %}
-                </ol>
-            </div>
-        </div>
-    
-        <!-- Review Section -->
-        <div class="reviews-section">
-            <h2>Reviews</h2>
+    <div class="container">
+        <div class="recipe-content">
+            <!-- Back to Home Button -->
+            <a href="{{ url_for('home') }}" class="back-link">Back to Home</a>
+
+            <h1>{{ recipe.title }}</h1>
             
-            <!-- Review Form -->
-            <div class="review-form">
-                <h3>Add Your Review</h3>
-                <form method="POST" action="{{ url_for('add_review', recipe_id=recipe._id) }}">
-                    <textarea name="review_text" rows="4" placeholder="Write your review here"></textarea>
-                    <button type="submit">Submit Review</button>
-                </form>
+            <div class="recipe-description">
+                <h3>Description</h3>
+                <p>{{ recipe.description }}</p>
             </div>
-    
-            <!-- Review List -->
-            <div class="review-list">
-                <h3>What Others Say</h3>
-                {% if reviews %}
-                    {% for review in reviews %}
-                        <div class="review-item">
-                            <p>{{ review.text }}</p>
-                            <p class="author">By: {{ review.author }}</p>
+        
+            <div class="recipe-details">
+                <!-- Recipe Image -->
+                <div class="recipe-image">
+                    <img src="{{ url_for('static', filename='uploads/' + recipe.picture) }}" alt="{{ recipe.title }}">
+                </div>
+        
+                <!-- Ingredients Section -->
+                <div class="ingredients-section">
+                    <h3>Ingredients</h3>
+                    <div>
+                        <p>Serving Size: <span id="serving-size">4</span> servings</p>
+                        <div class="scale-controls">
+                            <button onclick="setScale(1)" id="scale-1x" class="scale-btn active">1x</button>
+                            <button onclick="setScale(2)" id="scale-2x" class="scale-btn">2x</button>
+                            <button onclick="setScale(4)" id="scale-4x" class="scale-btn">4x</button>
                         </div>
-                    {% endfor %}
-                {% else %}
-                    <p>No reviews yet. Be the first to review this recipe!</p>
-                {% endif %}
+                    </div>
+                    <ul class="ingredient-list" id="ingredient-list">
+                        {% for ingredient in ingredients %}
+                            <li>{{ ingredient }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+        
+                <!-- Instructions Section -->
+                <div class="instructions-section">
+                    <h3>Instructions</h3>
+                    <ol class="instruction-list">
+                        {% for instruction in recipe.instructions.split('. ') %}
+                            {% if instruction.strip() %}
+                                <li>{{ instruction }}.</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        
+            <!-- Review Section -->
+            <div class="reviews-section">
+                <h2>Reviews</h2>
+                <div class="review-form">
+                    <h3>Add Your Review</h3>
+                    <form method="POST" action="{{ url_for('add_review', recipe_id=recipe._id) }}">
+                        <textarea name="review_text" rows="4" placeholder="Write your review here"></textarea>
+                        <button type="submit">Submit Review</button>
+                    </form>
+                </div>
+        
+                <div class="review-list">
+                    <h3>What Others Say</h3>
+                    {% if reviews %}
+                        {% for review in reviews %}
+                            <div class="review-item">
+                                <p>{{ review.text }}</p>
+                                <p class="author">By: {{ review.author }}</p>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No reviews yet. Be the first to review this recipe!</p>
+                    {% endif %}
+                </div>
             </div>
         </div>
-        
-        <a href="{{ url_for('home') }}" class="back-link">Back to Home</a>
     </div>
     
     <script>
         let baseServingSize = 4;
-        let currentScale = 4; // Default to 4x
+        let currentScale = 1; // Default to 1x
         const scaleButtons = document.querySelectorAll('.scale-controls button');
         const ingredientList = document.getElementById('ingredient-list');
         const servingSizeElement = document.getElementById('serving-size');
@@ -304,14 +337,11 @@ h3 {
         function setScale(scale) {
             currentScale = scale;
 
-            // Update button styles
             scaleButtons.forEach(button => button.classList.remove('active'));
             document.getElementById(`scale-${scale}x`).classList.add('active');
 
-            // Update serving size
             servingSizeElement.textContent = baseServingSize * scale;
 
-            // Update ingredient list
             updateIngredientList();
         }
 
@@ -337,51 +367,8 @@ h3 {
 
         // Call updateIngredientList() on page load to display initial ingredients
         window.onload = function() {
-            // Set 4x as default active button
-            document.getElementById('scale-4x').classList.add('active');
             updateIngredientList();
         };
-
-        // Handle review form submission using AJAX
-        const reviewForm = document.querySelector('.review-form form');
-        const reviewList = document.querySelector('.review-list');
-
-        reviewForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            const formData = new FormData(reviewForm);
-            const reviewText = formData.get('review_text');
-
-            if (!reviewText.trim()) {
-                alert('Please enter a review.');
-                return;
-            }
-
-            fetch(reviewForm.action, {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const newReview = document.createElement('div');
-                    newReview.classList.add('review-item');
-                    newReview.innerHTML = ` 
-                        <p>${data.review.text}</p>
-                        <p class="author">By: ${data.review.author}</p>
-                    `;
-                    reviewList.appendChild(newReview);
-
-                    reviewForm.reset();
-                } else {
-                    alert(data.message || 'Failed to add review.');
-                }
-            })
-            .catch(error => {
-                console.error('Error submitting review:', error);
-                alert('An error occurred while submitting your review.');
-            });
-        });
     </script>
 
 </body>

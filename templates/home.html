@@ -93,7 +93,7 @@
     }
 
     .nav-button:hover {
-      background:black;
+      background: black;
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
@@ -139,24 +139,8 @@
     }
 
     .search-form button:hover {
-      background-color:black;
+      background-color: black;
       transform: translateY(-2px);
-    }
-
-    .special-button {
-      background: black;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
-
-    .special-button:hover {
-      background: black;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     section h2 {
@@ -229,7 +213,6 @@
       margin-bottom: 10px;
     }
 
-    /* New style for Read More links */
     .recipe-card a {
       color: black;
       text-decoration: none;
@@ -249,10 +232,33 @@
       border-radius: 5px;
       cursor: pointer;
     }
-    
 
     button:hover {
       background: #ccc;
+    }
+
+    /* Rating Filter Form Style */
+    .rating-filter-form {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .rating-filter-form select {
+      padding: 8px;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    .rating-filter-form button {
+      background-color: #000000;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 16px;
+      font-weight: bold;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -275,20 +281,37 @@
             <input type="text" name="search" placeholder="Search by title or ingredients" value="{{ request.args.get('search', '') }}">
             <div class="button-group">
               <button type="submit">Search</button>
-              <button type="button" onclick="resetSearch()">Reset</button>
             </div>
           </form>
           
-          <a href="{{ url_for('high_rated_recipes') }}" class="special-button">High-Rated Recipes</a>
+          <!-- Replace High-Rated Recipes with Reset Filters Button -->
+          <form action="{{ url_for('home') }}" method="GET" class="nav-container">
+            <button type="submit" class="nav-button">Reset Filters</button>
+          </form>
         </div>
       </nav>
+
+      <!-- Rating Filter Form -->
+    <form action="{{ url_for('home') }}" method="GET" class="rating-filter-form">
+      <label for="rating-filter">Filter by Rating:</label>
+      <select name="min_rating" id="rating-filter">
+        <option value="">Select Rating Range</option>
+        <option value="1" {% if request.args.get('min_rating') == '1' %}selected{% endif %}>1 Star (1-2)</option>
+        <option value="2" {% if request.args.get('min_rating') == '2' %}selected{% endif %}>2 Stars (2-3)</option>
+        <option value="3" {% if request.args.get('min_rating') == '3' %}selected{% endif %}>3 Stars (3-4)</option>
+        <option value="4" {% if request.args.get('min_rating') == '4' %}selected{% endif %}>4 Stars (4-5)</option>
+        <option value="5" {% if request.args.get('min_rating') == '5' %}selected{% endif %}>5 Stars (exactly 5)</option>
+      </select>
+      <button type="submit">Filter</button>
+    </form>
+
     </header>
-    
+
     <section>
       <h2>Recipes</h2>
       <div class="recipe-list">
         {% if recipes|length == 0 %}
-          <p>No recipes found matching your search. <a href="{{ url_for('home') }}">See all recipes</a></p>
+          <p>No recipes found matching your search or filter. <a href="{{ url_for('home') }}">See all recipes</a></p>
         {% else %}
           {% for recipe in recipes %}
           <div class="recipe-card">
@@ -296,9 +319,7 @@
               <img src="{{ url_for('static', filename='uploads/' ~ recipe.picture) }}" alt="{{ recipe.title }} Photo" class="recipe-photo">
             {% endif %}
             <h3>{{ recipe.title }}</h3>
-            <!-- <p class="posted-by">by {{ recipe.posted_by }}</p>-->
           
-            <!-- Star Rating System -->
             <div class="star-rating" data-recipe="{{ recipe._id }}">
               {% for i in range(1, 6) %}
                 <span class="star {% if recipe.average_rating >= i %}active{% endif %}" data-value="{{ i }}">&#9733;</span>
@@ -320,30 +341,6 @@
       document.querySelector('input[name="search"]').value = "";
       window.location.href = "{{ url_for('home') }}";
     }
-    
-    document.addEventListener("DOMContentLoaded", function () {
-      document.querySelectorAll(".star").forEach(star => {
-        star.addEventListener("click", function () {
-          let value = this.getAttribute("data-value");
-          let parent = this.parentElement;
-          let recipeId = parent.getAttribute("data-recipe");
-    
-          fetch("/rate_recipe", {
-            method: "POST",
-            body: JSON.stringify({ recipe_id: recipeId, rating: value }),
-            headers: { "Content-Type": "application/json" }
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              location.reload();
-            } else {
-              alert("Error: " + data.message);
-            }
-          });
-        });
-      });
-    });
   </script>
 </body>
 </html>

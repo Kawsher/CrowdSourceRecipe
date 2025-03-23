@@ -142,6 +142,9 @@ def logout():
 @login_required
 def home():
     search_term = request.args.get('search', '').strip()
+    min_rating = request.args.get('min_rating', None)
+
+    # Perform search query if search_term is present
     if search_term:
         recipes_cursor = mongo.db.recipes.find({
             "$or": [
@@ -151,13 +154,36 @@ def home():
         })
     else:
         recipes_cursor = mongo.db.recipes.find()
+
+    # Convert cursor to list
     recipes = list(recipes_cursor)
+
+    # Calculate average rating for each recipe
     for recipe in recipes:
         if 'ratings' in recipe and len(recipe['ratings']) > 0:
             recipe['average_rating'] = sum(recipe['ratings']) / len(recipe['ratings'])
         else:
             recipe['average_rating'] = 0
-    return render_template('home.html', recipes=recipes,username=current_user.username)
+
+    # Apply rating filter if 'min_rating' is specified
+    if min_rating:
+        min_rating = int(min_rating)
+
+        # Filter recipes based on the rating ranges
+        if min_rating == 1:
+            recipes = [recipe for recipe in recipes if 1 <= recipe['average_rating'] < 2]
+        elif min_rating == 2:
+            recipes = [recipe for recipe in recipes if 2 <= recipe['average_rating'] < 3]
+        elif min_rating == 3:
+            recipes = [recipe for recipe in recipes if 3 <= recipe['average_rating'] < 4]
+        elif min_rating == 4:
+            recipes = [recipe for recipe in recipes if 4 <= recipe['average_rating'] < 5]
+        elif min_rating == 5:
+            recipes = [recipe for recipe in recipes if recipe['average_rating'] == 5]
+
+    # Pass recipes and username to template
+    return render_template('home.html', recipes=recipes, username=current_user.username)
+
 
 # Route to post a new recipe.
 @app.route('/post_recipe', methods=['GET', 'POST'])
