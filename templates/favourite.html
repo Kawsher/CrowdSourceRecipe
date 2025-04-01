@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Favorite Recipes - Crowd Recipe Collection</title>
+  <style>
+    /* Add your styles here */
+    .container {
+      width: 80%;
+      margin: 0 auto;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    header h1 {
+      margin: 0;
+    }
+    .user-controls {
+      display: flex;
+      align-items: center;
+    }
+    .user-controls span {
+      margin-right: 15px;
+    }
+    .nav-button {
+      text-decoration: none;
+      padding: 10px;
+      margin: 0 5px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+    }
+    .search-form {
+      display: flex;
+      align-items: center;
+    }
+    .search-form input {
+      padding: 5px;
+      margin-right: 10px;
+    }
+    .recipe-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .recipe-card {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .recipe-card img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+    .average-rating {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .favorite-icon {
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-top">
+        <h1>Your Favorite Recipes</h1>
+        <div class="user-controls">
+          <span>Welcome, {{ username }}!</span>
+          <a href="{{ url_for('logout') }}" class="nav-button">Logout</a>
+        </div>
+      </div>
+
+      <nav>
+        <div class="nav-container">
+          <a href="{{ url_for('post_recipe') }}" class="nav-button">Post a New Recipe</a>
+          <form action="{{ url_for('home') }}" method="GET" class="search-form">
+            <input type="text" name="search" placeholder="Search by title or ingredients" value="{{ request.args.get('search', '') }}">
+            <button type="submit">Search</button>
+          </form>
+          <a href="{{ url_for('favourite_recipes') }}" class="nav-button" title="Favorites">
+            <span class="favorite-icon">&#9733;</span>
+          </a>
+        </div>
+      </nav>
+    </header>
+
+    <section>
+      <h2>Your Favorite Recipes</h2>
+      <div class="recipe-list">
+        {% if recipes|length == 0 %}
+          <p>You have no favorite recipes yet. <a href="{{ url_for('home') }}">See all recipes</a></p>
+        {% else %}
+          {% for recipe in recipes %}
+          <div class="recipe-card">
+            {% if recipe.picture %}
+              <img src="{{ url_for('static', filename='uploads/' ~ recipe.picture) }}" alt="{{ recipe.title }} Photo" class="recipe-photo">
+            {% endif %}
+            <h3>{{ recipe.title }}</h3>
+            <p class="average-rating">Average Rating: {{ "%.1f"|format(recipe.average_rating) if recipe.average_rating else "No ratings yet" }}</p>
+            <a href="{{ url_for('recipe_detail', recipe_id=recipe._id) }}">View Recipe</a>
+          </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </section>
+  </div>
+</body>
+</html>

@@ -88,7 +88,52 @@
     .go-button:hover {
       background: #0056b3;
     }
+    .meal-dropdown,
+    .cuisine-dropdown {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+      background-color: white;
+    }
 
+    .diet-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .diet-tags input[type="checkbox"] {
+      display: none;
+    }
+
+    .diet-tags .tag {
+      padding: 5px 10px;
+      background-color: #f0f0f0;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .diet-tags input[type="checkbox"]:checked + .tag {
+      background-color: black;
+      color: white;
+    }
+
+    #keywords-box {
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+      background-color: #f9f9f9;
+      min-height: 50px;
+    }
+    
   </style>
 </head>
 <body>
@@ -107,16 +152,90 @@
       <label for="instructions">Instructions:</label>
       <textarea id="instructions" name="instructions" rows="5" placeholder="Step by step instructions" required></textarea>
       
+      <label for="cuisine">Cuisine Type:</label>
+      <select id="cuisine" name="cuisine" class="cuisine-dropdown" required>
+        <option value="">Select a cuisine</option>
+        <option value="Italian">Italian</option>
+        <option value="Mexican">Mexican</option>
+        <option value="Chinese">Chinese</option>
+        <option value="Indian">Indian</option>
+        <option value="Japanese">Japanese</option>
+        <option value="Thai">Thai</option>
+        <option value="French">French</option>
+        <option value="Greek">Greek</option>
+        <option value="American">American</option>
+      </select>
+   
+      <label for="HealthyDiet">HealthyDiet</label>
+      <input type="hidden" id="diet-hidden" name="HealthyDiet" value="">
+      <div class="diet-tags">
+        <input type="checkbox" id="Keto" name="diet[]" value="Keto">
+        <label for="Keto" class="tag">Keto Recipe</label>
+        <input type="checkbox" id="Healthy" name="diet[]" value="Healthy">
+        <label for="Healthy" class="tag">Healthy Recipe</label>
+        <input type="checkbox" id="Vegetarian" name="diet[]" value="Vegetarian">
+        <label for="Vegetarian" class="tag">Vegetarian Recipe</label>
+        <input type="checkbox" id="Vegan" name="diet[]" value="Vegan">
+        <label for="Vegan" class="tag">Vegan Recipe</label>
+        <input type="checkbox" id="Gluten-Free" name="diet[]" value="Gluten-Free">
+        <label for="Gluten-Free" class="tag">Gluten-Free Recipe</label>
+        <input type="checkbox" id="Low-Carb" name="diet[]" value="Low-Carb">
+        <label for="Low-Carb" class="tag">Low-Carb Recipe</label>
+        <input type="checkbox" id="Non-Vegetarian" name="diet[]" value="Non-Vegetarian">
+        <label for="Non-Vegetarian" class="tag">Non-Vegetarian Recipe</label>
+        </div>
+
+        <!-- Meal Type Dropdown -->
+  <label for="meal">Meal Type:</label>
+  <select id="meal" name="meal" class="meal-dropdown" required>
+    <option value="">Select a meal type</option>
+    <option value="Breakfast & Brunch">Breakfast & Brunch</option>
+    <option value="Lunch">Lunch</option>
+    <option value="Healthy">Healthy</option>
+    <option value="Appetizers & Snacks">Appetizers & Snacks</option>
+    <option value="Salads">Salads</option>
+    <option value="Side Dishes">Side Dishes</option>
+    <option value="Soups">Soups</option>
+    <option value="Dinner">Dinner</option>
+    <option value="Drinks">Drinks</option>
+    <option value="Desserts">Desserts</option>
+  </select>
+        
       <label for="picture">Picture:</label>
       <input type="file" id="picture" name="picture" accept="image/*">
       
       <input type="submit" value="Post Recipe">
       <input type="button" value="Go Back" onclick="goToHome()" class="go-button">
     </form>
+    
     <script>
       function goToHome() {
         window.location.href = "{{ url_for('home') }}";
       }
+
+      document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.diet-tags input[type="checkbox"]');
+    const hiddenInput = document.getElementById('diet-hidden');
+
+    function updateHiddenInput() {
+        const selectedDiets = Array.from(checkboxes)
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
+
+        // Set the hidden input value with comma-separated selected diets
+        hiddenInput.value = selectedDiets.join(',');
+        console.log("Selected diets:", hiddenInput.value); // For debugging
+    }
+
+    // Add event listeners to all checkboxes
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateHiddenInput);
+    });
+
+    // Initialize on page load
+    updateHiddenInput();
+});
+
     </script>
   </div>
 </body>

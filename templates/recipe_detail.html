@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ recipe.title }} - Recipe Details</title>
     <style>
+        /* Reset some default browser styles */
         * {
             margin: 0;
             padding: 0;
@@ -20,6 +22,7 @@
             position: relative;
         }
 
+        /* Add an overlay to improve text readability over the background image */
         body::before {
             content: "";
             position: fixed;
@@ -84,6 +87,7 @@
             margin-bottom: 30px;
         }
 
+        /* Media query for larger screens */
         @media (min-width: 768px) {
             .recipe-details {
                 grid-template-columns: 1fr 1fr;
@@ -101,7 +105,6 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             display: flex;
             justify-content: center;
-            display: flex;
             align-items: center;
             padding: 15px;
             background-color: #f9f9f9;
@@ -141,7 +144,8 @@
             color: #fff;
         }
 
-        .ingredients-section, .instructions-section {
+        .ingredients-section,
+        .instructions-section {
             padding: 20px;
             background-color: #f9f9f9;
             border-radius: 8px;
@@ -158,7 +162,8 @@
             padding-left: 25px;
         }
 
-        .ingredient-list li, .instruction-list li {
+        .ingredient-list li,
+        .instruction-list li {
             margin-bottom: 12px;
             line-height: 1.6;
         }
@@ -247,27 +252,123 @@
             transform: translateY(-2px);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+        .star-rating {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.star {
+    font-size: 2rem;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.star:hover,
+.star.active {
+    color: black;
+}
+
+.star:hover ~ .star {
+    color:black;
+}
+.button-container {
+        display: flex; /* Use flexbox for horizontal layout */
+        align-items: center; /* Vertically align items in the center */
+        gap: 15px; /* Add some space between the button and the link */
+        margin-bottom: 20px; /* Add some space below the container */
+    }
+
+    /* Style for the save button to match the back link */
+    .save-button {
+        background-color: #000;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .save-button:hover {
+        background-color: #333;
+        transform: translateY(-2px);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    button-container {
+        display: flex; /* Use flexbox for horizontal layout */
+        align-items: center; /* Vertically align items in the center */
+        gap: 15px; /* Add some space between the button and the link */
+        margin-bottom: 20px; /* Add some space below the container */
+    }
+
+
+   /* For the "Back to Home" link */
+.back-link {
+    display: inline-block; 
+    padding: 12px 24px;   
+    background-color: #000; 
+    color: white;         
+    text-decoration: none; 
+    border-radius: 5px;    
+    margin-top: 30px;      
+    font-weight: bold;   
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    background-color: #333; 
+    transform: translateY(-2px); 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+}
+
+/* For the "Save to Favorites" button */
+button[type="submit"] {
+    background-color: #000; 
+    color: white;          
+    padding: 12px 24px;   
+    border: none;          
+    border-radius: 5px;    
+    cursor: pointer;       
+    font-weight: bold;    
+    transition: all 0.3s ease; 
+}
+
+button[type="submit"]:hover {
+    background-color: #333; 
+    transform: translateY(-2px); 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+}
+
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="recipe-content">
             <!-- Back to Home Button -->
             <a href="{{ url_for('home') }}" class="back-link">Back to Home</a>
-
             <h1>{{ recipe.title }}</h1>
-            
+
             <div class="recipe-description">
                 <h3>Description</h3>
                 <p>{{ recipe.description }}</p>
             </div>
-        
+
             <div class="recipe-details">
                 <!-- Recipe Image -->
                 <div class="recipe-image">
-                    <img src="{{ url_for('static', filename='uploads/' + recipe.picture) }}" alt="{{ recipe.title }}">
+                    {% if recipe.picture %}
+    <img src="{{ url_for('static', filename='uploads/' + recipe.picture) }}" alt="{{ recipe.title }}">
+{% else %}
+    <img src="{{ url_for('static', filename='images/default_recipe.jpg') }}" alt="{{ recipe.title }}">
+{% endif %}
+
                 </div>
-        
+
                 <!-- Ingredients Section -->
                 <div class="ingredients-section">
                     <h3>Ingredients</h3>
@@ -281,58 +382,103 @@
                     </div>
                     <ul class="ingredient-list" id="ingredient-list">
                         {% for ingredient in ingredients %}
-                            <li>{{ ingredient }}</li>
+                        <li>{{ ingredient }}</li>
                         {% endfor %}
                     </ul>
                 </div>
-        
+
                 <!-- Instructions Section -->
                 <div class="instructions-section">
                     <h3>Instructions</h3>
                     <ol class="instruction-list">
-                        {% for instruction in recipe.instructions.split('. ') %}
+                        {% for instruction in recipe.instructions.split('.') %}
                             {% if instruction.strip() %}
-                                <li>{{ instruction }}.</li>
+                                <li>{{ instruction.strip() }}.</li>
                             {% endif %}
                         {% endfor %}
                     </ol>
                 </div>
+                
             </div>
-        
+            <!-- Save Button -->
+            <form method="POST" action="{{ url_for('save_recipe', recipe_id=recipe['_id']) }}">
+                <button type="submit">Save to Favorites</button>
+            </form>
+            
+
+            <div class="rating-section">
+                <h2>Rate this Recipe</h2>
+                <div class="star-rating" data-recipe="{{ recipe._id }}">
+                    {% for i in range(1, 6) %}
+                        <span class="star {% if recipe.get('average_rating', 0) >= i %}active{% endif %}" data-value="{{ i }}">
+                            &#9733;
+                        </span>
+                    {% endfor %}
+                </div>
+                <p class="average-rating">
+                    Average Rating: {{ "%.1f"|format(recipe.get('average_rating', 0)) if recipe.get('average_rating', 0) else "No ratings yet" }}
+                </p>
+            </div>
+            
+
+            
             <!-- Review Section -->
-            <div class="reviews-section">
-                <h2>Reviews</h2>
-                <div class="review-form">
-                    <h3>Add Your Review</h3>
-                    <form method="POST" action="{{ url_for('add_review', recipe_id=recipe._id) }}">
-                        <textarea name="review_text" rows="4" placeholder="Write your review here"></textarea>
-                        <button type="submit">Submit Review</button>
-                    </form>
+            <div class="review-form">
+                <h3>Add Your Review</h3>
+                <form id="review-form">
+                    <textarea name="review_text" id="review-text" rows="4"
+                        placeholder="Write your review here"></textarea>
+                    <button type="submit">Submit Review</button>
+                </form>
+            </div>
+
+            <div class="review-list">
+                <h3>What Others Say</h3>
+                {% if reviews %}
+                {% for review in reviews %}
+                <div class="review-item">
+                    <p>{{ review.text }}</p>
+                    <p class="author">By: {{ review.author }}</p>
                 </div>
-        
-                <div class="review-list">
-                    <h3>What Others Say</h3>
-                    {% if reviews %}
-                        {% for review in reviews %}
-                            <div class="review-item">
-                                <p>{{ review.text }}</p>
-                                <p class="author">By: {{ review.author }}</p>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <p>No reviews yet. Be the first to review this recipe!</p>
-                    {% endif %}
-                </div>
+                {% endfor %}
+                {% else %}
+                <p>No reviews yet. Be the first to review this recipe!</p>
+                {% endif %}
             </div>
         </div>
     </div>
-    
+
     <script>
         let baseServingSize = 4;
         let currentScale = 1; // Default to 1x
         const scaleButtons = document.querySelectorAll('.scale-controls button');
         const ingredientList = document.getElementById('ingredient-list');
         const servingSizeElement = document.getElementById('serving-size');
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const stars = document.querySelectorAll(".star");
+            stars.forEach(star => {
+                star.addEventListener("click", function() {
+                    const value = this.getAttribute("data-value");
+                    const recipeId = this.parentElement.getAttribute("data-recipe");
+                    
+                    fetch("{{ url_for('rate_recipe') }}", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ recipe_id: recipeId, rating: value })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        }
+                    });
+                });
+            });
+
+            // Initialize the ingredient list with the default scale (1x)
+            setScale(1);
+        });
 
         function setScale(scale) {
             currentScale = scale;
@@ -347,29 +493,87 @@
 
         function updateIngredientList() {
             fetch(`/recipe/{{ recipe._id }}/scale?scale=${currentScale}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        ingredientList.innerHTML = '';
-                        data.ingredients.forEach(ingredient => {
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    ingredientList.innerHTML = '';
+                    data.ingredients.forEach(ingredient => {
+                        if (ingredient.trim()) { // Check if ingredient is not empty
                             const li = document.createElement('li');
                             li.textContent = ingredient;
                             ingredientList.appendChild(li);
-                        });
-                    } else {
-                        alert(data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching scaled ingredients:', error);
-                });
+                        }
+                    });
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching scaled ingredients:', error);
+            });
         }
 
-        // Call updateIngredientList() on page load to display initial ingredients
-        window.onload = function() {
-            updateIngredientList();
-        };
+        document.getElementById('save-recipe-btn').addEventListener('click', function() {
+            const recipeId = '{{ recipe._id }}';  // Get the current recipe ID
+            fetch(`/save_recipe/${recipeId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ recipe_id: recipeId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    // Optionally update the UI to reflect the saved state
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error saving recipe:', error);
+            });
+        });
+
+        document.getElementById("review-form").addEventListener("submit", function (event) {
+            event.preventDefault();  // Prevent page reload
+
+            let reviewText = document.getElementById("review-text").value;
+            if (!reviewText.trim()) {
+                alert("Review text is required!");
+                return;
+            }
+
+            fetch("{{ url_for('add_review', recipe_id=recipe._id) }}", {
+                method: "POST",
+                body: new URLSearchParams({ "review_text": reviewText }),
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    let reviewList = document.querySelector(".review-list");
+
+                    // Create review element
+                    let newReview = document.createElement("div");
+                    newReview.classList.add("review-item");
+                    newReview.innerHTML = `
+                        <p>${data.review.text}</p>
+                        <p class="author">By: ${data.review.author}</p>
+                    `;
+
+                    // Append new review to list
+                    reviewList.appendChild(newReview);
+
+                    // Clear the text area
+                    document.getElementById("review-text").value = "";
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error("Error submitting review:", error));
+        });
     </script>
 
 </body>
+
 </html>
