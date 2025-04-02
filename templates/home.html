@@ -582,6 +582,22 @@
             </div>
 
             <div class="dropdown">
+              <button class="dropbtn">Popular</button>
+              <div class="dropdown-content">        
+                <a href="{{ url_for('high_by_popular', rating=5.0) }}">Trending </a>
+                <a href="{{ url_for('filter_by_popular', popular='Breakfast & Brunch') }}">Breakfast & Brunch Recipes</a>
+                <a href="{{ url_for('filter_by_popular', popular='Lunch') }}">Lunch Recipes</a>
+                <a href="{{ url_for('filter_by_popular', popular='Appetizers & Snacks') }}">Appetizers & Snack Recipes</a>
+                <a href="{{ url_for('filter_by_popular', popular='Dinner') }}">Dinner Recipes</a>
+                <a href="{{ url_for('filter_by_popular', popular='Salads') }}">Salads Recipes</a>
+                <a href="{{ url_for('filter_by_popular', popular='Side Dishes') }}">Side Dishes </a>
+                <a href="{{ url_for('filter_by_popular', popular='Drinks') }}">Drinks </a>
+              </div>
+            </div>
+
+
+
+            <div class="dropdown">
               <button class="dropbtn">Healthy&Diet</button>
               <div class="dropdown-content">
                 <a href="{{ url_for('filter_by_healthy_diet', healthy_diet='Keto') }}">Keto Recipes</a>
@@ -608,6 +624,10 @@
                 <a href="{{ url_for('filter_by_meal_type', meal_type='Desserts') }}">Desserts</a>
               </div>
             </div>
+
+            
+            
+       
             
             <form action="{{ url_for('home') }}" method="GET" class="rating-filter-form">
               <label for="rating-filter">Rating:</label>

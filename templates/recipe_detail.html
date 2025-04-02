@@ -342,6 +342,86 @@ button[type="submit"]:hover {
     transform: translateY(-2px); 
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
 }
+.review-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fff;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .reply-button {
+            background-color: transparent;
+            color: #555;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: underline;
+            margin-top: 8px;
+        }
+
+        .reply-button:hover {
+            color: #000;
+        }
+
+        .reply-form {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .reply-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            font-family: Arial, sans-serif;
+        }
+
+        .reply-form button {
+            background-color: #000;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .reply-form button:hover {
+            background-color: #333;
+        }
+
+        .review-replies {
+            margin-left: 20px;
+            margin-top: 10px;
+            border-left: 2px solid #eee;
+            padding-left: 15px;
+        }
+
+        .reply-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .reply-item p {
+            margin: 0 0 8px 0;
+        }
+
+        .reply-item .author {
+            font-style: italic;
+            color: #777;
+            font-size: 0.85rem;
+            text-align: right;
+        }
 
     </style>
 </head>
@@ -422,31 +502,40 @@ button[type="submit"]:hover {
             
 
             
-            <!-- Review Section -->
-            <div class="review-form">
-                <h3>Add Your Review</h3>
-                <form id="review-form">
-                    <textarea name="review_text" id="review-text" rows="4"
-                        placeholder="Write your review here"></textarea>
-                    <button type="submit">Submit Review</button>
-                </form>
+            <!-- Review Section - Modified -->
+    <div class="review-list">
+        <h3>What Others Say</h3>
+        {% if reviews %}
+        {% for review in reviews %}
+        <div class="review-item" data-review-id="{{ review._id }}">
+            <p>{{ review.text }}</p>
+            <p class="author">By: {{ review.author }}</p>
+            <button class="reply-button" onclick="showReplyForm('{{ review._id }}')">Reply</button>
+            
+            <!-- Reply form -->
+            <div class="reply-form" id="reply-form-{{ review._id }}">
+                <textarea placeholder="Write your reply here" id="reply-text-{{ review._id }}"></textarea>
+                <button onclick="submitReply('{{ review._id }}')">Submit Reply</button>
             </div>
-
-            <div class="review-list">
-                <h3>What Others Say</h3>
-                {% if reviews %}
-                {% for review in reviews %}
-                <div class="review-item">
-                    <p>{{ review.text }}</p>
-                    <p class="author">By: {{ review.author }}</p>
+            
+            <!-- Replies container -->
+            <div class="review-replies" id="replies-{{ review._id }}">
+                {% if review.replies %}
+                {% for reply in review.replies %}
+                <div class="reply-item">
+                    <p>{{ reply.text }}</p>
+                    <p class="author">By: {{ reply.author }}</p>
                 </div>
                 {% endfor %}
-                {% else %}
-                <p>No reviews yet. Be the first to review this recipe!</p>
                 {% endif %}
             </div>
         </div>
+        {% endfor %}
+        {% else %}
+        <p>No reviews yet. Be the first to review this recipe!</p>
+        {% endif %}
     </div>
+    
 
     <script>
         let baseServingSize = 4;
@@ -572,8 +661,67 @@ button[type="submit"]:hover {
             })
             .catch(error => console.error("Error submitting review:", error));
         });
+        // New functions for reply feature
+        function showReplyForm(reviewId) {
+            const replyForm = document.getElementById(`reply-form-${reviewId}`);
+            
+            // Toggle the form visibility
+            if (replyForm.style.display === 'block') {
+                replyForm.style.display = 'none';
+            } else {
+                replyForm.style.display = 'block';
+            }
+        }
+        
+        function submitReply(reviewId) {
+            const replyText = document.getElementById(`reply-text-${reviewId}`).value;
+            
+            if (!replyText.trim()) {
+                alert("Reply text is required!");
+                return;
+            }
+            
+            // Send the reply to the server
+            fetch("{{ url_for('add_reply') }}", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    review_id: reviewId,
+                    recipe_id: "{{ recipe._id }}",
+                    reply_text: replyText
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Create and append the new reply element
+                    const repliesContainer = document.getElementById(`replies-${reviewId}`);
+                    
+                    const replyElement = document.createElement('div');
+                    replyElement.classList.add('reply-item');
+                    replyElement.innerHTML = `
+                        <p>${data.reply.text}</p>
+                        <p class="author">By: ${data.reply.author}</p>
+                    `;
+                    
+                    repliesContainer.appendChild(replyElement);
+                    
+                    // Clear the reply form and hide it
+                    document.getElementById(`reply-text-${reviewId}`).value = "";
+                    document.getElementById(`reply-form-${reviewId}`).style.display = 'none';
+                } else {
+                    alert(data.message || "Error adding reply");
+                }
+            })
+            .catch(error => {
+                console.error("Error submitting reply:", error);
+                alert("An error occurred while submitting your reply");
+            });
+        }
     </script>
+  
 
 </body>
 
 </html>
+

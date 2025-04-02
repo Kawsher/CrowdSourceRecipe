@@ -9,6 +9,12 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from bson import ObjectId
 import re
 from fractions import Fraction
+from fractions import Fraction
+from flask import jsonify, request
+from bson import ObjectId
+import re
+import datetime
+
 
 app = Flask(__name__)
 app.secret_key = 'crowdrecipe@1233'
@@ -324,10 +330,6 @@ def add_review(recipe_id):
         return jsonify({'success': True, 'review': review})
     return jsonify({'success': False, 'message': 'Review text is required'}), 400
 
-from fractions import Fraction
-from flask import jsonify, request
-from bson import ObjectId
-import re
 
 @app.route('/recipe/<recipe_id>/scale', methods=['GET'])
 def scale_ingredients(recipe_id):
@@ -449,7 +451,89 @@ def filter_by_meal_type(meal_type):
     filtered_recipes = list(mongo.db.recipes.find({'meal': meal_type}))
     return render_template('home.html', recipes=filtered_recipes, username=current_user.username)
 
+# Filter recipes by category and rating
+@app.route('/filter_by_popular', methods=['GET'])
+def filter_by_popular():
+    category = request.args.get('popular')
+    min_rating = 4.5
+
+    # Ensure category is provided
+    if not category:
+        flash("No category specified.", "error")
+        return redirect(url_for('home'))
+
+    # Query recipes with the specified category and average rating >= min_rating
+    recipes_cursor = mongo.db.recipes.find({
+        "meal": category,
+        "average_rating": {"$gte": min_rating}
+    })
+
+    recipes = list(recipes_cursor)
+    return render_template('home.html', recipes=recipes,
+                           username=current_user.username if current_user.is_authenticated else None)
+
+@app.route('/filter_by_popular/<category>', methods=['GET'])
+def filter_by_popular_category(category):
+    min_rating = 4.5
+
+    # Query recipes with the specified category and average rating >= min_rating
+    recipes_cursor = mongo.db.recipes.find({
+        "meal": category,
+        "average_rating": {"$gte": min_rating}
+    })
+
+    recipes = list(recipes_cursor)
+    return render_template('home.html', recipes=recipes,
+                           username=current_user.username if current_user.is_authenticated else None)
+                           
+@app.route('/high_by_popular')
+def high_by_popular():
+    rating = request.args.get('rating', type=float)  # Get rating from query parameter
     
+    if rating is None:
+        flash("No rating specified.", "error")
+        return redirect(url_for('home'))
+
+    recipes_cursor = mongo.db.recipes.find({
+        "average_rating": rating  # Filter by exact rating
+    })
+    
+    recipes = list(recipes_cursor)
+    return render_template('home.html', recipes=recipes, username=current_user.username if current_user.is_authenticated else None)
+
+
+@app.route('/add_reply', methods=['POST'])
+@login_required
+def add_reply():
+    data = request.json
+    review_id = data.get('review_id')
+    recipe_id = data.get('recipe_id')
+    reply_text = data.get('reply_text')
+    
+    if not all([review_id, recipe_id, reply_text]):
+        return jsonify({'success': False, 'message': 'Missing required data'}), 400
+    
+    # Create the reply object
+    reply = {
+        'text': reply_text,
+        'author': current_user.username,
+        'created_at': datetime.datetime.now()
+    }
+    
+    # Update the review document by adding the reply to its replies array
+    result = mongo.db.reviews.update_one(
+        {'_id': ObjectId(review_id)},
+        {'$push': {'replies': reply}}
+    )
+    
+    if result.modified_count > 0:
+        return jsonify({
+            'success': True,
+            'reply': reply
+        })
+    else:
+        return jsonify({'success': False, 'message': 'Could not add reply'}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
 
