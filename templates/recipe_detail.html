@@ -422,7 +422,157 @@ button[type="submit"]:hover {
             font-size: 0.85rem;
             text-align: right;
         }
+        .toggle-replies-button {
+    background-color: transparent;
+    color: #555;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-decoration: underline;
+    margin-top: 8px;
+    margin-left: 10px; /* Add some spacing from the reply button */
+    display: inline-block; /* Make it appear next to the reply button */
+}
 
+.toggle-replies-button:hover {
+    color: #000;
+}
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.action-button {
+    background-color: #000;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.form-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.rating-instructions {
+    text-align: center;
+    margin-top: 10px;
+    color: #666;
+    font-style: italic;
+}
+.hidden {
+            display: none;
+        }
+/* Enhanced styling for the review textarea */
+#review-text {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    min-height: 120px;
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+    resize: vertical;
+    transition: border 0.3s ease;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#review-text:focus {
+    border-color: #000;
+    outline: none;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Improved submit button styling to match your existing buttons */
+.submit-button {
+    background-color: #000;
+    color: white;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Container styling for better visual separation */
+#review-form-container {
+    background-color: #f9f9f9;
+    padding: 25px;
+    border-radius: 10px;
+    margin: 30px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+#review-form-container h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+ /* Enhanced action buttons styling */
+ .action-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin: 30px 0;
+    }
+
+    .action-button {
+        background-color: #000;
+        color: white;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    .action-button:hover {
+        background-color: #333;
+        transform: translateY(-2px);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    /* For smaller screens, make buttons more mobile-friendly */
+    @media (max-width: 768px) {
+        .action-buttons {
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .action-button {
+            width: 100%;
+        }
+    }
     </style>
 </head>
 
@@ -430,7 +580,7 @@ button[type="submit"]:hover {
     <div class="container">
         <div class="recipe-content">
             <!-- Back to Home Button -->
-            <a href="{{ url_for('home') }}" class="back-link">Back to Home</a>
+            <!--<a href="{{ url_for('home') }}" class="back-link">Back to Home</a>-->
             <h1>{{ recipe.title }}</h1>
 
             <div class="recipe-description">
@@ -442,11 +592,10 @@ button[type="submit"]:hover {
                 <!-- Recipe Image -->
                 <div class="recipe-image">
                     {% if recipe.picture %}
-    <img src="{{ url_for('static', filename='uploads/' + recipe.picture) }}" alt="{{ recipe.title }}">
-{% else %}
-    <img src="{{ url_for('static', filename='images/default_recipe.jpg') }}" alt="{{ recipe.title }}">
-{% endif %}
-
+                        <img src="{{ url_for('static', filename='uploads/' + recipe.picture) }}" alt="{{ recipe.title }}">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/default_recipe.jpg') }}" alt="{{ recipe.title }}">
+                    {% endif %}
                 </div>
 
                 <!-- Ingredients Section -->
@@ -482,11 +631,24 @@ button[type="submit"]:hover {
             </div>
             <!-- Save Button -->
             <form method="POST" action="{{ url_for('save_recipe', recipe_id=recipe['_id']) }}">
-                <button type="submit">Save to Favorites</button>
+               <!--- <button type="submit">Save to Favorites</button>-->
             </form>
             
+            <!-- Action Buttons -->
+           <!-- Replace the separate Back to Home link and Save to Favorites button with this code -->
+<div class="action-buttons">
+    <a href="{{ url_for('home') }}" class="action-button">Back to Home</a>
+    <form method="POST" action="{{ url_for('save_recipe', recipe_id=recipe['_id']) }}" style="display: inline;">
+        <button type="submit" class="action-button">Save to Favorites</button>
+    </form>
+    <button type="button" id="show-rating-btn" class="action-button">Rate Recipe</button>
+    <button type="button" id="show-review-btn" class="action-button">Write Review</button>
+    <button type="button" id="download-image-btn" class="action-button">Download as Image</button>
+    <button type="button" id="print-pdf-btn" class="action-button">Print as PDF</button>
+</div>
 
-            <div class="rating-section">
+            <!-- Rating Section - Hidden by default -->
+            <div class="rating-section hidden" id="rating-section">
                 <h2>Rate this Recipe</h2>
                 <div class="star-rating" data-recipe="{{ recipe._id }}">
                     {% for i in range(1, 6) %}
@@ -499,44 +661,59 @@ button[type="submit"]:hover {
                     Average Rating: {{ "%.1f"|format(recipe.get('average_rating', 0)) if recipe.get('average_rating', 0) else "No ratings yet" }}
                 </p>
             </div>
-            
 
-            
-            <!-- Review Section - Modified -->
-    <div class="review-list">
-        <h3>What Others Say</h3>
-        {% if reviews %}
-        {% for review in reviews %}
-        <div class="review-item" data-review-id="{{ review._id }}">
-            <p>{{ review.text }}</p>
-            <p class="author">By: {{ review.author }}</p>
-            <button class="reply-button" onclick="showReplyForm('{{ review._id }}')">Reply</button>
-            
-            <!-- Reply form -->
-            <div class="reply-form" id="reply-form-{{ review._id }}">
-                <textarea placeholder="Write your reply here" id="reply-text-{{ review._id }}"></textarea>
-                <button onclick="submitReply('{{ review._id }}')">Submit Reply</button>
+            <!-- Review Form - Initially hidden -->
+            <div id="review-form-container" class="form-container hidden">
+                <h3>Write Your Review</h3>
+                <form id="review-form" action="{{ url_for('add_review', recipe_id=recipe._id) }}" method="post">
+                    <textarea id="review-text" name="review_text" placeholder="Share your thoughts about this recipe" required></textarea>
+                    <button type="submit" class="submit-button">Submit Review</button>
+                </form>
             </div>
             
-            <!-- Replies container -->
-            <div class="review-replies" id="replies-{{ review._id }}">
-                {% if review.replies %}
-                {% for reply in review.replies %}
-                <div class="reply-item">
-                    <p>{{ reply.text }}</p>
-                    <p class="author">By: {{ reply.author }}</p>
+            <!-- Review Section -->
+            <div class="review-list">
+                <h3>What Others Say</h3>
+                {% if reviews %}
+                {% for review in reviews %}
+                <div class="review-item" data-review-id="{{ review._id }}">
+                    <p>{{ review.text }}</p>
+                    <p class="author">By: {{ review.author }}</p>
+                    <button class="reply-button" onclick="showReplyForm('{{ review._id }}')">Reply</button>
+                    <button class="toggle-replies-button" onclick="toggleReplies('{{ review._id }}')">
+                        {% if review.replies %}
+                        see {{ review.replies|length }} more
+                        {% else %}
+                        No Replies
+                        {% endif %}
+                    </button>
+                    
+                    <!-- Reply form -->
+                    <div class="reply-form" id="reply-form-{{ review._id }}">
+                        <textarea placeholder="Write your reply here" id="reply-text-{{ review._id }}"></textarea>
+                        <button onclick="submitReply('{{ review._id }}')">Submit Reply</button>
+                    </div>
+                
+                    <!-- Replies container -->
+                    <div class="review-replies" id="replies-{{ review._id }}" style="display: none;">
+                        {% if review.replies %}
+                        {% for reply in review.replies %}
+                        <div class="reply-item">
+                            <p>{{ reply.text }}</p>
+                            <p class="author">By: {{ reply.author }}</p>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
                 </div>
                 {% endfor %}
+                {% else %}
+                <p>No reviews yet. Be the first to review this recipe!</p>
                 {% endif %}
             </div>
         </div>
-        {% endfor %}
-        {% else %}
-        <p>No reviews yet. Be the first to review this recipe!</p>
-        {% endif %}
     </div>
-    
-
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
         let baseServingSize = 4;
         let currentScale = 1; // Default to 1x
@@ -545,6 +722,35 @@ button[type="submit"]:hover {
         const servingSizeElement = document.getElementById('serving-size');
 
         document.addEventListener("DOMContentLoaded", function() {
+            // Get references to UI elements
+            const showRatingBtn = document.getElementById('show-rating-btn');
+            const showReviewBtn = document.getElementById('show-review-btn');
+            const ratingSection = document.getElementById('rating-section');
+            const reviewFormContainer = document.getElementById('review-form-container');
+            
+            // Event listener for Rate Recipe button
+            showRatingBtn.addEventListener('click', function() {
+                // Toggle the rating section visibility
+                if (ratingSection.classList.contains('hidden')) {
+                    ratingSection.classList.remove('hidden');
+                    reviewFormContainer.classList.add('hidden'); // Hide review form
+                } else {
+                    ratingSection.classList.add('hidden');
+                }
+            });
+            
+            // Event listener for Write Review button
+            showReviewBtn.addEventListener('click', function() {
+                // Toggle the review form visibility
+                if (reviewFormContainer.classList.contains('hidden')) {
+                    reviewFormContainer.classList.remove('hidden');
+                    ratingSection.classList.add('hidden'); // Hide rating section
+                } else {
+                    reviewFormContainer.classList.add('hidden');
+                }
+            });
+            
+            // Add event listeners to stars for rating functionality
             const stars = document.querySelectorAll(".star");
             stars.forEach(star => {
                 star.addEventListener("click", function() {
@@ -602,28 +808,7 @@ button[type="submit"]:hover {
             });
         }
 
-        document.getElementById('save-recipe-btn').addEventListener('click', function() {
-            const recipeId = '{{ recipe._id }}';  // Get the current recipe ID
-            fetch(`/save_recipe/${recipeId}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ recipe_id: recipeId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert(data.message);
-                    // Optionally update the UI to reflect the saved state
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error saving recipe:', error);
-            });
-        });
-
-        document.getElementById("review-form").addEventListener("submit", function (event) {
+        document.getElementById('review-form').addEventListener("submit", function (event) {
             event.preventDefault();  // Prevent page reload
 
             let reviewText = document.getElementById("review-text").value;
@@ -661,7 +846,7 @@ button[type="submit"]:hover {
             })
             .catch(error => console.error("Error submitting review:", error));
         });
-        // New functions for reply feature
+        
         function showReplyForm(reviewId) {
             const replyForm = document.getElementById(`reply-form-${reviewId}`);
             
@@ -718,10 +903,176 @@ button[type="submit"]:hover {
                 alert("An error occurred while submitting your reply");
             });
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the toggle buttons
+            const reviewItems = document.querySelectorAll('.review-item');
+            
+            reviewItems.forEach(function(reviewItem) {
+                const reviewId = reviewItem.getAttribute('data-review-id');
+                const repliesDiv = document.getElementById('replies-' + reviewId);
+                const toggleButton = reviewItem.querySelector('.toggle-replies-button');
+                
+                if (repliesDiv && toggleButton) {
+                    // Initially hide all reply sections
+                    repliesDiv.style.display = 'none';
+                    
+                    // Set the initial button text based on reply count
+                    const replyCount = repliesDiv.querySelectorAll('.reply-item').length;
+                    
+                    // Update the button text to include the count immediately on page load
+                    if (replyCount === 0) {
+                        toggleButton.textContent = 'No Replies';
+                    } else {
+                        toggleButton.textContent = `See ${replyCount} Replies`;
+                    }
+                }
+            });
+        });
+
+        function toggleReplies(reviewId) {
+            const repliesDiv = document.getElementById('replies-' + reviewId);
+            const toggleButton = document.querySelector(`.review-item[data-review-id="${reviewId}"] .toggle-replies-button`);
+            
+            if (!repliesDiv || !toggleButton) return;
+            
+            const replyCount = repliesDiv.querySelectorAll('.reply-item').length;
+            
+            if (repliesDiv.style.display === 'none') {
+                // Show replies
+                repliesDiv.style.display = 'block';
+                toggleButton.textContent = 'Hide Replies';
+            } else {
+                // Hide replies
+                repliesDiv.style.display = 'none';
+                if (replyCount === 0) {
+                    toggleButton.textContent = 'No Replies';
+                } else {
+                    toggleButton.textContent = `See  ${replyCount} Replies`;
+                }
+            }
+        }
+        // Add event listeners for the new buttons
+        const downloadImageBtn = document.getElementById('download-image-btn');
+        const printPdfBtn = document.getElementById('print-pdf-btn');
+        
+        // Download as Image button click handler
+        downloadImageBtn.addEventListener('click', function() {
+            // Create a clean version of the recipe for capture
+            const recipeContent = document.querySelector('.recipe-content');
+            const recipeCopy = recipeContent.cloneNode(true);
+            
+            // Remove elements we don't want in the image
+            const elementsToRemove = ['#rating-section', '#review-form-container', '.review-list', '.action-buttons', '.reply-form'];
+            elementsToRemove.forEach(selector => {
+                const elements = recipeCopy.querySelectorAll(selector);
+                elements.forEach(el => el.remove());
+            });
+            
+            // Create a temporary container for the cleaned recipe
+            const tempContainer = document.createElement('div');
+            tempContainer.style.width = '800px';
+            tempContainer.style.background = 'white';
+            tempContainer.style.padding = '20px';
+            tempContainer.style.position = 'absolute';
+            tempContainer.style.left = '-9999px';
+            tempContainer.appendChild(recipeCopy);
+            document.body.appendChild(tempContainer);
+            
+            // Use html2canvas to convert it to an image
+            html2canvas(tempContainer, {
+                scale: 2, // Higher quality
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#ffffff'
+            }).then(canvas => {
+                // Convert the canvas to a data URL and trigger a download
+                const imageURL = canvas.toDataURL('image/jpeg', 0.9);
+                const link = document.createElement('a');
+                link.href = imageURL;
+                link.download = `${document.querySelector('h1').textContent.trim()}.jpg`;
+                link.click();
+                
+                // Clean up
+                document.body.removeChild(tempContainer);
+            }).catch(error => {
+                console.error('Error generating image:', error);
+                alert('There was an error generating the image. Please try again.');
+            });
+        });
+        
+        // Print as PDF button click handler
+        printPdfBtn.addEventListener('click', function() {
+            // Create a clean version of the recipe for printing
+            const recipeElements = document.querySelector('.recipe-content');
+            
+            // Store the current state of elements we want to hide
+            const elementsToHide = [
+                document.querySelector('.review-list'),
+                document.querySelector('.action-buttons'),
+                document.getElementById('rating-section'),
+                document.getElementById('review-form-container')
+            ];
+            
+            const originalDisplayValues = elementsToHide.map(el => {
+                if (!el) return null;
+                return { el, display: el.style.display };
+            });
+            
+            // Hide elements for printing
+            elementsToHide.forEach(el => {
+                if (el) el.style.display = 'none';
+            });
+            
+            // Add print-specific styling
+            const style = document.createElement('style');
+            style.id = 'print-style';
+            style.innerHTML = `
+                @media print {
+                    body, html {
+                        margin: 0;
+                        padding: 0;
+                        background: white;
+                    }
+                    body::before {
+                        display: none;
+                    }
+                    .container {
+                        box-shadow: none;
+                        margin: 0;
+                        padding: 20px;
+                    }
+                    .back-link, button[type="submit"] {
+                        display: none;
+                    }
+                    .recipe-image img {
+                        max-height: 300px;
+                    }
+                    @page {
+                        size: auto;
+                        margin: 0.5in;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Trigger the print dialog
+            setTimeout(() => {
+                window.print();
+                
+                // Restore the display of hidden elements
+                originalDisplayValues.forEach(item => {
+                    if (item && item.el) item.el.style.display = item.display;
+                });
+                
+                // Remove the print styles
+                document.head.removeChild(style);
+            }, 300);
+        });
+    
     </script>
   
 
 </body>
 
 </html>
-
