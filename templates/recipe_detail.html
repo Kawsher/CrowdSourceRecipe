@@ -635,7 +635,8 @@ button[type="submit"]:hover {
             </form>
             
             <!-- Action Buttons -->
-           <!-- Replace the separate Back to Home link and Save to Favorites button with this code -->
+
+<!-- Add this button to your action buttons section -->
 <div class="action-buttons">
     <a href="{{ url_for('home') }}" class="action-button">Back to Home</a>
     <form method="POST" action="{{ url_for('save_recipe', recipe_id=recipe['_id']) }}" style="display: inline;">
@@ -645,6 +646,7 @@ button[type="submit"]:hover {
     <button type="button" id="show-review-btn" class="action-button">Write Review</button>
     <button type="button" id="download-image-btn" class="action-button">Download as Image</button>
     <button type="button" id="print-pdf-btn" class="action-button">Print as PDF</button>
+    <button type="button" id="share-email-btn" class="action-button">Share via Email</button>
 </div>
 
             <!-- Rating Section - Hidden by default -->
@@ -673,7 +675,7 @@ button[type="submit"]:hover {
             
             <!-- Review Section -->
             <div class="review-list">
-                <h3>What Others Say</h3>
+               <!--<h3>What Others Say</h3>-->
                 {% if reviews %}
                 {% for review in reviews %}
                 <div class="review-item" data-review-id="{{ review._id }}">
@@ -737,7 +739,13 @@ button[type="submit"]:hover {
                 } else {
                     ratingSection.classList.add('hidden');
                 }
+                
             });
+            // Add event listener for the share via email button
+        const shareEmailBtn = document.getElementById('share-email-btn');
+        if (shareEmailBtn) {
+            shareEmailBtn.addEventListener('click', shareViaEmail);
+        }
             
             // Event listener for Write Review button
             showReviewBtn.addEventListener('click', function() {
@@ -809,43 +817,70 @@ button[type="submit"]:hover {
         }
 
         document.getElementById('review-form').addEventListener("submit", function (event) {
-            event.preventDefault();  // Prevent page reload
+    event.preventDefault();  // Prevent page reload
 
-            let reviewText = document.getElementById("review-text").value;
-            if (!reviewText.trim()) {
-                alert("Review text is required!");
-                return;
+    let reviewText = document.getElementById("review-text").value;
+    if (!reviewText.trim()) {
+        alert("Review text is required!");
+        return;
+    }
+
+    fetch("{{ url_for('add_review', recipe_id=recipe._id) }}", {
+        method: "POST",
+        body: new URLSearchParams({ "review_text": reviewText }),
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            let reviewList = document.querySelector(".review-list");
+
+            // Check if there's a "no reviews yet" message and remove it
+            const noReviewsMsg = reviewList.querySelector("p:only-child");
+            if (noReviewsMsg && noReviewsMsg.textContent.includes("No reviews yet")) {
+                noReviewsMsg.remove();
             }
 
-            fetch("{{ url_for('add_review', recipe_id=recipe._id) }}", {
-                method: "POST",
-                body: new URLSearchParams({ "review_text": reviewText }),
-                headers: { "Content-Type": "application/x-www-form-urlencoded" }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    let reviewList = document.querySelector(".review-list");
+            // Create review element with reply functionality
+            let newReview = document.createElement("div");
+            newReview.classList.add("review-item");
+            newReview.setAttribute("data-review-id", data.review._id);
+            
+            newReview.innerHTML = `
+                <p>${data.review.text}</p>
+                <p class="author">By: ${data.review.author}</p>
+                <button class="reply-button" onclick="showReplyForm('${data.review._id}')">Reply</button>
+                <button class="toggle-replies-button" onclick="toggleReplies('${data.review._id}')">
+                    No Replies
+                </button>
+                
+                <!-- Reply form -->
+                <div class="reply-form" id="reply-form-${data.review._id}">
+                    <textarea placeholder="Write your reply here" id="reply-text-${data.review._id}"></textarea>
+                    <button onclick="submitReply('${data.review._id}')">Submit Reply</button>
+                </div>
+            
+                <!-- Replies container -->
+                <div class="review-replies" id="replies-${data.review._id}" style="display: none;">
+                </div>
+            `;
 
-                    // Create review element
-                    let newReview = document.createElement("div");
-                    newReview.classList.add("review-item");
-                    newReview.innerHTML = `
-                        <p>${data.review.text}</p>
-                        <p class="author">By: ${data.review.author}</p>
-                    `;
+            // Insert new review at the top of the list
+            if (reviewList.firstChild) {
+                reviewList.insertBefore(newReview, reviewList.firstChild);
+            } else {
+                reviewList.appendChild(newReview);
+            }
 
-                    // Append new review to list
-                    reviewList.appendChild(newReview);
-
-                    // Clear the text area
-                    document.getElementById("review-text").value = "";
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => console.error("Error submitting review:", error));
-        });
+            // Clear the text area and hide the review form
+            document.getElementById("review-text").value = "";
+            document.getElementById("review-form-container").classList.add("hidden");
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => console.error("Error submitting review:", error));
+});
         
         function showReplyForm(reviewId) {
             const replyForm = document.getElementById(`reply-form-${reviewId}`);
@@ -1069,6 +1104,50 @@ button[type="submit"]:hover {
                 document.head.removeChild(style);
             }, 300);
         });
+        // Function to share recipe via email
+    function shareViaEmail() {
+        // Get recipe title
+        const recipeTitle = document.querySelector('h1').textContent.trim();
+        
+        // Get recipe description
+        const recipeDescription = document.querySelector('.recipe-description p').textContent.trim();
+        
+        // Get ingredients list
+        const ingredients = [];
+        document.querySelectorAll('.ingredient-list li').forEach(item => {
+            ingredients.push(item.textContent.trim());
+        });
+        
+        // Get instructions
+        const instructions = [];
+        document.querySelectorAll('.instruction-list li').forEach(item => {
+            instructions.push(item.textContent.trim());
+        });
+        
+        // Format the email body
+        let emailBody = `Check out this recipe for ${recipeTitle}!\n\n`;
+        emailBody += `Description: ${recipeDescription}\n\n`;
+        
+        emailBody += "Ingredients:\n";
+        ingredients.forEach((ingredient, index) => {
+            emailBody += `- ${ingredient}\n`;
+        });
+        
+        emailBody += "\nInstructions:\n";
+        instructions.forEach((instruction, index) => {
+            emailBody += `${index + 1}. ${instruction}\n`;
+        });
+        
+        emailBody += "\n\nShared from the Recipe App";
+        
+        // Encode the subject and body for mailto link
+        const subject = encodeURIComponent(`Recipe: ${recipeTitle}`);
+        const body = encodeURIComponent(emailBody);
+        
+        // Create and open the mailto link
+        const mailtoLink = `mailto:?subject=${subject}&body=${body}`;
+        window.location.href = mailtoLink;
+    }
     
     </script>
   
