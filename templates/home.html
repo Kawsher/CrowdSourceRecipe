@@ -635,7 +635,7 @@
                 <option value="5" {% if request.args.get('min_rating') == '5' %}selected{% endif %}>5★</option>
               </select>
               <button type="submit">Filter</button>
-            </form>
+            </form>0
             
             <form action="{{ url_for('home') }}" method="GET" class="reset-button">
               <button type="submit" class="nav-button">Reset All</button>
