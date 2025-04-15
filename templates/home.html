@@ -588,7 +588,17 @@
   <div class="container">
     <header>
       <div class="header-top">
-        <h1>Crowd Recipe Collection</h1>
+        <!-- LOGO SAMPLE -->
+        <a href="{{ url_for('home') }}" class="me-3">
+          <img
+            src="{{ url_for('static', filename='images/Logo.jpg') }}"
+            alt="Recipe Hub Logo"
+            width="60"
+            height="60"
+          >
+        </a>
+    
+        <h1>Recipe Hub</h1>
         <div class="hamburger-menu">
           <div class="hamburger-icon">
             <span></span>

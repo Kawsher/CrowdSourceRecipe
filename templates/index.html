@@ -164,7 +164,17 @@
 </head>
 <body>
   <header>
-    <h1>Crowd Recipe Collection</h1>
+    <!-- LOGO SAMPLE IN INDEX PAGE -->
+    <a href="{{ url_for('index') }}" class="me-3">
+      <img
+        src="{{ url_for('static', filename='images/new-logo.png') }}"
+        alt="Recipe Hub Logo"
+        width="80"
+        height="80"
+        class="site-logo"
+      >
+    </a>
+    <h1>Recipe Hub</h1>
     <nav>
       <a href="{{ url_for('signup') }}">Sign Up</a>
       <a href="{{ url_for('login') }}">Login</a>
