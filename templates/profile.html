@@ -22,6 +22,7 @@
             max-width: 1000px;
             margin: 20px auto;
             padding: 20px;
+            position: relative;
         }
         
         .profile-header {
@@ -222,9 +223,51 @@
         .edit-profile-form {
             max-width: 500px;
         }
-
         
+        /* Home button styles */
+        .home-button {
+            display: block;
+            margin: 20px auto 0;
+            text-align: center;
+        }
+        
+        .home-button a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #3498db;
+            transition: transform 0.2s;
+        }
+        
+        .home-button a:hover {
+            transform: scale(1.1);
+        }
+        
+        .home-icon {
+            background-color: #3498db;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .home-icon i {
+            font-size: 24px;
+        }
+        
+        .home-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
     </style>
+    <!-- Font Awesome for home icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -338,6 +381,16 @@
                 
                 <button type="submit" class="btn">Update Profile</button>
             </form>
+        </div>
+        
+        <!-- Back to Home Button -->
+        <div class="home-button">
+            <a href="{{ url_for('index') }}">
+                <div class="home-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <span class="home-text">Back to Home</span>
+            </a>
         </div>
     </div>
     
@@ -459,14 +512,5 @@
             }, 5000);
         }
     </script>
-
-<!-- Adding home button in profile page(AR)  -->
-<footer class="mt-5 bg-light d-flex justify-content-center align-items-center py-4">
-    <a href="{{ url_for('home') }}" class="btn btn-primary">
-      ← Home
-    </a>
-  </footer>
-  
-  
 </body>
 </html>
