@@ -162,37 +162,32 @@ def logout():
 def home():
     search_term = request.args.get('search', '').strip()
     min_rating = request.args.get('min_rating', None)
-    
-    # Perform search query if search_term is present
+
     if search_term:
         recipes_cursor = mongo.db.recipes.find({
             "$or": [
                 {"title": {"$regex": search_term, "$options": "i"}},
                 {"ingredients": {"$regex": search_term, "$options": "i"}}
             ]
-        })
+        }).sort("_id", -1)
     else:
-        recipes_cursor = mongo.db.recipes.find()
+        recipes_cursor = mongo.db.recipes.find().sort("_id", -1)
 
-    # Convert cursor to list
     recipes = list(recipes_cursor)
-
-    # Calculate average rating for each recipe
     for recipe in recipes:
         if 'ratings' in recipe and len(recipe['ratings']) > 0:
             recipe['average_rating'] = sum(recipe['ratings']) / len(recipe['ratings'])
         else:
             recipe['average_rating'] = 0
 
-    # Apply rating filter if 'min_rating' is specified
     if min_rating:
         min_rating = int(min_rating)
-        recipes = [recipe for recipe in recipes if recipe['average_rating'] >= min_rating]
-        # Special case for 5 stars to show only exact 5-star ratings
-    if min_rating == 5:
-        recipes = [recipe for recipe in recipes if recipe['average_rating'] == 5]
-    # Pass recipes and username to template
+        recipes = [r for r in recipes if r['average_rating'] >= min_rating]
+        if min_rating == 5:
+            recipes = [r for r in recipes if r['average_rating'] == 5]
+
     return render_template('home.html', recipes=recipes, username=current_user.username)
+
 
 
 # Route to post a new recipe.
@@ -397,10 +392,12 @@ def simplify_quantity(value):
 @app.route('/favourite_recipes', methods=['GET'])
 @login_required
 def favourite_recipes():
-    # Fetch the favorite recipes for the user
     recipe_ids = [ObjectId(recipe_id) for recipe_id in current_user.saved_recipes]
-    favorite_recipes = list(mongo.db.recipes.find({"_id": {"$in": recipe_ids}}))
+    favorite_recipes = list(
+        mongo.db.recipes.find({"_id": {"$in": recipe_ids}}).sort("_id", -1)
+    )
     return render_template('home.html', recipes=favorite_recipes)
+
 
 # Route to save a recipe as a favorite.
 @app.route('/save_recipe/<recipe_id>', methods=['POST'])
@@ -429,26 +426,28 @@ def save_recipe(recipe_id):
 @app.route('/cuisine/<cuisine>')
 def filter_by_cuisine(cuisine):
     if cuisine.lower() == 'all':
-        # Fetch all recipes
-        filtered_recipes = list(mongo.db.recipes.find())
+        filtered_recipes = list(mongo.db.recipes.find().sort("_id", -1))
     else:
-        # Fetch recipes for the specific cuisine
-        filtered_recipes = list(mongo.db.recipes.find({'cuisine': {'$regex': cuisine, '$options': 'i'}}))
-    
+        filtered_recipes = list(
+            mongo.db.recipes.find({'cuisine': {'$regex': cuisine, '$options': 'i'}}).sort("_id", -1)
+        )
     return render_template('home.html', recipes=filtered_recipes, selected_cuisine=cuisine)
 
 @app.route('/healthy_diet/<healthy_diet>')
 @login_required
 def filter_by_healthy_diet(healthy_diet):
-    # Fetch recipes that have the selected value in their HealthyDiet array
-    filtered_recipes = list(mongo.db.recipes.find({'HealthyDiet': healthy_diet}))
+    filtered_recipes = list(
+        mongo.db.recipes.find({'HealthyDiet': healthy_diet}).sort("_id", -1)
+    )
     return render_template('home.html', recipes=filtered_recipes, username=current_user.username)
+
 
 @app.route('/meal_type/<meal_type>')
 @login_required
 def filter_by_meal_type(meal_type):
-    # Fetch recipes that have the selected value in their MealType array
-    filtered_recipes = list(mongo.db.recipes.find({'meal': meal_type}))
+    filtered_recipes = list(
+        mongo.db.recipes.find({'meal': meal_type}).sort("_id", -1)
+    )
     return render_template('home.html', recipes=filtered_recipes, username=current_user.username)
 
 # Filter recipes by category and rating
@@ -456,17 +455,14 @@ def filter_by_meal_type(meal_type):
 def filter_by_popular():
     category = request.args.get('popular')
     min_rating = 4.5
-
-    # Ensure category is provided
     if not category:
         flash("No category specified.", "error")
         return redirect(url_for('home'))
 
-    # Query recipes with the specified category and average rating >= min_rating
     recipes_cursor = mongo.db.recipes.find({
         "meal": category,
         "average_rating": {"$gte": min_rating}
-    })
+    }).sort("_id", -1)
 
     recipes = list(recipes_cursor)
     return render_template('home.html', recipes=recipes,
@@ -475,12 +471,10 @@ def filter_by_popular():
 @app.route('/filter_by_popular/<category>', methods=['GET'])
 def filter_by_popular_category(category):
     min_rating = 4.5
-
-    # Query recipes with the specified category and average rating >= min_rating
     recipes_cursor = mongo.db.recipes.find({
         "meal": category,
         "average_rating": {"$gte": min_rating}
-    })
+    }).sort("_id", -1)
 
     recipes = list(recipes_cursor)
     return render_template('home.html', recipes=recipes,
@@ -488,18 +482,18 @@ def filter_by_popular_category(category):
                            
 @app.route('/high_by_popular')
 def high_by_popular():
-    rating = request.args.get('rating', type=float)  # Get rating from query parameter
-    
+    rating = request.args.get('rating', type=float)
     if rating is None:
         flash("No rating specified.", "error")
         return redirect(url_for('home'))
 
     recipes_cursor = mongo.db.recipes.find({
-        "average_rating": rating  # Filter by exact rating
-    })
-    
+        "average_rating": rating
+    }).sort("_id", -1)
+
     recipes = list(recipes_cursor)
-    return render_template('home.html', recipes=recipes, username=current_user.username if current_user.is_authenticated else None)
+    return render_template('home.html', recipes=recipes,
+                           username=current_user.username if current_user.is_authenticated else None)
 
 
 @app.route('/add_reply', methods=['POST'])
@@ -533,26 +527,24 @@ def add_reply():
         })
     else:
         return jsonify({'success': False, 'message': 'Could not add reply'}), 500
+    
 # Profile page route - displays user info and posted recipes
 @app.route('/profile', methods=['GET'])
 @login_required
 def profile():
-    # Get current user data
     user_data = mongo.db.users.find_one({"_id": ObjectId(current_user.id)})
-    
-    # Get recipes posted by current user
-    user_recipes = list(mongo.db.recipes.find({"user_id": current_user.id}))
-    
-    # Calculate average rating for each recipe
+    user_recipes = list(
+        mongo.db.recipes.find({"user_id": current_user.id}).sort("_id", -1)
+    )
+
     for recipe in user_recipes:
         if 'ratings' in recipe and len(recipe['ratings']) > 0:
             recipe['average_rating'] = sum(recipe['ratings']) / len(recipe['ratings'])
         else:
             recipe['average_rating'] = 0
-    
-    return render_template('profile.html', 
-                          user=user_data, 
-                          recipes=user_recipes)
+
+    return render_template('profile.html', user=user_data, recipes=user_recipes)
+
 
 # Change password route
 @app.route('/change_password', methods=['POST'])
@@ -588,6 +580,8 @@ def change_password():
     
     return jsonify({"success": True, "message": "Password changed successfully"})
 
+
+
 # Delete recipe route
 @app.route('/delete_recipe/<recipe_id>', methods=['POST'])
 @login_required
@@ -613,6 +607,8 @@ def delete_recipe(recipe_id):
     except Exception as e:
         print(f"Error deleting recipe: {e}")
         return jsonify({"success": False, "message": "Error deleting recipe"}), 500
+
+
 
 # Edit user profile route
 @app.route('/edit_profile', methods=['POST'])
