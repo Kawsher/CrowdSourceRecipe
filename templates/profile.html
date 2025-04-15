@@ -222,6 +222,8 @@
         .edit-profile-form {
             max-width: 500px;
         }
+
+        
     </style>
 </head>
 <body>
@@ -457,5 +459,14 @@
             }, 5000);
         }
     </script>
+
+<!-- Adding home button in profile page(AR)  -->
+<footer class="mt-5 bg-light d-flex justify-content-center align-items-center py-4">
+    <a href="{{ url_for('home') }}" class="btn btn-primary">
+      ← Home
+    </a>
+  </footer>
+  
+  
 </body>
 </html>
