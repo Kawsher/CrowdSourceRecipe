@@ -117,11 +117,11 @@ def signup():
         }
         try:
             mongo.db.users.insert_one(user_data)
-            flash("Signup successful. Please log in.")
+            #flash("Signup successful. Please log in.")
             return redirect(url_for('login'))
         except Exception as e:
             print("Error inserting document:", e)
-            flash("There was an error processing your signup.")
+            #flash("There was an error processing your signup.")
             return redirect(url_for('signup'))
     return render_template('signup.html')
 
@@ -144,7 +144,7 @@ def login():
             login_user(user_instance)
             return redirect(url_for('home'))  # Redirect to home after successful login
 
-        flash('Invalid username or password.', 'error')
+        #flash('Invalid username or password.', 'error')
         return redirect(url_for('login'))  # Redirect to login page if login fails
 
     return render_template('login.html')
@@ -162,37 +162,32 @@ def logout():
 def home():
     search_term = request.args.get('search', '').strip()
     min_rating = request.args.get('min_rating', None)
-    
-    # Perform search query if search_term is present
+
     if search_term:
         recipes_cursor = mongo.db.recipes.find({
             "$or": [
                 {"title": {"$regex": search_term, "$options": "i"}},
                 {"ingredients": {"$regex": search_term, "$options": "i"}}
             ]
-        })
+        }).sort("_id", -1)
     else:
-        recipes_cursor = mongo.db.recipes.find()
+        recipes_cursor = mongo.db.recipes.find().sort("_id", -1)
 
-    # Convert cursor to list
     recipes = list(recipes_cursor)
-
-    # Calculate average rating for each recipe
     for recipe in recipes:
         if 'ratings' in recipe and len(recipe['ratings']) > 0:
             recipe['average_rating'] = sum(recipe['ratings']) / len(recipe['ratings'])
         else:
             recipe['average_rating'] = 0
 
-    # Apply rating filter if 'min_rating' is specified
     if min_rating:
         min_rating = int(min_rating)
-        recipes = [recipe for recipe in recipes if recipe['average_rating'] >= min_rating]
-        # Special case for 5 stars to show only exact 5-star ratings
-    if min_rating == 5:
-        recipes = [recipe for recipe in recipes if recipe['average_rating'] == 5]
-    # Pass recipes and username to template
+        recipes = [r for r in recipes if r['average_rating'] >= min_rating]
+        if min_rating == 5:
+            recipes = [r for r in recipes if r['average_rating'] == 5]
+
     return render_template('home.html', recipes=recipes, username=current_user.username)
+
 
 
 # Route to post a new recipe.
@@ -231,7 +226,7 @@ def post_recipe():
         }
 
         mongo.db.recipes.insert_one(recipe_data)
-        flash("Recipe posted successfully!", "success")
+       # flash("Recipe posted successfully!", "success")
         return redirect(url_for('home'))
 
     return render_template('post_recipe.html')
@@ -397,10 +392,12 @@ def simplify_quantity(value):
 @app.route('/favourite_recipes', methods=['GET'])
 @login_required
 def favourite_recipes():
-    # Fetch the favorite recipes for the user
     recipe_ids = [ObjectId(recipe_id) for recipe_id in current_user.saved_recipes]
-    favorite_recipes = list(mongo.db.recipes.find({"_id": {"$in": recipe_ids}}))
+    favorite_recipes = list(
+        mongo.db.recipes.find({"_id": {"$in": recipe_ids}}).sort("_id", -1)
+    )
     return render_template('home.html', recipes=favorite_recipes)
+
 
 # Route to save a recipe as a favorite.
 @app.route('/save_recipe/<recipe_id>', methods=['POST'])
@@ -429,26 +426,28 @@ def save_recipe(recipe_id):
 @app.route('/cuisine/<cuisine>')
 def filter_by_cuisine(cuisine):
     if cuisine.lower() == 'all':
-        # Fetch all recipes
-        filtered_recipes = list(mongo.db.recipes.find())
+        filtered_recipes = list(mongo.db.recipes.find().sort("_id", -1))
     else:
-        # Fetch recipes for the specific cuisine
-        filtered_recipes = list(mongo.db.recipes.find({'cuisine': {'$regex': cuisine, '$options': 'i'}}))
-    
+        filtered_recipes = list(
+            mongo.db.recipes.find({'cuisine': {'$regex': cuisine, '$options': 'i'}}).sort("_id", -1)
+        )
     return render_template('home.html', recipes=filtered_recipes, selected_cuisine=cuisine)
 
 @app.route('/healthy_diet/<healthy_diet>')
 @login_required
 def filter_by_healthy_diet(healthy_diet):
-    # Fetch recipes that have the selected value in their HealthyDiet array
-    filtered_recipes = list(mongo.db.recipes.find({'HealthyDiet': healthy_diet}))
+    filtered_recipes = list(
+        mongo.db.recipes.find({'HealthyDiet': healthy_diet}).sort("_id", -1)
+    )
     return render_template('home.html', recipes=filtered_recipes, username=current_user.username)
+
 
 @app.route('/meal_type/<meal_type>')
 @login_required
 def filter_by_meal_type(meal_type):
-    # Fetch recipes that have the selected value in their MealType array
-    filtered_recipes = list(mongo.db.recipes.find({'meal': meal_type}))
+    filtered_recipes = list(
+        mongo.db.recipes.find({'meal': meal_type}).sort("_id", -1)
+    )
     return render_template('home.html', recipes=filtered_recipes, username=current_user.username)
 
 # Filter recipes by category and rating
@@ -456,17 +455,14 @@ def filter_by_meal_type(meal_type):
 def filter_by_popular():
     category = request.args.get('popular')
     min_rating = 4.5
-
-    # Ensure category is provided
     if not category:
         flash("No category specified.", "error")
         return redirect(url_for('home'))
 
-    # Query recipes with the specified category and average rating >= min_rating
     recipes_cursor = mongo.db.recipes.find({
         "meal": category,
         "average_rating": {"$gte": min_rating}
-    })
+    }).sort("_id", -1)
 
     recipes = list(recipes_cursor)
     return render_template('home.html', recipes=recipes,
@@ -475,12 +471,10 @@ def filter_by_popular():
 @app.route('/filter_by_popular/<category>', methods=['GET'])
 def filter_by_popular_category(category):
     min_rating = 4.5
-
-    # Query recipes with the specified category and average rating >= min_rating
     recipes_cursor = mongo.db.recipes.find({
         "meal": category,
         "average_rating": {"$gte": min_rating}
-    })
+    }).sort("_id", -1)
 
     recipes = list(recipes_cursor)
     return render_template('home.html', recipes=recipes,
@@ -488,18 +482,18 @@ def filter_by_popular_category(category):
                            
 @app.route('/high_by_popular')
 def high_by_popular():
-    rating = request.args.get('rating', type=float)  # Get rating from query parameter
-    
+    rating = request.args.get('rating', type=float)
     if rating is None:
         flash("No rating specified.", "error")
         return redirect(url_for('home'))
 
     recipes_cursor = mongo.db.recipes.find({
-        "average_rating": rating  # Filter by exact rating
-    })
-    
+        "average_rating": rating
+    }).sort("_id", -1)
+
     recipes = list(recipes_cursor)
-    return render_template('home.html', recipes=recipes, username=current_user.username if current_user.is_authenticated else None)
+    return render_template('home.html', recipes=recipes,
+                           username=current_user.username if current_user.is_authenticated else None)
 
 
 @app.route('/add_reply', methods=['POST'])
@@ -533,7 +527,132 @@ def add_reply():
         })
     else:
         return jsonify({'success': False, 'message': 'Could not add reply'}), 500
+    
+# Profile page route - displays user info and posted recipes
+@app.route('/profile', methods=['GET'])
+@login_required
+def profile():
+    user_data = mongo.db.users.find_one({"_id": ObjectId(current_user.id)})
+    user_recipes = list(
+        mongo.db.recipes.find({"user_id": current_user.id}).sort("_id", -1)
+    )
 
+    for recipe in user_recipes:
+        if 'ratings' in recipe and len(recipe['ratings']) > 0:
+            recipe['average_rating'] = sum(recipe['ratings']) / len(recipe['ratings'])
+        else:
+            recipe['average_rating'] = 0
+
+    return render_template('profile.html', user=user_data, recipes=user_recipes)
+
+
+# Change password route
+@app.route('/change_password', methods=['POST'])
+@login_required
+def change_password():
+    current_password = request.form.get('currentPassword')
+    new_password = request.form.get('newPassword')
+    confirm_password = request.form.get('confirmPassword')
+    
+    # Get current user data
+    user_data = mongo.db.users.find_one({"_id": ObjectId(current_user.id)})
+    
+    # Validate form data
+    if not all([current_password, new_password, confirm_password]):
+        return jsonify({"success": False, "message": "All fields are required"}), 400
+    
+    if new_password != confirm_password:
+        return jsonify({"success": False, "message": "New passwords do not match"}), 400
+        
+    if len(new_password) < 8:
+        return jsonify({"success": False, "message": "Password must be at least 8 characters long"}), 400
+    
+    # Verify current password
+    if not check_password_hash(user_data['password'], current_password):
+        return jsonify({"success": False, "message": "Current password is incorrect"}), 400
+    
+    # Hash new password and update in database
+    hashed_password = generate_password_hash(new_password)
+    mongo.db.users.update_one(
+        {"_id": ObjectId(current_user.id)},
+        {"$set": {"password": hashed_password}}
+    )
+    
+    return jsonify({"success": True, "message": "Password changed successfully"})
+
+
+
+# Delete recipe route
+@app.route('/delete_recipe/<recipe_id>', methods=['POST'])
+@login_required
+def delete_recipe(recipe_id):
+    try:
+        # Find the recipe
+        recipe = mongo.db.recipes.find_one({"_id": ObjectId(recipe_id)})
+        
+        # Check if recipe exists and belongs to current user
+        if not recipe:
+            return jsonify({"success": False, "message": "Recipe not found"}), 404
+            
+        if recipe.get('user_id') != current_user.id:
+            return jsonify({"success": False, "message": "Unauthorized to delete this recipe"}), 403
+        
+        # Delete the recipe
+        mongo.db.recipes.delete_one({"_id": ObjectId(recipe_id)})
+        
+        # Also delete associated reviews
+        mongo.db.reviews.delete_many({"recipe_id": recipe_id})
+        
+        return jsonify({"success": True, "message": "Recipe deleted successfully"})
+    except Exception as e:
+        print(f"Error deleting recipe: {e}")
+        return jsonify({"success": False, "message": "Error deleting recipe"}), 500
+
+
+
+# Edit user profile route
+@app.route('/edit_profile', methods=['POST'])
+@login_required
+def edit_profile():
+    try:
+        # Get form data
+        username = request.form.get('username')
+        email = request.form.get('email')
+        full_name = request.form.get('full_name')
+        bio = request.form.get('bio')
+        
+        # Check if username already exists (if it's being changed)
+        current_user_data = mongo.db.users.find_one({"_id": ObjectId(current_user.id)})
+        if username != current_user_data.get('username'):
+            existing_user = mongo.db.users.find_one({"username": username})
+            if existing_user:
+                return jsonify({"success": False, "message": "Username already exists"}), 400
+        
+        # Process profile picture if provided
+        profile_pic_filename = current_user_data.get('profile_pic')
+        if 'profile_pic' in request.files:
+            profile_pic = request.files['profile_pic']
+            if profile_pic and profile_pic.filename != '' and allowed_file(profile_pic.filename):
+                filename = secure_filename(profile_pic.filename)
+                profile_pic.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                profile_pic_filename = os.path.join("uploads", filename)
+        
+        # Update user data
+        mongo.db.users.update_one(
+            {"_id": ObjectId(current_user.id)},
+            {"$set": {
+                "username": username,
+                "email": email,
+                "full_name": full_name,
+                "bio": bio,
+                "profile_pic": profile_pic_filename
+            }}
+        )
+        
+        return jsonify({"success": True, "message": "Profile updated successfully"})
+    except Exception as e:
+        print(f"Error updating profile: {e}")
+        return jsonify({"success": False, "message": "Error updating profile"}), 500
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8925)
 
