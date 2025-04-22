@@ -212,6 +212,11 @@ def post_recipe():
                 filename = secure_filename(picture.filename)
                 picture.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 picture_filename = filename
+        
+        # Adding the link referenece (issue number 18)
+        video_link = request.form.get('video_link')
+
+
 
         recipe_data = {
             "title": title,
@@ -222,6 +227,7 @@ def post_recipe():
             "HealthyDiet": healthy_diet,  # Store as list in MongoDB
             "meal":meal ,
             "picture": picture_filename,
+            "video_link": video_link,
             "user_id": current_user.id
         }
 
