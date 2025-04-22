@@ -582,6 +582,25 @@
   background-color: #f1f1f1;
 }
 
+/* Styling for the suprise button  */
+.filter-button {
+    background-color: #141313;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    margin: 0 5px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.filter-button:hover {
+    background-color: #222;
+    color: #fff;
+}
+
+
   </style>
 </head>
 <body>
@@ -705,11 +724,16 @@
                 <option value="5" {% if request.args.get('min_rating') == '5' %}selected{% endif %}>5★</option>
               </select>
               <button type="submit">Filter</button>
-            </form>0
+            </form>
+
+            <!-- THE MEALDBAPI (Suprise me test) -->
+            <a href="/surprise-me" class="filter-button">🎲 Surprise Me!</a>
             
             <form action="{{ url_for('home') }}" method="GET" class="reset-button">
               <button type="submit" class="nav-button">Reset All</button>
             </form>
+
+
            <!-- Update the User Dropdown HTML -->
 <div class="user-dropdown-container">
   <!-- Human icon button -->

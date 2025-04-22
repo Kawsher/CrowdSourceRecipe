@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Surprise Meal</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h2>🍽️ Surprise Recipe: {{ meal.strMeal }}</h2>
+    <img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }}" style="max-width: 100%; border-radius: 10px;">
+    
+    <h4>Category: {{ meal.strCategory }} | Cuisine: {{ meal.strArea }}</h4>
+
+    <h4>Instructions:</h4>
+    <p>{{ meal.strInstructions }}</p>
+
+    {% if meal.strYoutube %}
+    <h4>Video Tutorial:</h4>
+    <iframe width="100%" height="400" src="{{ meal.strYoutube | replace('watch?v=', 'embed/') }}"
+            frameborder="0" allowfullscreen></iframe>
+    {% endif %}
+
+    <a href="/surprise-me" class="btn btn-primary" style="margin-top: 20px;">Get Another Random Recipe</a>
+  </div>
+</body>
+</html>

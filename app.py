@@ -1,5 +1,6 @@
 import os
 import certifi
+import requests
 from flask import Flask, render_template, request, session,redirect, url_for, flash, jsonify
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -188,7 +189,20 @@ def home():
 
     return render_template('home.html', recipes=recipes, username=current_user.username)
 
+# trying the themealdbAPI
 
+def get_random_meal():
+    url = "https://www.themealdb.com/api/json/v1/1/random.php"
+    response = requests.get(url)
+    data = response.json()
+    return data['meals'][0] if data['meals'] else None
+
+@app.route('/surprise-me')
+def surprise_meal():
+    meal = get_random_meal()
+    return render_template('random_meal.html', meal=meal)
+
+# THEMEALDB API CODE BLOCK
 
 # Route to post a new recipe.
 @app.route('/post_recipe', methods=['GET', 'POST'])
