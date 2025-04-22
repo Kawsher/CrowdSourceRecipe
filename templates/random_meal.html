@@ -5,6 +5,28 @@
   <title>Surprise Meal</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
+<style>
+    .surprise-btn {
+    display: inline-block;
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.surprise-btn:hover {
+    background-color: #222;
+    transform: translateY(-2px);
+    color: #fff;
+}
+
+</style>
 <body>
   <div class="container">
     <h2>🍽️ Surprise Recipe: {{ meal.strMeal }}</h2>
@@ -21,7 +43,8 @@
             frameborder="0" allowfullscreen></iframe>
     {% endif %}
 
-    <a href="/surprise-me" class="btn btn-primary" style="margin-top: 20px;">Get Another Random Recipe</a>
+    <a href="/surprise-me" class="surprise-btn">🎲 Get Another Random Recipe</a>
+
   </div>
 </body>
 </html>
