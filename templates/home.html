@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Home - Crowd Recipe Collection</title>
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+  <title>Home - RecipeHub</title>
   <style>
     /* Keep all your existing CSS here */
     /* Basic Reset */
@@ -599,6 +602,42 @@
     background-color: #222;
     color: #fff;
 }
+ /* SWIPES STYLING  */
+.swiper {
+  width: 100%;
+  padding: 20px 0;
+}
+
+.swiper-slide {
+  width: 300px;
+  margin-right: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 10px;
+}
+
+.card h5 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+/* SWIPES STYLING */
+
 
 
   </style>
@@ -753,7 +792,37 @@
       </nav>
     </header>
 
+    
+
+
+
+
     <section>
+      <h2>Try our recipes today</h2>
+      <!-- Swiper JS -->
+      <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+      <!-- Swipe using as cards -->
+      <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+          {% for recipe in recipes %}
+          <div class="swiper-slide">
+            <div class="card">
+              {% if recipe.picture %}
+                <img src="{{ url_for('static', filename='uploads/' ~ recipe.picture) }}" alt="{{ recipe.title }} photo" class="recipe-photo">
+              {% else %}
+                <img src="{{ url_for('static', filename='placeholder.png') }}" alt="No Image" class="recipe-photo">
+              {% endif %}
+              <div class="card-body">
+                <h5>{{ recipe.title }}</h5>
+                <a href="{{ url_for('recipe_detail', recipe_id=recipe._id) }}">View Recipe</a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      
+      <!-- swiper.js sample code tryiing -->
       <h2>Recipes</h2>
       <div class="recipe-list">
         {% if recipes|length == 0 %}
@@ -939,5 +1008,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   </script>
+ <!-- DEMO AND TRYING SWIPER.JS  -->
+<script>
+  var swiper = new Swiper(".mySwiper", {
+    slidesPerView: 3,
+    spaceBetween: 20,
+    loop: true,
+    autoplay: {
+      delay: 3000,
+      disableOnInteraction: false,
+    },
+    breakpoints: {
+      768: {
+        slidesPerView: 2
+      },
+      1024: {
+        slidesPerView: 3
+      },
+      1400: {
+        slidesPerView: 4
+      }
+    }
+  });
+</script>
+<!-- CODE BLOCK FOR DEMO SWIPES -->
+
 </body>
 </html>
