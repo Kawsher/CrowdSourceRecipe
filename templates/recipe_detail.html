@@ -98,35 +98,39 @@
             }
         }
 
-        .recipe-image {
-            width: 100%;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
-            background-color: #f9f9f9;
-        }
+        /* Add to your CSS style section */
+.media-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
 
-        .recipe-image img {
-            max-width: 120%;
-            max-height: 400px;
-            object-fit: contain;
-            border-radius: 6px;
-            display: block;
-        }
+.recipe-image, .video-container {
+    height: 350px;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
 
-        /* Video reference (issue no:18) */
-        .video-container iframe {
-         border-radius: 6px;
-         object-fit: contain;
-         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-         background-color: #f9f9f9;
-         display: block;
+.recipe-image img {
+    max-width: 100%;
+    max-height: 320px;
+    object-fit: contain;
+    border-radius: 6px;
+}
 
-        }
+.video-container iframe {
+    width: 100%;
+    height: 320px;
+    border-radius: 6px;
+}
+
 
         .scale-controls {
             display: flex;
@@ -586,6 +590,94 @@ button[type="submit"]:hover {
             width: 100%;
         }
     }
+    /* Add to your CSS style section */
+.content-expandable {
+    position: relative;
+    max-height: 350px;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+}
+
+.content-expandable.expanded {
+    max-height: 10000px;
+}
+
+.read-more-link {
+    display: block;
+    text-align: center;
+    background: linear-gradient(to bottom, rgba(249, 249, 249, 0) 0%, rgba(249, 249, 249, 1) 80%);
+    padding-top: 40px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    cursor: pointer;
+    color: #000;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.read-more-link.hidden {
+    display: none;
+}
+
+.recipe-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Always show two equal columns */
+    gap: 30px;
+    margin-bottom: 30px;
+}
+.ingredient-list li {
+    margin-bottom: 12px;
+    line-height: 1.6;
+    word-wrap: break-word; /* Ensures long words break */
+    overflow-wrap: break-word; /* Modern browsers */
+    max-width: 100%; /* Prevent text from overflowing */
+}
+/* For smaller screens, stack them */
+@media (max-width: 767px) {
+    .recipe-details {
+        grid-template-columns: 1fr;
+    }
+}
+.ingredients-section, .instructions-section {
+    height: 400px; /* Fixed equal height for both sections */
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+.ingredients-section, .instructions-section {
+    height: 400px; /* Fixed equal height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+#ingredients-container {
+    width: 100%;
+}
+
+.ingredient-list {
+    list-style-type: disc;
+    padding-left: 20px;
+    width: 100%;
+}
+/* Style the scrollbar for better appearance */
+.ingredients-section::-webkit-scrollbar, .instructions-section::-webkit-scrollbar {
+    width: 8px;
+}
+
+.ingredients-section::-webkit-scrollbar-thumb, .instructions-section::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+}
+
+.ingredients-section::-webkit-scrollbar-track, .instructions-section::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
     </style>
 </head>
 
@@ -600,68 +692,65 @@ button[type="submit"]:hover {
                 <h3>Description</h3>
                 <p>{{ recipe.description }}</p>
             </div>
+            <!-- Media Container for Image and Video -->
+<div class="media-container">
+    <!-- Recipe Image -->
+    <div class="recipe-image">
+        {% if recipe.picture %}
+            <img src="{{ url_for('static', filename='uploads/' + recipe.picture) }}" alt="{{ recipe.title }}">
+        {% else %}
+            <img src="{{ url_for('static', filename='images/default_recipe.jpg') }}" alt="{{ recipe.title }}">
+        {% endif %}
+    </div>
 
-            <div class="recipe-details">
-                <!-- Recipe Image -->
-                <div class="recipe-image">
-                    {% if recipe.picture %}
-                        <img src="{{ url_for('static', filename='uploads/' + recipe.picture) }}" alt="{{ recipe.title }}">
-                    {% else %}
-                        <img src="{{ url_for('static', filename='images/default_recipe.jpg') }}" alt="{{ recipe.title }}">
-                    {% endif %}
-                </div>
-
-                <!-- Recipe video(issue no:18) -->
-                {% if recipe.video_link %}
-                <div class="video-container" style="margin-top: 20px;">
-                  <h4>Watch Video</h4>
-                  <iframe width="100%" height="360"
-                      src="{{ recipe.video_link | replace('watch?v=', 'embed/') }}"
-                      frameborder="0"
-                      allowfullscreen>
-                  </iframe>
-                </div>
-              {% endif %}
-              
-
-                <!-- Ingredients Section -->
-                <div class="ingredients-section">
-                    <h3>Ingredients</h3>
-                    <div>
-                        <p>Serving Size: <span id="serving-size">4</span> servings</p>
-                        <div class="scale-controls">
-                            <button onclick="setScale(1)" id="scale-1x" class="scale-btn active">1x</button>
-                            <button onclick="setScale(2)" id="scale-2x" class="scale-btn">2x</button>
-                            <button onclick="setScale(4)" id="scale-4x" class="scale-btn">4x</button>
-                        </div>
-                    </div>
-                    <ul class="ingredient-list" id="ingredient-list">
-                        {% for ingredient in ingredients %}
-                        <li>{{ ingredient }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-
-                <!-- Instructions Section -->
-                <div class="instructions-section">
-                    <h3>Instructions</h3>
-                    <ol class="instruction-list">
-                        {% for instruction in recipe.instructions.split('.') %}
-                            {% if instruction.strip() %}
-                                <li>{{ instruction.strip() }}.</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ol>
-                </div>
-                
+    <!-- Recipe video -->
+    <div class="video-container">
+        {% if recipe.video_link %}
+            <iframe 
+                src="{{ recipe.video_link | replace('watch?v=', 'embed/') }}"
+                frameborder="0"
+                allowfullscreen>
+            </iframe>
+        {% else %}
+            <div style="text-align: center; padding: 20px;">
+                <p>No video available for this recipe</p>
             </div>
-            <!-- Save Button -->
-            <form method="POST" action="{{ url_for('save_recipe', recipe_id=recipe['_id']) }}">
-               <!--- <button type="submit">Save to Favorites</button>-->
-            </form>
-            
-            <!-- Action Buttons -->
+        {% endif %}
+    </div>
+</div>
+<!-- Ingredients Section -->
+<div class="ingredients-section">
+    <h3>Ingredients</h3>
+    <div>
+        <p>Serving Size: <span id="serving-size">4</span> servings</p>
+        <div class="scale-controls">
+            <button onclick="setScale(1)" id="scale-1x" class="scale-btn active">1x</button>
+            <button onclick="setScale(2)" id="scale-2x" class="scale-btn">2x</button>
+            <button onclick="setScale(4)" id="scale-4x" class="scale-btn">4x</button>
+        </div>
+    </div>
+    <div id="ingredients-container">
+        <ul class="ingredient-list" id="ingredient-list">
+            {% for ingredient in ingredients %}
+            <li>{{ ingredient }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 
+<!-- Instructions Section -->
+<div class="instructions-section">
+    <h3>Instructions</h3>
+    <div id="instructions-container">
+        <ol class="instruction-list">
+            {% for instruction in recipe.instructions.split('.') %}
+                {% if instruction.strip() %}
+                    <li>{{ instruction.strip() }}.</li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </div>
+</div>
 <!-- Add this button to your action buttons section -->
 <div class="action-buttons">
     <a href="{{ url_for('home') }}" class="action-button">Back to Home</a>
@@ -1174,6 +1263,36 @@ button[type="submit"]:hover {
         const mailtoLink = `mailto:?subject=${subject}&body=${body}`;
         window.location.href = mailtoLink;
     }
+    document.addEventListener("DOMContentLoaded", function() {
+    // Setup read more functionality for ingredients
+    setupReadMore('ingredients-container', 'ingredients-read-more');
+    
+    // Setup read more functionality for instructions
+    setupReadMore('instructions-container', 'instructions-read-more');
+    
+    // Rest of your existing DOMContentLoaded code...
+});
+
+function setupReadMore(containerId, linkId) {
+    const container = document.getElementById(containerId);
+    const readMoreLink = document.getElementById(linkId);
+    
+    // Check if the content needs a read more button
+    if (container.scrollHeight <= container.clientHeight) {
+        readMoreLink.classList.add('hidden');
+    }
+    
+    // Add click event for read more
+    readMoreLink.addEventListener('click', function() {
+        if (container.classList.contains('expanded')) {
+            container.classList.remove('expanded');
+            readMoreLink.textContent = 'Read More';
+        } else {
+            container.classList.add('expanded');
+            readMoreLink.textContent = 'Read Less';
+        }
+    });
+}
     
     </script>
   

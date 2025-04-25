@@ -552,13 +552,13 @@
 .horizontal-dropdown-menu {
   display: none;
   position: absolute;
-  right: 0;
+  right: -90%;
   top: 100%; /* Position below the button */
   background-color: #ffffff;
   box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
   z-index: 100;
   border-radius: 5px;
-  min-width: 150px; /* Set minimum width */
+  min-width: 130px; /* Set minimum width */
   margin-top: 5px; /* Add a small gap */
 }
 
@@ -637,7 +637,24 @@
 }
 
 /* SWIPES STYLING */
+.header-top {
+  display: flex;
+  justify-content: space-between; /* Keeps items on the edges */
+  align-items: center;
+  margin-bottom: 15px;
+}
 
+.logo-title-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo-title-container h1 {
+  margin-right: 15px; /* Add some space between the title and logo */
+  font-size: 2rem;
+  color: black;
+  font-weight: bold;
+}
 
 
   </style>
@@ -646,17 +663,11 @@
   <div class="container">
     <header>
       <div class="header-top">
-        <!-- LOGO SAMPLE -->
-        <a href="{{ url_for('home') }}" class="me-3">
-          <img
-            src="{{ url_for('static', filename='images/Logo.jpeg') }}"
-            alt="Recipe Hub Logo"
-            width="70"
-            height="70"
-          >
-        </a>
-    
-        <h1>Recipe Hub</h1>
+          <div class="logo-title-container">
+              <h1>Recipe Hub</h1>
+              <img src="{{ url_for('static', filename='images/Logo.jpeg') }}" alt="Recipe Hub Logo" width="70" height="70">
+          </div>
+  
         <div class="hamburger-menu">
           <div class="hamburger-icon">
             <span></span>
@@ -669,8 +680,7 @@
             <a href="{{ url_for('logout') }}" class="nav-button">Logout</a>
           </div>
         </div>
-      </div>
-
+      </header>
 
       <nav>
         <div class="nav-container">
