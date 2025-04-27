@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <title>{{ recipe.title }} - Recipe Details</title>
     <style>
         /* Reset some default browser styles */
@@ -678,6 +679,98 @@ button[type="submit"]:hover {
 .ingredients-section::-webkit-scrollbar-track, .instructions-section::-webkit-scrollbar-track {
     background-color: #f1f1f1;
 }
+
+/* Changing the appearance of the buttons(AR) */
+.recipe-icon-actions {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: none;
+        }
+
+        .icon-btn {
+        width: 44px;
+        height: 44px;
+        background-color: #f3f3f3;
+        border: none;
+        border-radius: 8px;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        }
+
+        .icon-btn:hover {
+        background-color: #e0e0e0;
+        }
+
+
+        .cta-btn {
+        background-color: #fcd34d;
+        color: #000;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        }
+
+        .cta-btn:hover {
+        background-color: #fbbf24;
+        }
+        /* Changing gthe apperance of the buttons(AR) */
+
+        .recipe-media-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .media-left {
+        flex: 1;
+        position: relative;
+        }
+
+        .media-left img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .recipe-media-container {
+                flex-direction: column;
+            }
+        }
+
+
+
+        .media-right {
+        flex: 1;
+        }
+
+        /* STYLING THE RECEIPE ICONS AT THE BUTTOM IN THE PAGE */
+        .recipe-icon-actions-bottom {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+
+
     </style>
 </head>
 
@@ -692,32 +785,48 @@ button[type="submit"]:hover {
                 <h3>Description</h3>
                 <p>{{ recipe.description }}</p>
             </div>
-            <!-- Media Container for Image and Video -->
-<div class="media-container">
-    <!-- Recipe Image -->
-    <div class="recipe-image">
-        {% if recipe.picture %}
-            <img src="{{ url_for('static', filename='uploads/' + recipe.picture) }}" alt="{{ recipe.title }}">
-        {% else %}
-            <img src="{{ url_for('static', filename='images/default_recipe.jpg') }}" alt="{{ recipe.title }}">
-        {% endif %}
-    </div>
+                  <!-- Changing the button omn the image of the receipe(AR) -->
+            <div class="recipe-media-container">
 
-    <!-- Recipe video -->
-    <div class="video-container">
-        {% if recipe.video_link %}
-            <iframe 
-                src="{{ recipe.video_link | replace('watch?v=', 'embed/') }}"
-                frameborder="0"
-                allowfullscreen>
-            </iframe>
-        {% else %}
-            <div style="text-align: center; padding: 20px;">
-                <p>No video available for this recipe</p>
-            </div>
-        {% endif %}
-    </div>
-</div>
+                <div class="media-left">
+                  <div style="position: relative;">
+                    <!-- Floating Action Buttons -->
+                    <div class="recipe-icon-actions">
+                      <form method="POST" action="{{ url_for('save_recipe', recipe_id=recipe._id) }}" style="display: inline;">
+                        <button type="submit" class="icon-btn" title="Save to Favorites">
+                          <i class="bi bi-bookmark-heart-fill"></i>
+                        </button>
+                      </form>
+              
+                      <button id="download-image-btn" class="icon-btn" title="Download Image">
+                        <i class="bi bi-download"></i>
+                      </button>
+              
+                      <button id="print-pdf-btn" class="icon-btn" title="Print as PDF">
+                        <i class="bi bi-printer"></i>
+                      </button>
+              
+                      <button id="share-email-btn" class="icon-btn" title="Share via Email">
+                        <i class="bi bi-share-fill"></i>
+                      </button>
+                    </div>
+              
+                    <!-- Recipe Image -->
+                    {% if recipe.picture %}
+                    <img src="{{ url_for('static', filename='uploads/' + recipe.picture) }}" alt="Recipe Image" class="recipe-photo">
+                    {% endif %}
+                  </div>
+                </div>
+              
+                <div class="media-right">
+                  {% if recipe.video_link %}
+                  <iframe width="100%" height="360" src="{{ recipe.video_link | replace('watch?v=', 'embed/') }}" frameborder="0" allowfullscreen></iframe>
+                  {% endif %}
+                </div>
+              
+              </div>
+               <!-- CHANGING THE ACTION BUTTON ON THBEIMAGE (AR)  -->
+
 <!-- Ingredients Section -->
 <div class="ingredients-section">
     <h3>Ingredients</h3>
@@ -752,17 +861,38 @@ button[type="submit"]:hover {
     </div>
 </div>
 <!-- Add this button to your action buttons section -->
-<div class="action-buttons">
-    <a href="{{ url_for('home') }}" class="action-button">Back to Home</a>
+<div class="recipe-icon-actions-bottom">
+    <a href="{{ url_for('home') }}" class="icon-btn" title="Back to Home">
+      <i class="bi bi-house-door-fill"></i>
+    </a>
+
     <form method="POST" action="{{ url_for('save_recipe', recipe_id=recipe['_id']) }}" style="display: inline;">
-        <button type="submit" class="action-button">Save to Favorites</button>
+      <button type="submit" class="icon-btn" title="Save to Favorites">
+        <i class="bi bi-bookmark-heart-fill"></i>
+      </button>
     </form>
-    <button type="button" id="show-rating-btn" class="action-button">Rate Recipe</button>
-    <button type="button" id="show-review-btn" class="action-button">Write Review</button>
-    <button type="button" id="download-image-btn" class="action-button">Download as Image</button>
-    <button type="button" id="print-pdf-btn" class="action-button">Print as PDF</button>
-    <button type="button" id="share-email-btn" class="action-button">Share via Email</button>
+
+    <button type="button" id="show-rating-btn" class="icon-btn" title="Rate Recipe">
+      <i class="bi bi-star-fill"></i>
+    </button>
+
+    <button type="button" id="show-review-btn" class="cta-btn">
+      <i class="bi bi-chat-left-text-fill"></i> Write Review
+    </button>
+
+    <button type="button" id="download-image-btn" class="icon-btn" title="Download Image">
+      <i class="bi bi-download"></i>
+    </button>
+
+    <button type="button" id="print-pdf-btn" class="icon-btn" title="Print as PDF">
+      <i class="bi bi-printer"></i>
+    </button>
+
+    <button type="button" id="share-email-btn" class="icon-btn" title="Share via Email">
+      <i class="bi bi-share-fill"></i>
+    </button>
 </div>
+<!-- Changed the recipe icons at the page buttom with icon style(AR) -->
 
             <!-- Rating Section - Hidden by default -->
             <div class="rating-section hidden" id="rating-section">
