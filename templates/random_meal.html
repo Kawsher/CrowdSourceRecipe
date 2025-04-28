@@ -36,7 +36,6 @@
       display: flex;
       gap: 20px;
       margin-bottom: 30px;
-      /* Added max-height to reduce overall size */
       max-height: 300px;
     }
     
@@ -45,7 +44,6 @@
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      /* Added max-height to reduce container height */
       max-height: 300px;
     }
     
@@ -53,7 +51,7 @@
       width: 100%;
       height: 100%;
       display: block;
-      object-fit: cover; /* This ensures the image covers the container nicely */
+      object-fit: cover;
     }
     
     .video-container {
@@ -66,27 +64,36 @@
     .video-container iframe {
       width: 100%;
       height: 100%;
-      /* Reduced minimum height */
       min-height: 230px;
     }
     
+    /* Modified recipe-details to display in a single column */
     .recipe-details {
-      display: flex;
-      gap: 20px;
       margin-bottom: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
     
-    .ingredients-container {
-      flex: 1;
+    .ingredients-container,
+    .instructions-container {
       background-color: #f8f8f8;
       padding: 20px;
       border-radius: 10px;
+      /* Each container has its own scrolling */
+      max-height: 350px;
+      overflow-y: auto;
     }
     
-    .ingredients-container h4 {
+    .ingredients-container h4,
+    .instructions-container h4 {
       margin-top: 0;
       border-bottom: 1px solid #ddd;
       padding-bottom: 10px;
+      position: sticky;
+      top: 0;
+      background-color: #f8f8f8;
+      z-index: 1;
     }
     
     .ingredients-list {
@@ -105,19 +112,6 @@
       position: absolute;
       left: 0;
       color: #666;
-    }
-    
-    .instructions-container {
-      flex: 2;
-      background-color: #f8f8f8;
-      padding: 20px;
-      border-radius: 10px;
-    }
-    
-    .instructions-container h4 {
-      margin-top: 0;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 10px;
     }
     
     .instructions-list {
@@ -163,16 +157,18 @@
     }
     
     @media (max-width: 768px) {
-      .media-container, .recipe-details {
-        flex-direction: column;
-      }
-      
       .media-container {
+        flex-direction: column;
         max-height: none;
       }
       
       .image-container, .video-container {
         max-height: 200px;
+      }
+      
+      .ingredients-container,
+      .instructions-container {
+        max-height: 250px;
       }
       
       .buttons-container {
