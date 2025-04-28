@@ -665,7 +665,11 @@
       <div class="header-top">
           <div class="logo-title-container">
               <h1>Recipe Hub</h1>
-              <img src="{{ url_for('static', filename='images/Logo.jpeg') }}" alt="Recipe Hub Logo" width="70" height="70">
+              <!-- <img src="{{ url_for('static', filename='images/Logo.jpeg') }}" alt="Recipe Hub Logo" width="70" height="70"> -->
+              <a href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='images/Logo.jpeg') }}" alt="Recipe Hub Logo" class="logo-img" width="70" height="70">
+            </a>
+            
           </div>
   
         <div class="hamburger-menu">
