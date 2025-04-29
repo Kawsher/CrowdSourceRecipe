@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Surprise Meal</title>
+  <!-- Add Font Awesome for home icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -156,6 +158,48 @@
       color: #fff;
     }
     
+    /* Home button styles */
+    .home-button {
+      display: block;
+      margin: 20px auto 0;
+      text-align: center;
+    }
+    
+    .home-button a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: black;
+      transition: transform 0.2s;
+    }
+    
+    .home-button a:hover {
+      transform: scale(1.1);
+    }
+    
+    .home-icon {
+      background-color:black;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .home-icon i {
+      font-size: 24px;
+    }
+    
+    .home-text {
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
     @media (max-width: 768px) {
       .media-container {
         flex-direction: column;
@@ -181,55 +225,12 @@
         max-width: 250px;
         margin-bottom: 10px;
       }
-      
     }
-    /* Home button styles */
-    .home-button {
-            display: block;
-            margin: 20px auto 0;
-            text-align: center;
-        }
-        
-        .home-button a {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: #3498db;
-            transition: transform 0.2s;
-        }
-        
-        .home-button a:hover {
-            transform: scale(1.1);
-        }
-        
-        .home-icon {
-            background-color: #3498db;
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        .home-icon i {
-            font-size: 24px;
-        }
-        
-        .home-text {
-            font-size: 14px;
-            font-weight: 500;
-        }
-    
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>🍽️ Surprise Recipe: {{ meal.strMeal }}</h2>
+    <h2>🍽 Surprise Recipe: {{ meal.strMeal }}</h2>
     
     <div class="category-info">
       <h4>Category: {{ meal.strCategory }} | Cuisine: {{ meal.strArea }}</h4>
@@ -277,18 +278,19 @@
     </div>
     
     <div class="buttons-container">
-      <!--<a href="{{ url_for('home') }}" class="action-button">Back to Home</a>-->
       <a href="/surprise-me" class="surprise-btn">🎲 Get Another Recipe</a>
     </div>
-
-</body>
-<div class="home-button">
-  <a href="{{ url_for('index') }}">
+    
+  </div>
+  
+  <!-- Back to Home Button - Outside container and at page bottom -->
+  <div class="home-button">
+    <a href="{{ url_for('index') }}">
       <div class="home-icon">
-          <i class="fas fa-home"></i>
+        <i class="fas fa-home"></i>
       </div>
       <span class="home-text">Back to Home</span>
-  </a>
-</div>
-</div>
+    </a>
+  </div>
+</body>
 </html>

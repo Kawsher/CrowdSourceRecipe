@@ -2,83 +2,179 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
   <title>Sign Up - Crowd Recipe Collection</title>
   <style>
     /* Basic reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    /* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    body {
-      font-family: Arial, sans-serif;
-      background: url('{{ url_for("static", filename="images/background.jpg") }}') no-repeat center center fixed;
-      background-size: cover;
-      color: #333;
-      padding: 20px;
-    }
+body {
+  font-family: Arial, sans-serif;
+  background: url('{{ url_for("static", filename="images/signup_bg.jpg") }}') no-repeat center center fixed;
+  background-size: cover;
+  color: #333;
+  padding: 20px;
+  min-height: 100vh;
+}
 
-    .signup-container {
-      background: rgba(255, 255, 255, 0.95);
-      width: 400px;
-      margin: 50px auto;
-      padding: 25px 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    }
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255,255,255,0.85); /* white overlay */
+  z-index: -1;
+}
 
-    .signup-container h1 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #444;
-    }
 
-    .signup-container label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
+/* Main Wrapper */
+.signup-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0px;
+  padding: 40px 20px;
+  min-height: 100vh;
+}
 
-    .signup-container input[type="text"],
-    .signup-container input[type="email"],
-    .signup-container input[type="password"],
-    .signup-container input[type="file"],
-    .signup-container textarea {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
+/* Lottie Animation Styling */
+.signup-animation {
+  flex: 1;
+  text-align: center;
+}
 
-    .signup-container input[type="submit"] {
-      width: 100%;
-      padding: 10px;
-      background: #28a745;
-      border: none;
-      color: #fff;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
+.signup-animation lottie-player {
+  width: 900px;
+  height: 1200px;
+}
 
-    .signup-container input[type="submit"]:hover {
-      background: #218838;
-    }
+/* Signup Form Container */
+.signup-container {
+  flex: 1;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 30px 35px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 1.2s ease-out forwards;
+}
 
-    .links a {
-      color: #007bff;
-      text-decoration: none;
-    }
+/* Form Content */
+.signup-container h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #222;
+}
 
-    .links a:hover {
-      text-decoration: underline;
-    }
+.signup-container label {
+  font-weight: bold;
+  margin-top: 12px;
+  display: block;
+}
+
+.signup-container input[type="text"],
+.signup-container input[type="email"],
+.signup-container input[type="password"],
+.signup-container input[type="file"],
+.signup-container textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.signup-container textarea {
+  resize: vertical;
+}
+
+.signup-container input[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  background: #28a745;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.signup-container input[type="submit"]:hover {
+  background: #218838;
+}
+
+.links {
+  text-align: center;
+  margin-top: 12px;
+}
+
+.links a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+/* Fade In Animation */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .signup-wrapper {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  /* .signup-animation lottie-player {
+    width: 280px;
+    height: 280px;
+  } */
+
+  .signup-container {
+    width: 100%;
+    padding: 25px 20px;
+  }
+}
+
+
+
   </style>
 </head>
 <body>
+<div class="signup-wrapper">
+  <div class="signup-animation">
+    <lottie-player 
+      src="{{ url_for('static', filename='animations/Cooking_Scene.json') }}"  
+      background="transparent"  
+      speed="1"  
+      style="width:400; height: 400px;"  
+      loop  
+      autoplay>
+    </lottie-player>
+  </div>
+
   <div class="signup-container">
     <h1>Create an Account</h1>
     <form action="{{ url_for('signup') }}" method="POST" enctype="multipart/form-data">
@@ -109,5 +205,7 @@
       </div>
     </form>
   </div>
+  
+</div>
 </body>
 </html>
