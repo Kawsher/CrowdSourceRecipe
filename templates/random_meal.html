@@ -80,22 +80,52 @@
     .ingredients-container,
     .instructions-container {
       background-color: #f8f8f8;
-      padding: 20px;
+      padding: 0;
       border-radius: 10px;
       /* Each container has its own scrolling */
       max-height: 350px;
       overflow-y: auto;
+      /* Add positioning context for the header */
+      position: relative;
     }
     
+    /* Enhanced sticky headers styling */
     .ingredients-container h4,
     .instructions-container h4 {
-      margin-top: 0;
+      margin: 0;
       border-bottom: 1px solid #ddd;
-      padding-bottom: 10px;
+      padding: 15px 20px;
       position: sticky;
       top: 0;
       background-color: #f8f8f8;
-      z-index: 1;
+      z-index: 10;
+      transition: box-shadow 0.3s ease;
+    }
+    
+    /* Add padding to content inside containers but not headers */
+    .ingredients-list,
+    .instructions-list {
+      padding: 0 20px 20px 20px;
+      margin-top: 10px;
+    }
+    
+    /* Shadow effect class that will be added via JavaScript */
+    .sticky-active {
+      box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+      border-bottom: 1px solid #ddd;
+    }
+    
+    /* Ensure content doesn't show through the header */
+    .ingredients-container h4::after,
+    .instructions-container h4::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      height: 10px;
+      background: linear-gradient(to bottom, rgba(248, 248, 248, 0.8), rgba(248, 248, 248, 0));
+      pointer-events: none;
     }
     
     .ingredients-list {
@@ -253,7 +283,7 @@
     
     <div class="recipe-details">
       <div class="ingredients-container">
-        <h4>Ingredients:</h4>
+        <h4 id="ingredients-header">Ingredients:</h4>
         <ul class="ingredients-list">
           {% for i in range(1, 21) %}
             {% set ingredient = meal['strIngredient' ~ i]|default('') %}
@@ -266,7 +296,7 @@
       </div>
       
       <div class="instructions-container">
-        <h4>Instructions:</h4>
+        <h4 id="instructions-header">Instructions:</h4>
         <ol class="instructions-list">
           {% for step in meal.strInstructions.split('.') %}
             {% if step|trim %}
@@ -292,5 +322,52 @@
       <span class="home-text">Back to Home</span>
     </a>
   </div>
+
+  <!-- Add JavaScript for sticky header shadow effect -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // For ingredients section
+      const ingredientsContainer = document.querySelector('.ingredients-container');
+      const ingredientsHeader = document.getElementById('ingredients-header');
+      
+      if (ingredientsContainer && ingredientsHeader) {
+        // Apply shadow by default to make it more visible
+        ingredientsHeader.classList.add('sticky-active');
+        
+        ingredientsContainer.addEventListener('scroll', function() {
+          // Always keep the sticky-active class to ensure the header is always visible
+          ingredientsHeader.classList.add('sticky-active');
+          
+          // Optional: You could adjust the shadow intensity based on scroll position
+          if (ingredientsContainer.scrollTop > 20) {
+            ingredientsHeader.style.boxShadow = '0 4px 8px -2px rgba(0, 0, 0, 0.2)';
+          } else {
+            ingredientsHeader.style.boxShadow = '0 4px 6px -2px rgba(0, 0, 0, 0.15)';
+          }
+        });
+      }
+      
+      // For instructions section
+      const instructionsContainer = document.querySelector('.instructions-container');
+      const instructionsHeader = document.getElementById('instructions-header');
+      
+      if (instructionsContainer && instructionsHeader) {
+        // Apply shadow by default to make it more visible
+        instructionsHeader.classList.add('sticky-active');
+        
+        instructionsContainer.addEventListener('scroll', function() {
+          // Always keep the sticky-active class to ensure the header is always visible
+          instructionsHeader.classList.add('sticky-active');
+          
+          // Optional: You could adjust the shadow intensity based on scroll position
+          if (instructionsContainer.scrollTop > 20) {
+            instructionsHeader.style.boxShadow = '0 4px 8px -2px rgba(0, 0, 0, 0.2)';
+          } else {
+            instructionsHeader.style.boxShadow = '0 4px 6px -2px rgba(0, 0, 0, 0.15)';
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>
