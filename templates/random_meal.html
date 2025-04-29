@@ -181,7 +181,50 @@
         max-width: 250px;
         margin-bottom: 10px;
       }
+      
     }
+    /* Home button styles */
+    .home-button {
+            display: block;
+            margin: 20px auto 0;
+            text-align: center;
+        }
+        
+        .home-button a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #3498db;
+            transition: transform 0.2s;
+        }
+        
+        .home-button a:hover {
+            transform: scale(1.1);
+        }
+        
+        .home-icon {
+            background-color: #3498db;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .home-icon i {
+            font-size: 24px;
+        }
+        
+        .home-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+    
   </style>
 </head>
 <body>
@@ -234,9 +277,18 @@
     </div>
     
     <div class="buttons-container">
-      <a href="{{ url_for('home') }}" class="action-button">Back to Home</a>
+      <!--<a href="{{ url_for('home') }}" class="action-button">Back to Home</a>-->
       <a href="/surprise-me" class="surprise-btn">🎲 Get Another Recipe</a>
     </div>
-  </div>
+
 </body>
+<div class="home-button">
+  <a href="{{ url_for('index') }}">
+      <div class="home-icon">
+          <i class="fas fa-home"></i>
+      </div>
+      <span class="home-text">Back to Home</span>
+  </a>
+</div>
+</div>
 </html>

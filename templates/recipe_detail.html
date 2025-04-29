@@ -73,12 +73,41 @@
             font-size: 1.3rem;
         }
 
+        /* Recipe Description Styling */
         .recipe-description {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .description-title {
+            margin-bottom: 15px;
+        }
+
+        .description-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .recipe-text {
+            flex: 1;
+            margin-right: 20px;
+            line-height: 1.6;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+
+        .icon-btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
         }
 
         .recipe-details {
@@ -99,58 +128,83 @@
             }
         }
 
-/* Improved media container styling for consistent sizing */
-.recipe-media-container {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 30px;
-}
+        /* Improved media container styling for consistent sizing */
+        .recipe-media-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
 
-.media-left, .media-right {
-    flex: 1;
-    position: relative;
-    height: 360px; /* Fixed height for both containers */
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
+        .media-left, .media-right {
+            flex: 1;
+            position: relative;
+            height: 360px; /* Fixed height for both containers */
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
 
-/* Style for the image container */
-.media-left img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* This maintains aspect ratio while filling the container */
-    border-radius: 12px;
-}
+        /* Style for the image container */
+        .media-left img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* This maintains aspect ratio while filling the container */
+            border-radius: 12px;
+        }
 
-/* Style for the video container */
-.media-right iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    border-radius: 12px;
-}
+        /* Style for the video container */
+        .media-right iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 12px;
+        }
 
-/* Make sure the action buttons stay on top */
-.recipe-icon-actions {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 10;
-}
+        /* Recipe icon actions styling */
+        .recipe-icon-actions {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 10;
+        }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .recipe-media-container {
-        flex-direction: column;
-    }
-    
-    .media-left, .media-right {
-        width: 100%;
-        margin-bottom: 15px;
-    }
-}
+        .recipe-icon-actions .icon-btn {
+            width: 44px;
+            height: 44px;
+            background-color: #f3f3f3;
+            border-radius: 8px;
+            font-size: 20px;
+        }
 
+        .recipe-icon-actions .icon-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .recipe-media-container {
+                flex-direction: column;
+            }
+            
+            .media-left, .media-right {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .description-wrapper {
+                flex-direction: column;
+            }
+            
+            .recipe-text {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+
+        /* Scale controls for ingredients */
         .scale-controls {
             display: flex;
             gap: 10px;
@@ -176,18 +230,30 @@
             background-color: #000;
             color: #fff;
         }
+        .ingredients-section {
+  grid-column: span 2;
+}
 
+
+        /* Ingredient and instruction sections styling */
         .ingredients-section,
         .instructions-section {
+            height: 400px; /* Fixed equal height */
+            overflow-y: auto; /* Enable vertical scrolling */
             padding: 20px;
             background-color: #f9f9f9;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
+        #ingredients-container {
+            width: 100%;
+        }
+
         .ingredient-list {
             list-style-type: disc;
             padding-left: 20px;
+            width: 100%;
         }
 
         .instruction-list {
@@ -199,8 +265,26 @@
         .instruction-list li {
             margin-bottom: 12px;
             line-height: 1.6;
+            word-wrap: break-word; /* Ensures long words break */
+            overflow-wrap: break-word; /* Modern browsers */
+            max-width: 100%; /* Prevent text from overflowing */
         }
 
+        /* Style the scrollbar for better appearance */
+        .ingredients-section::-webkit-scrollbar, .instructions-section::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .ingredients-section::-webkit-scrollbar-thumb, .instructions-section::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 4px;
+        }
+
+        .ingredients-section::-webkit-scrollbar-track, .instructions-section::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
+        }
+
+        /* Reviews section styling */
         .reviews-section {
             margin-top: 40px;
             padding-top: 20px;
@@ -215,33 +299,105 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
-        .review-form textarea {
+        /* Enhanced styling for the review textarea */
+        #review-text {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            resize: vertical;
+            border-radius: 8px;
+            min-height: 120px;
             font-family: Arial, sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        .review-form button {
+        #review-text:focus {
+            border-color: #000;
+            outline: none;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Star rating styling */
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .star {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .star:hover,
+        .star.active {
+            color: black;
+        }
+
+        .star:hover ~ .star {
+            color: black;
+        }
+
+        .rating-instructions {
+            text-align: center;
+            margin-top: 10px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Buttons styling */
+        .submit-button, .action-button, .save-button, .back-link {
             background-color: #000;
             color: white;
             padding: 12px 24px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1rem;
         }
 
-        .review-form button:hover {
+        .submit-button:hover, .action-button:hover, .save-button:hover, .back-link:hover {
             background-color: #333;
             transform: translateY(-2px);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
+        /* Button container */
+        .button-container, .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .back-link {
+            margin-top: 30px;
+        }
+
+        /* For smaller screens, make buttons more mobile-friendly */
+        @media (max-width: 768px) {
+            .action-buttons, .button-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .action-button, .submit-button, .save-button, .back-link {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* Review items styling */
         .review-list {
             background-color: #f9f9f9;
             padding: 20px;
@@ -268,122 +424,8 @@
             text-align: right;
         }
 
-        .back-link {
-            display: inline-block;
-            padding: 12px 24px;
-            background-color: #000;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 30px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .back-link:hover {
-            background-color: #333;
-            transform: translateY(-2px);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        .star-rating {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 15px;
-}
-
-.star {
-    font-size: 2rem;
-    color: #ddd;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.star:hover,
-.star.active {
-    color: black;
-}
-
-.star:hover ~ .star {
-    color:black;
-}
-.button-container {
-        display: flex; /* Use flexbox for horizontal layout */
-        align-items: center; /* Vertically align items in the center */
-        gap: 15px; /* Add some space between the button and the link */
-        margin-bottom: 20px; /* Add some space below the container */
-    }
-
-    /* Style for the save button to match the back link */
-    .save-button {
-        background-color: #000;
-        color: white;
-        padding: 12px 24px;
-        text-decoration: none;
-        border-radius: 5px;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        border: none;
-        cursor: pointer;
-    }
-
-    .save-button:hover {
-        background-color: #333;
-        transform: translateY(-2px);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-    button-container {
-        display: flex; /* Use flexbox for horizontal layout */
-        align-items: center; /* Vertically align items in the center */
-        gap: 15px; /* Add some space between the button and the link */
-        margin-bottom: 20px; /* Add some space below the container */
-    }
-
-
-   /* For the "Back to Home" link */
-.back-link {
-    display: inline-block; 
-    padding: 12px 24px;   
-    background-color: #000; 
-    color: white;         
-    text-decoration: none; 
-    border-radius: 5px;    
-    margin-top: 30px;      
-    font-weight: bold;   
-    transition: all 0.3s ease;
-}
-
-.back-link:hover {
-    background-color: #333; 
-    transform: translateY(-2px); 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
-}
-
-/* For the "Save to Favorites" button */
-button[type="submit"] {
-    background-color: #000; 
-    color: white;          
-    padding: 12px 24px;   
-    border: none;          
-    border-radius: 5px;    
-    cursor: pointer;       
-    font-weight: bold;    
-    transition: all 0.3s ease; 
-}
-
-button[type="submit"]:hover {
-    background-color: #333; 
-    transform: translateY(-2px); 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
-}
-.review-item {
-            padding: 15px;
-            margin-bottom: 15px;
-            background-color: #fff;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .reply-button {
+        /* Reply system styling */
+        .reply-button, .toggle-replies-button {
             background-color: transparent;
             color: #555;
             border: none;
@@ -394,7 +436,12 @@ button[type="submit"]:hover {
             margin-top: 8px;
         }
 
-        .reply-button:hover {
+        .toggle-replies-button {
+            margin-left: 10px;
+            display: inline-block;
+        }
+
+        .reply-button:hover, .toggle-replies-button:hover {
             color: #000;
         }
 
@@ -455,332 +502,40 @@ button[type="submit"]:hover {
             font-size: 0.85rem;
             text-align: right;
         }
-        .toggle-replies-button {
-    background-color: transparent;
-    color: #555;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    text-decoration: underline;
-    margin-top: 8px;
-    margin-left: 10px; /* Add some spacing from the reply button */
-    display: inline-block; /* Make it appear next to the reply button */
-}
 
-.toggle-replies-button:hover {
-    color: #000;
-}
-.action-buttons {
-    display: flex;
-    gap: 15px;
-    margin: 30px 0;
-}
+        /* Content expandable styling */
+        .content-expandable {
+            position: relative;
+            max-height: 350px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
 
-.action-button {
-    background-color: #000;
-    color: white;
-    padding: 10px 18px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
+        .content-expandable.expanded {
+            max-height: 10000px;
+        }
 
-.action-button:hover {
-    background-color: #333;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
+        .read-more-link {
+            display: block;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(249, 249, 249, 0) 0%, rgba(249, 249, 249, 1) 80%);
+            padding-top: 40px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            cursor: pointer;
+            color: #000;
+            font-weight: bold;
+            text-decoration: underline;
+        }
 
-.form-container {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 25px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-}
-
-.rating-instructions {
-    text-align: center;
-    margin-top: 10px;
-    color: #666;
-    font-style: italic;
-}
-
-
-
-.hidden {
+        .read-more-link.hidden, .hidden {
             display: none;
         }
-/* Enhanced styling for the review textarea */
-#review-text {
-    width: 100%;
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    min-height: 120px;
-    font-family: Arial, sans-serif;
-    font-size: 1rem;
-    resize: vertical;
-    transition: border 0.3s ease;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-}
 
-#review-text:focus {
-    border-color: #000;
-    outline: none;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 5px rgba(0, 0, 0, 0.2);
-}
-
-/* Improved submit button styling to match your existing buttons */
-.submit-button {
-    background-color: #000;
-    color: white;
-    padding: 12px 28px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-.submit-button:hover {
-    background-color: #333;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-/* Container styling for better visual separation */
-#review-form-container {
-    background-color: #f9f9f9;
-    padding: 25px;
-    border-radius: 10px;
-    margin: 30px 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-#review-form-container h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: #333;
-}
- /* Enhanced action buttons styling */
- .action-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        margin: 30px 0;
-    }
-
-    .action-button {
-        background-color: #000;
-        color: white;
-        padding: 10px 18px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 1rem;
-        text-align: center;
-    }
-
-    .action-button:hover {
-        background-color: #333;
-        transform: translateY(-2px);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    /* For smaller screens, make buttons more mobile-friendly */
-    @media (max-width: 768px) {
-        .action-buttons {
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .action-button {
-            width: 100%;
-        }
-    }
-    /* Add to your CSS style section */
-.content-expandable {
-    position: relative;
-    max-height: 350px;
-    overflow: hidden;
-    transition: max-height 0.5s ease;
-}
-
-.content-expandable.expanded {
-    max-height: 10000px;
-}
-
-.read-more-link {
-    display: block;
-    text-align: center;
-    background: linear-gradient(to bottom, rgba(249, 249, 249, 0) 0%, rgba(249, 249, 249, 1) 80%);
-    padding-top: 40px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    cursor: pointer;
-    color: #000;
-    font-weight: bold;
-    text-decoration: underline;
-}
-
-.read-more-link.hidden {
-    display: none;
-}
-
-.recipe-details {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Always show two equal columns */
-    gap: 30px;
-    margin-bottom: 30px;
-}
-.ingredient-list li {
-    margin-bottom: 12px;
-    line-height: 1.6;
-    word-wrap: break-word; /* Ensures long words break */
-    overflow-wrap: break-word; /* Modern browsers */
-    max-width: 100%; /* Prevent text from overflowing */
-}
-/* For smaller screens, stack them */
-@media (max-width: 767px) {
-    .recipe-details {
-        grid-template-columns: 1fr;
-    }
-}
-.ingredients-section, .instructions-section {
-    height: 400px; /* Fixed equal height for both sections */
-    overflow-y: auto; /* Enable vertical scrolling */
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-.ingredients-section, .instructions-section {
-    height: 400px; /* Fixed equal height */
-    overflow-y: auto; /* Enable vertical scrolling */
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-#ingredients-container {
-    width: 100%;
-}
-
-.ingredient-list {
-    list-style-type: disc;
-    padding-left: 20px;
-    width: 100%;
-}
-/* Style the scrollbar for better appearance */
-.ingredients-section::-webkit-scrollbar, .instructions-section::-webkit-scrollbar {
-    width: 8px;
-}
-
-.ingredients-section::-webkit-scrollbar-thumb, .instructions-section::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 4px;
-}
-
-.ingredients-section::-webkit-scrollbar-track, .instructions-section::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
-}
-
-/* Changing the appearance of the buttons(AR) */
-.recipe-icon-actions {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            background: none;
-        }
-
-        .icon-btn {
-        width: 44px;
-        height: 44px;
-        background-color: #f3f3f3;
-        border: none;
-        border-radius: 8px;
-        font-size: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-        }
-
-        .icon-btn:hover {
-        background-color: #e0e0e0;
-        }
-
-
-        .cta-btn {
-        background-color: #fcd34d;
-        color: #000;
-        border: none;
-        padding: 12px 20px;
-        border-radius: 10px;
-        font-weight: 600;
-        font-size: 14px;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-
-        .cta-btn:hover {
-        background-color: #fbbf24;
-        }
-        }
-
-        /* Changing gthe apperance of the buttons(AR) */
-
-        .recipe-media-container {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .media-left {
-        flex: 1;
-        position: relative;
-        }
-
-        .media-left img {
-            width: 100%;
-            height: auto;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        @media (max-width: 768px) {
-            .recipe-media-container {
-                flex-direction: column;
-            }
-        }
-
-
-
-        .media-right {
-        flex: 1;
-        }
-
-        /* STYLING THE RECEIPE ICONS AT THE BUTTOM IN THE PAGE */
-         .recipe-icon-actions-bottom {
+        /* Bottom recipe icons */
+        .recipe-icon-actions-bottom {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
@@ -788,22 +543,109 @@ button[type="submit"]:hover {
             margin-top: 20px;
         }
 
+        /* Form container styling */
+        .form-container, #review-form-container {
+            background-color: #f9f9f9;
+            padding: 20px 25px;
+            border-radius: 8px 10px;
+            margin: 25px 0 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
 
+        #review-form-container h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333;
+        }
 
-    </style>
+        /* CTA button styling */
+        .cta-btn {
+            background-color: #fcd34d;
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
 
+        .cta-btn:hover {
+            background-color: #fbbf24;
+        }
 
-</head>
+        /* Action button styling for ingredients section */
+        .recipe-action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
 
-<head>
-    <!-- Head content remains the same -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <title>{{ recipe.title }} - Recipe Details</title>
-    <!-- Your existing CSS styles remain unchanged -->
-    <style>
-        /* All your existing styles remain here */
+        .recipe-action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .recipe-action-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .save-btn {
+            background-color: #fff;
+            color: #333;
+        }
+
+        .save-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .print-btn {
+            background-color: #fff;
+            color: #333;
+        }
+
+        .print-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .share-btn {
+            background-color: #fff;
+            color: #333;
+        }
+
+        .share-btn:hover {
+            background-color: #f0f0f0;
+        }
+        .image-btn{
+            background-color: #fff;
+            color: #333;
+        }
+
+        .image-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .recipe-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 
@@ -811,73 +653,99 @@ button[type="submit"]:hover {
     <div class="container">
         <div class="recipe-content">
             <h1>{{ recipe.title }}</h1>
-
+            
             <div class="recipe-description">
-                <h3>Description</h3>
-                <p>{{ recipe.description }}</p>
+                <h3 class="description-title">Description</h3>
+                <div class="description-wrapper">
+                    <p class="recipe-text">This is the most delicious salad - fresh and wonderful-tasting. FYI, lettuce can very much be a part of any greek salad - if you want it to. We like lettuce in my family and I often add it. It would not be 'authentic' in a Horiatiki (village) salad, but who cares?</p>
+                    <button id="download-image-btn" class="icon-btn" title="Download Image">
+                        <i class="bi bi-download"></i>
+                    </button>
+                </div>
             </div>
             
             <!-- Recipe Media Container -->
             <div class="recipe-media-container">
                 <div class="media-left">
-                  <div style="position: relative;">
-                    <!-- Floating Action Buttons -->
-                    <div class="recipe-icon-actions">
-                      <form method="POST" action="{{ url_for('save_recipe', recipe_id=recipe._id) }}" style="display: inline;">
-                        <button type="submit" class="icon-btn" title="Save to Favorites">
-                          <i class="bi bi-bookmark-heart-fill"></i>
-                        </button>
-                      </form>
+                    <div style="position: relative;">
+                        <!-- Floating Action Buttons -->
+                        <div class="recipe-icon-actions">
+                            <form method="POST" action="{{ url_for('save_recipe', recipe_id=recipe._id) }}" style="display: inline;">
+                                <button type="submit" class="icon-btn" title="Save to Favorites">
+                                    <i class="bi bi-heart"></i>
+                                    
+                                </button>
+                            </form>
+                        </div>
+                
+                        <!-- Recipe Image -->
+                        {% if recipe.picture %}
+                        <img src="{{ url_for('static', filename='uploads/' + recipe.picture) }}" alt="Recipe Image" class="recipe-photo">
+                        {% endif %}
                     </div>
-              
-                    <!-- Recipe Image -->
-                    {% if recipe.picture %}
-                    <img src="{{ url_for('static', filename='uploads/' + recipe.picture) }}" alt="Recipe Image" class="recipe-photo">
-                    {% endif %}
-                  </div>
                 </div>
-              
+                
                 <div class="media-right">
-                  {% if recipe.video_link %}
-                  <iframe width="100%" height="360" src="{{ recipe.video_link | replace('watch?v=', 'embed/') }}" frameborder="0" allowfullscreen></iframe>
-                  {% endif %}
+                    {% if recipe.video_link %}
+                    <iframe width="100%" height="360" src="{{ recipe.video_link | replace('watch?v=', 'embed/') }}" frameborder="0" allowfullscreen></iframe>
+                    {% endif %}
                 </div>
             </div>
 
- <!-- Ingredients Section -->
-<div class="ingredients-section">
-    <h3>Ingredients</h3>
-    <div>
-        <p>Serving Size: <span id="serving-size">4</span> servings</p>
-        <div class="scale-controls">
-            <button onclick="setScale(1)" id="scale-1x" class="scale-btn active">1x</button>
-            <button onclick="setScale(2)" id="scale-2x" class="scale-btn">2x</button>
-            <button onclick="setScale(4)" id="scale-4x" class="scale-btn">4x</button>
-        </div>
-    </div>
-    <div id="ingredients-container">
-        <ul class="ingredient-list" id="ingredient-list">
-            {% for ingredient in ingredients %}
-            <li>{{ ingredient }}</li>
-            {% endfor %}
-        </ul>
-    </div>
+            <div class="recipe-details">
+                <!-- Ingredients Section -->
+                <div class="ingredients-section">
+                    <div class="recipe-section-header">
+                        <h3>Ingredients</h3>
+                        <!-- Added action buttons for ingredients section -->
+                        <div class="recipe-action-buttons">
+                            <!-- Ingredients Section Action Buttons -->
+<div class="recipe-action-buttons">
+    <button id="recipe-action-btn-image" class="recipe-action-btn image-btn" title="Download Image">
+        <i class="bi bi-download"></i>
+    </button>
+    <button class="recipe-action-btn print-btn" title="Print Recipe">
+        <i class="bi bi-printer"></i> Print
+    </button>
+    <button class="recipe-action-btn share-btn" title="Share Recipe">
+        <i class="bi bi-share"></i> Share
+    </button>
 </div>
 
+                        </div>
+                    </div>
+                    <div>
+                        <p>Serving Size: <span id="serving-size">4</span> servings</p>
+                        <div class="scale-controls">
+                            <button onclick="setScale(1)" id="scale-1x" class="scale-btn active">1x</button>
+                            <button onclick="setScale(2)" id="scale-2x" class="scale-btn">2x</button>
+                            <button onclick="setScale(4)" id="scale-4x" class="scale-btn">4x</button>
+                        </div>
+                    </div>
+                    <div id="ingredients-container">
+                        <ul class="ingredient-list" id="ingredient-list">
+                            {% for ingredient in ingredients %}
+                            <li>{{ ingredient }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
 
-<!-- Instructions Section -->
-<div class="instructions-section">
-    <h3>Instructions</h3>
-    <div id="instructions-container">
-        <ol class="instruction-list">
-            {% for instruction in recipe.instructions.split('.') %}
-                {% if instruction.strip() %}
-                    <li>{{ instruction.strip() }}.</li>
-                {% endif %}
-            {% endfor %}
-        </ol>
-    </div>
-</div>
+                <!-- Instructions Section -->
+                <div class="instructions-section">
+                    <h3>Instructions</h3>
+                    <div id="instructions-container">
+                        <ol class="instruction-list">
+                            {% for instruction in recipe.instructions.split('.') %}
+                                {% if instruction.strip() %}
+                                    <li>{{ instruction.strip() }}.</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
 
             <!-- Rating Section -->
             <div class="rating-section" id="rating-section">
@@ -946,433 +814,229 @@ button[type="submit"]:hover {
             <!-- Back to Home Link -->
             <div class="home-button">
                 <a href="{{ url_for('index') }}" class="back-link">Back to Home</a>
-                <button id="download-image-btn" class="icon-btn" title="Download Image">
-                    <i class="bi bi-download"></i>
-                </button>
             </div>
         </div>
     </div>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
-let baseServingSize = 4;
-        let currentScale = 1; // Default to 1x
-        const ingredientList = document.getElementById('ingredient-list');
-        const servingSizeElement = document.getElementById('serving-size');
-
-        // This makes sure the DOM is fully loaded before running any JS
-        document.addEventListener("DOMContentLoaded", function() {
-            // Get references to UI elements
-            const showRatingBtn = document.getElementById('show-rating-btn');
-            const showReviewBtn = document.getElementById('show-review-btn');
-            const ratingSection = document.getElementById('rating-section');
-            const reviewFormContainer = document.getElementById('review-form-container');
-            const scaleButtons = document.querySelectorAll('.scale-controls button');
+    // Document ready event listener to ensure all elements are loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get references to share and print buttons
+        const printBtn = document.querySelector('.print-btn');
+        const shareBtn = document.querySelector('.share-btn');
+        
+        // Add event listeners for the buttons if they exist
+        if (printBtn) {
+            printBtn.addEventListener('click', printRecipe);
+        }
+        
+        if (shareBtn) {
+            shareBtn.addEventListener('click', shareRecipe);
+        }
+        
+        // Set up other event listeners and functionality
+        setupScaleControls();
+        setupReviewSystem();
+        setupImageDownload();
+    });
+    
+    // Function to handle printing the recipe
+    function printRecipe() {
+        // Create a clean version of the recipe for printing
+        const recipeContent = document.querySelector('.recipe-content');
+        
+        // Store the current state of elements we want to hide
+        const elementsToHide = [
+            document.querySelector('.review-list'),
+            document.querySelector('.recipe-action-buttons'),
+            document.getElementById('rating-section'),
+            document.getElementById('review-form-container'),
+            document.querySelector('.home-button'),
+            document.querySelectorAll('.icon-btn'),
+            document.querySelectorAll('.reply-form'),
+            document.querySelector('.recipe-icon-actions')
+        ];
+        
+        // Save their original display state
+        const originalDisplayValues = [];
+        elementsToHide.forEach(element => {
+            if (!element) return;
             
-            // Event listener for Rate Recipe button
-            if (showRatingBtn) {
-                showRatingBtn.addEventListener('click', function() {
-                    // Toggle the rating section visibility
-                    if (ratingSection.classList.contains('hidden')) {
-                        ratingSection.classList.remove('hidden');
-                        reviewFormContainer.classList.add('hidden'); // Hide review form
-                    } else {
-                        ratingSection.classList.add('hidden');
-                    }
-                });
-            }
-            
-            // Event listener for Write Review button
-            if (showReviewBtn) {
-                showReviewBtn.addEventListener('click', function() {
-                    // Toggle the review form visibility
-                    if (reviewFormContainer.classList.contains('hidden')) {
-                        reviewFormContainer.classList.remove('hidden');
-                        ratingSection.classList.add('hidden'); // Hide rating section
-                    } else {
-                        reviewFormContainer.classList.add('hidden');
-                    }
-                });
-            }
-            
-            // Add event listeners to stars for rating functionality
-            const stars = document.querySelectorAll(".star");
-            stars.forEach(star => {
-                star.addEventListener("click", function() {
-                    const value = this.getAttribute("data-value");
-                    const recipeId = this.parentElement.getAttribute("data-recipe");
-                    
-                    fetch("{{ url_for('rate_recipe') }}", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ recipe_id: recipeId, rating: value })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            location.reload();
-                        }
+            // Handle NodeLists (from querySelectorAll)
+            if (element.length) {
+                Array.from(element).forEach(el => {
+                    originalDisplayValues.push({
+                        el: el,
+                        display: el.style.display
                     });
+                    el.style.display = 'none';
                 });
-            });
-
-            // Initialize ingredients with scale of 1 (default)
-            // This ensures ingredients are loaded when the page loads
-            loadIngredientsOnPageLoad();
-            
-            // Add event listener for download image button
-            const downloadImageBtn = document.getElementById('download-image-btn');
-            if (downloadImageBtn) {
-                downloadImageBtn.addEventListener('click', downloadRecipeImage);
+            } else {
+                // Handle single elements
+                originalDisplayValues.push({
+                    el: element,
+                    display: element.style.display
+                });
+                element.style.display = 'none';
             }
         });
-
-        // This function ensures ingredients are loaded when the page loads
-        function loadIngredientsOnPageLoad() {
-            // Only make the API call if we have an ingredients container
-            if (ingredientList) {
-                setScale(1); // This will trigger the API call
-            }
-        }
-
-        function setScale(scale) {
-            currentScale = scale;
-            
-            // Update UI to reflect the current scale
-            const scaleButtons = document.querySelectorAll('.scale-controls button');
-            scaleButtons.forEach(button => button.classList.remove('active'));
-            const activeButton = document.getElementById(`scale-${scale}x`);
-            if (activeButton) {
-                activeButton.classList.add('active');
-            }
-
-            if (servingSizeElement) {
-                servingSizeElement.textContent = baseServingSize * scale;
-            }
-
-            // Fetch and update ingredients
-            updateIngredientList();
-        }
-
-        function updateIngredientList() {
-            fetch(`/recipe/{{ recipe._id }}/scale?scale=${currentScale}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Only clear if we have ingredients to add
-                    if (data.ingredients && data.ingredients.length > 0 && ingredientList) {
-                        ingredientList.innerHTML = '';
-                        data.ingredients.forEach(ingredient => {
-                            if (ingredient.trim()) {
-                                const li = document.createElement('li');
-                                li.textContent = ingredient;
-                                ingredientList.appendChild(li);
-                            }
-                        });
-                    }
-                } else {
-                    console.error('Error:', data.message);
+        
+        // Add print-specific styling
+        const style = document.createElement('style');
+        style.id = 'print-style';
+        style.innerHTML = `
+            @media print {
+                body, html {
+                    margin: 0;
+                    padding: 0;
+                    background: white !important;
+                    color: black !important;
                 }
-            })
-            .catch(error => {
-                console.error('Error fetching scaled ingredients:', error);
+                body::before {
+                    display: none !important;
+                }
+                .container {
+                    box-shadow: none !important;
+                    margin: 0 !important;
+                    padding: 20px !important;
+                    width: 100% !important;
+                    max-width: none !important;
+                }
+                .recipe-image img {
+                    max-height: 300px !important;
+                }
+                .recipe-icon-actions, .recipe-action-buttons, .back-link, 
+                .reply-button, .toggle-replies-button, .icon-btn {
+                    display: none !important;
+                }
+                .recipe-media-container {
+                    display: block !important;
+                }
+                .media-left {
+                    width: 100% !important;
+                    margin-bottom: 20px !important;
+                }
+                .media-right {
+                    display: none !important; /* Hide video when printing */
+                }
+                .ingredients-section, .instructions-section {
+                    height: auto !important;
+                    overflow: visible !important;
+                    page-break-inside: avoid !important;
+                }
+                @page {
+                    size: auto;
+                    margin: 0.5in;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Print the content
+        setTimeout(() => {
+            window.print();
+            
+            // Restore the display of hidden elements
+            originalDisplayValues.forEach(item => {
+                if (item && item.el) {
+                    item.el.style.display = item.display;
+                }
             });
-        }
-
-        document.getElementById('review-form').addEventListener("submit", function (event) {
-    event.preventDefault();  // Prevent page reload
-
-    let reviewText = document.getElementById("review-text").value;
-    if (!reviewText.trim()) {
-        alert("Review text is required!");
-        return;
+            
+            // Remove the print styles
+            document.head.removeChild(style);
+        }, 300);
     }
-
-    fetch("{{ url_for('add_review', recipe_id=recipe._id) }}", {
-        method: "POST",
-        body: new URLSearchParams({ "review_text": reviewText }),
-        headers: { "Content-Type": "application/x-www-form-urlencoded" }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            let reviewList = document.querySelector(".review-list");
-
-            // Check if there's a "no reviews yet" message and remove it
-            const noReviewsMsg = reviewList.querySelector("p:only-child");
-            if (noReviewsMsg && noReviewsMsg.textContent.includes("No reviews yet")) {
-                noReviewsMsg.remove();
-            }
-
-            // Create review element with reply functionality
-            let newReview = document.createElement("div");
-            newReview.classList.add("review-item");
-            newReview.setAttribute("data-review-id", data.review._id);
-            
-            newReview.innerHTML = `
-                <p>${data.review.text}</p>
-                <p class="author">By: ${data.review.author}</p>
-                <button class="reply-button" onclick="showReplyForm('${data.review._id}')">Reply</button>
-                <button class="toggle-replies-button" onclick="toggleReplies('${data.review._id}')">
-                    No Replies
-                </button>
-                
-                <!-- Reply form -->
-                <div class="reply-form" id="reply-form-${data.review._id}">
-                    <textarea placeholder="Write your reply here" id="reply-text-${data.review._id}"></textarea>
-                    <button onclick="submitReply('${data.review._id}')">Submit Reply</button>
-                </div>
-            
-                <!-- Replies container -->
-                <div class="review-replies" id="replies-${data.review._id}" style="display: none;">
-                </div>
-            `;
-
-            // Insert new review at the top of the list
-            if (reviewList.firstChild) {
-                reviewList.insertBefore(newReview, reviewList.firstChild);
-            } else {
-                reviewList.appendChild(newReview);
-            }
-
-            // Clear the text area and hide the review form
-            document.getElementById("review-text").value = "";
-            document.getElementById("review-form-container").classList.add("hidden");
+    
+    // Function to share the recipe
+    function shareRecipe() {
+        // Get recipe title
+        const recipeTitle = document.querySelector('h1').textContent.trim();
+        
+        // Try using the Web Share API first (mobile-friendly)
+        if (navigator.share) {
+            navigator.share({
+                title: recipeTitle,
+                text: `Check out this recipe for ${recipeTitle}!`,
+                url: window.location.href
+            })
+            .then(() => console.log('Successful share'))
+            .catch((error) => {
+                console.log('Error sharing:', error);
+                shareViaEmail(); // Fallback to email sharing
+            });
         } else {
-            alert(data.message);
-        }
-    })
-    .catch(error => console.error("Error submitting review:", error));
-});
-        
-        function showReplyForm(reviewId) {
-            const replyForm = document.getElementById(`reply-form-${reviewId}`);
-            
-            // Toggle the form visibility
-            if (replyForm.style.display === 'block') {
-                replyForm.style.display = 'none';
-            } else {
-                replyForm.style.display = 'block';
-            }
-        }
-        
-        function submitReply(reviewId) {
-            const replyText = document.getElementById(`reply-text-${reviewId}`).value;
-            
-            if (!replyText.trim()) {
-                alert("Reply text is required!");
-                return;
-            }
-            
-            // Send the reply to the server
-            fetch("{{ url_for('add_reply') }}", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    review_id: reviewId,
-                    recipe_id: "{{ recipe._id }}",
-                    reply_text: replyText
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Create and append the new reply element
-                    const repliesContainer = document.getElementById(`replies-${reviewId}`);
-                    
-                    const replyElement = document.createElement('div');
-                    replyElement.classList.add('reply-item');
-                    replyElement.innerHTML = `
-                        <p>${data.reply.text}</p>
-                        <p class="author">By: ${data.reply.author}</p>
-                    `;
-                    
-                    repliesContainer.appendChild(replyElement);
-                    
-                    // Clear the reply form and hide it
-                    document.getElementById(`reply-text-${reviewId}`).value = "";
-                    document.getElementById(`reply-form-${reviewId}`).style.display = 'none';
-                } else {
-                    alert(data.message || "Error adding reply");
-                }
-            })
-            .catch(error => {
-                console.error("Error submitting reply:", error);
-                alert("An error occurred while submitting your reply");
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize the toggle buttons
-            const reviewItems = document.querySelectorAll('.review-item');
-            
-            reviewItems.forEach(function(reviewItem) {
-                const reviewId = reviewItem.getAttribute('data-review-id');
-                const repliesDiv = document.getElementById('replies-' + reviewId);
-                const toggleButton = reviewItem.querySelector('.toggle-replies-button');
-                
-                if (repliesDiv && toggleButton) {
-                    // Initially hide all reply sections
-                    repliesDiv.style.display = 'none';
-                    
-                    // Set the initial button text based on reply count
-                    const replyCount = repliesDiv.querySelectorAll('.reply-item').length;
-                    
-                    // Update the button text to include the count immediately on page load
-                    if (replyCount === 0) {
-                        toggleButton.textContent = 'No Replies';
-                    } else {
-                        toggleButton.textContent = `See ${replyCount} Replies`;
-                    }
-                }
-            });
-        });
-
-        function toggleReplies(reviewId) {
-            const repliesDiv = document.getElementById('replies-' + reviewId);
-            const toggleButton = document.querySelector(`.review-item[data-review-id="${reviewId}"] .toggle-replies-button`);
-            
-            if (!repliesDiv || !toggleButton) return;
-            
-            const replyCount = repliesDiv.querySelectorAll('.reply-item').length;
-            
-            if (repliesDiv.style.display === 'none') {
-                // Show replies
-                repliesDiv.style.display = 'block';
-                toggleButton.textContent = 'Hide Replies';
-            } else {
-                // Hide replies
-                repliesDiv.style.display = 'none';
-                if (replyCount === 0) {
-                    toggleButton.textContent = 'No Replies';
-                } else {
-                    toggleButton.textContent = `See  ${replyCount} Replies`;
-                }
-            }
-        }
-        // Add event listeners for the new buttons
-        const downloadImageBtn = document.getElementById('download-image-btn');
-        const printPdfBtn = document.getElementById('print-pdf-btn');
-        
-        // Download as Image button click handler
-        downloadImageBtn.addEventListener('click', function() {
-            // Create a clean version of the recipe for capture
-            const recipeContent = document.querySelector('.recipe-content');
-            const recipeCopy = recipeContent.cloneNode(true);
-            
-            // Remove elements we don't want in the image
-            const elementsToRemove = ['#rating-section', '#review-form-container', '.review-list', '.action-buttons', '.reply-form'];
-            elementsToRemove.forEach(selector => {
-                const elements = recipeCopy.querySelectorAll(selector);
-                elements.forEach(el => el.remove());
-            });
-            
-            // Create a temporary container for the cleaned recipe
-            const tempContainer = document.createElement('div');
-            tempContainer.style.width = '800px';
-            tempContainer.style.background = 'white';
-            tempContainer.style.padding = '20px';
-            tempContainer.style.position = 'absolute';
-            tempContainer.style.left = '-9999px';
-            tempContainer.appendChild(recipeCopy);
-            document.body.appendChild(tempContainer);
-            
-            // Use html2canvas to convert it to an image
-            html2canvas(tempContainer, {
-                scale: 2, // Higher quality
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: '#ffffff'
-            }).then(canvas => {
-                // Convert the canvas to a data URL and trigger a download
-                const imageURL = canvas.toDataURL('image/jpeg', 0.9);
-                const link = document.createElement('a');
-                link.href = imageURL;
-                link.download = `${document.querySelector('h1').textContent.trim()}.jpg`;
-                link.click();
-                
-                // Clean up
-                document.body.removeChild(tempContainer);
-            }).catch(error => {
-                console.error('Error generating image:', error);
-                alert('There was an error generating the image. Please try again.');
-            });
-        });
-        
-        // Print as PDF button click handler
-        printPdfBtn.addEventListener('click', function() {
-            // Create a clean version of the recipe for printing
-            const recipeElements = document.querySelector('.recipe-content');
-            
-            // Store the current state of elements we want to hide
-            const elementsToHide = [
-                document.querySelector('.review-list'),
-                document.querySelector('.action-buttons'),
-                document.getElementById('rating-section'),
-                document.getElementById('review-form-container')
-            ];
-            
-            const originalDisplayValues = elementsToHide.map(el => {
-                if (!el) return null;
-                return { el, display: el.style.display };
-            });
-            
-            // Hide elements for printing
-            elementsToHide.forEach(el => {
-                if (el) el.style.display = 'none';
-            });
-            
-            // Add print-specific styling
-            const style = document.createElement('style');
-            style.id = 'print-style';
-            style.innerHTML = `
-                @media print {
-                    body, html {
-                        margin: 0;
-                        padding: 0;
-                        background: white;
-                    }
-                    body::before {
-                        display: none;
-                    }
-                    .container {
-                        box-shadow: none;
-                        margin: 0;
-                        padding: 20px;
-                    }
-                    .back-link, button[type="submit"] {
-                        display: none;
-                    }
-                    .recipe-image img {
-                        max-height: 300px;
-                    }
-                    @page {
-                        size: auto;
-                        margin: 0.5in;
-                    }
-                }
+            // Fallback for desktop: offer clipboard copy and email options
+            const shareOptions = document.createElement('div');
+            shareOptions.className = 'share-options';
+            shareOptions.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+                z-index: 1000;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
             `;
-            document.head.appendChild(style);
             
-            // Trigger the print dialog
-            setTimeout(() => {
-                window.print();
-                
-                // Restore the display of hidden elements
-                originalDisplayValues.forEach(item => {
-                    if (item && item.el) item.el.style.display = item.display;
-                });
-                
-                // Remove the print styles
-                document.head.removeChild(style);
-            }, 300);
-        });
-        // Function to share recipe via email
+            // Create a backdrop
+            const backdrop = document.createElement('div');
+            backdrop.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 999;
+            `;
+            
+            // Add share options
+            shareOptions.innerHTML = `
+                <h3 style="margin-top:0;">Share "${recipeTitle}"</h3>
+                <button id="copy-link" style="padding:10px; margin:5px 0; cursor:pointer;">Copy Link</button>
+                <button id="share-email" style="padding:10px; margin:5px 0; cursor:pointer;">Share via Email</button>
+                <button id="close-share" style="padding:10px; margin:5px 0; cursor:pointer;">Close</button>
+            `;
+            
+            // Add to document
+            document.body.appendChild(backdrop);
+            document.body.appendChild(shareOptions);
+            
+            // Set up event listeners
+            document.getElementById('copy-link').addEventListener('click', function() {
+                navigator.clipboard.writeText(window.location.href);
+                alert('Link copied to clipboard!');
+                cleanup();
+            });
+            
+            document.getElementById('share-email').addEventListener('click', function() {
+                shareViaEmail();
+                cleanup();
+            });
+            
+            document.getElementById('close-share').addEventListener('click', cleanup);
+            backdrop.addEventListener('click', cleanup);
+            
+            function cleanup() {
+                document.body.removeChild(backdrop);
+                document.body.removeChild(shareOptions);
+            }
+        }
+    }
+    
+    // Function to share recipe via email
     function shareViaEmail() {
         // Get recipe title
         const recipeTitle = document.querySelector('h1').textContent.trim();
         
         // Get recipe description
-        const recipeDescription = document.querySelector('.recipe-description p').textContent.trim();
+        const recipeDescription = document.querySelector('.recipe-text').textContent.trim();
         
         // Get ingredients list
         const ingredients = [];
@@ -1410,36 +1074,361 @@ let baseServingSize = 4;
         const mailtoLink = `mailto:?subject=${subject}&body=${body}`;
         window.location.href = mailtoLink;
     }
-    document.addEventListener("DOMContentLoaded", function() {
-    // Setup read more functionality for ingredients
-    setupReadMore('ingredients-container', 'ingredients-read-more');
     
-    // Setup read more functionality for instructions
-    setupReadMore('instructions-container', 'instructions-read-more');
-    
-    // Rest of your existing DOMContentLoaded code...
-});
-
-function setupReadMore(containerId, linkId) {
-    const container = document.getElementById(containerId);
-    const readMoreLink = document.getElementById(linkId);
-    
-    // Check if the content needs a read more button
-    if (container.scrollHeight <= container.clientHeight) {
-        readMoreLink.classList.add('hidden');
+    // Function to download the recipe as image
+    function downloadRecipeImage() {
+        // Create a clean version of the recipe for capture
+        const recipeContent = document.querySelector('.recipe-content');
+        const recipeCopy = recipeContent.cloneNode(true);
+        
+        // Remove elements we don't want in the image
+        const elementsToRemove = ['#rating-section', '#review-form-container', '.review-list', 
+                                  '.recipe-action-buttons', '.reply-form', '.home-button'];
+        elementsToRemove.forEach(selector => {
+            const elements = recipeCopy.querySelectorAll(selector);
+            elements.forEach(el => el.remove());
+        });
+        
+        // Create a temporary container for the cleaned recipe
+        const tempContainer = document.createElement('div');
+        tempContainer.style.width = '800px';
+        tempContainer.style.background = 'white';
+        tempContainer.style.padding = '20px';
+        tempContainer.style.position = 'absolute';
+        tempContainer.style.left = '-9999px';
+        tempContainer.appendChild(recipeCopy);
+        document.body.appendChild(tempContainer);
+        
+        // Use html2canvas to convert it to an image
+        html2canvas(tempContainer, {
+            scale: 2, // Higher quality
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#ffffff'
+        }).then(canvas => {
+            // Convert the canvas to a data URL and trigger a download
+            const imageURL = canvas.toDataURL('image/jpeg', 0.9);
+            const link = document.createElement('a');
+            link.href = imageURL;
+            link.download = `${document.querySelector('h1').textContent.trim()}.jpg`;
+            link.click();
+            
+            // Clean up
+            document.body.removeChild(tempContainer);
+        }).catch(error => {
+            console.error('Error generating image:', error);
+            alert('There was an error generating the image. Please try again.');
+        });
     }
     
-    // Add click event for read more
-    readMoreLink.addEventListener('click', function() {
-        if (container.classList.contains('expanded')) {
-            container.classList.remove('expanded');
-            readMoreLink.textContent = 'Read More';
+    // Function to setup scale controls for ingredients
+    function setupScaleControls() {
+        let baseServingSize = 4;
+        let currentScale = 1; // Default to 1x
+        const ingredientList = document.getElementById('ingredient-list');
+        const servingSizeElement = document.getElementById('serving-size');
+        const scaleButtons = document.querySelectorAll('.scale-controls button');
+        
+        // Add event listeners to scale buttons
+        scaleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Get scale from button id (e.g., "scale-2x" => 2)
+                const scale = parseInt(this.id.replace('scale-', '').replace('x', ''));
+                setScale(scale);
+            });
+        });
+        
+        // Initialize with default scale
+        setScale(1);
+        
+        function setScale(scale) {
+            currentScale = scale;
+            
+            // Update UI to reflect the current scale
+            scaleButtons.forEach(button => button.classList.remove('active'));
+            const activeButton = document.getElementById(`scale-${scale}x`);
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+    
+            if (servingSizeElement) {
+                servingSizeElement.textContent = baseServingSize * scale;
+            }
+    
+            // Fetch and update ingredients
+            updateIngredientList();
+        }
+    
+        function updateIngredientList() {
+            const recipeId = window.location.pathname.split('/').pop(); // Extract recipe ID from URL
+            
+            fetch(`/recipe/${recipeId}/scale?scale=${currentScale}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Only clear if we have ingredients to add
+                    if (data.ingredients && data.ingredients.length > 0 && ingredientList) {
+                        ingredientList.innerHTML = '';
+                        data.ingredients.forEach(ingredient => {
+                            if (ingredient.trim()) {
+                                const li = document.createElement('li');
+                                li.textContent = ingredient;
+                                ingredientList.appendChild(li);
+                            }
+                        });
+                    }
+                } else {
+                    console.error('Error:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching scaled ingredients:', error);
+            });
+        }
+    }
+    
+    // Function to setup review system
+    function setupReviewSystem() {
+        const reviewForm = document.getElementById('review-form');
+        
+        if (reviewForm) {
+            reviewForm.addEventListener("submit", function(event) {
+                event.preventDefault();  // Prevent page reload
+    
+                let reviewText = document.getElementById("review-text").value;
+                if (!reviewText.trim()) {
+                    alert("Review text is required!");
+                    return;
+                }
+    
+                // Extract recipe ID from the form's action URL
+                const recipeId = this.action.split('/').pop();
+    
+                fetch(this.action, {
+                    method: "POST",
+                    body: new URLSearchParams({ "review_text": reviewText }),
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" }
+                })
+                .then(response => response.json())
+                .then(data => handleReviewSubmission(data))
+                .catch(error => console.error("Error submitting review:", error));
+            });
+        }
+    
+        // Initialize star rating functionality
+        initializeStarRating();
+    
+        // Initialize reply functionality for existing reviews
+        initializeReplySystem();
+    }
+    
+    function handleReviewSubmission(data) {
+        if (data.success) {
+            let reviewList = document.querySelector(".review-list");
+    
+            // Check if there's a "no reviews yet" message and remove it
+            const noReviewsMsg = reviewList.querySelector("p:only-child");
+            if (noReviewsMsg && noReviewsMsg.textContent.includes("No reviews yet")) {
+                noReviewsMsg.remove();
+            }
+    
+            // Create review element with reply functionality
+            let newReview = document.createElement("div");
+            newReview.classList.add("review-item");
+            newReview.setAttribute("data-review-id", data.review._id);
+            
+            newReview.innerHTML = `
+                <p>${data.review.text}</p>
+                <p class="author">By: ${data.review.author}</p>
+                <button class="reply-button" onclick="showReplyForm('${data.review._id}')">Reply</button>
+                <button class="toggle-replies-button" onclick="toggleReplies('${data.review._id}')">
+                    No Replies
+                </button>
+                
+                <!-- Reply form -->
+                <div class="reply-form" id="reply-form-${data.review._id}">
+                    <textarea placeholder="Write your reply here" id="reply-text-${data.review._id}"></textarea>
+                    <button onclick="submitReply('${data.review._id}')">Submit Reply</button>
+                </div>
+            
+                <!-- Replies container -->
+                <div class="review-replies" id="replies-${data.review._id}" style="display: none;">
+                </div>
+            `;
+    
+            // Insert new review at the top of the list
+            if (reviewList.firstChild) {
+                reviewList.insertBefore(newReview, reviewList.firstChild);
+            } else {
+                reviewList.appendChild(newReview);
+            }
+    
+            // Clear the text area and hide the review form
+            document.getElementById("review-text").value = "";
         } else {
-            container.classList.add('expanded');
-            readMoreLink.textContent = 'Read Less';
+            alert(data.message || "Error submitting review");
+        }
+    }
+    
+    function initializeStarRating() {
+        // Add event listeners to stars for rating functionality
+        const stars = document.querySelectorAll(".star");
+        stars.forEach(star => {
+            star.addEventListener("click", function() {
+                const value = this.getAttribute("data-value");
+                const recipeId = this.parentElement.getAttribute("data-recipe");
+                
+                // Call your server API endpoint to save the rating
+                fetch("/rate_recipe", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ recipe_id: recipeId, rating: value })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload(); // Refresh to show updated rating
+                    }
+                });
+            });
+        });
+    }
+    
+    function initializeReplySystem() {
+        // Initialize the toggle buttons
+        const reviewItems = document.querySelectorAll('.review-item');
+        
+        reviewItems.forEach(function(reviewItem) {
+            const reviewId = reviewItem.getAttribute('data-review-id');
+            const repliesDiv = document.getElementById('replies-' + reviewId);
+            const toggleButton = reviewItem.querySelector('.toggle-replies-button');
+            
+            if (repliesDiv && toggleButton) {
+                // Initially hide all reply sections
+                repliesDiv.style.display = 'none';
+                
+                // Set the initial button text based on reply count
+                const replyCount = repliesDiv.querySelectorAll('.reply-item').length;
+                
+                // Update the button text to include the count
+                if (replyCount === 0) {
+                    toggleButton.textContent = 'No Replies';
+                } else {
+                    toggleButton.textContent = `See ${replyCount} Replies`;
+                }
+            }
+        });
+    }
+    
+    function showReplyForm(reviewId) {
+        const replyForm = document.getElementById(`reply-form-${reviewId}`);
+        
+        // Toggle the form visibility
+        if (replyForm.style.display === 'block') {
+            replyForm.style.display = 'none';
+        } else {
+            replyForm.style.display = 'block';
+        }
+    }
+    
+    function submitReply(reviewId) {
+        const replyText = document.getElementById(`reply-text-${reviewId}`).value;
+        
+        if (!replyText.trim()) {
+            alert("Reply text is required!");
+            return;
+        }
+        
+        // Extract recipe ID from the current URL
+        const pathParts = window.location.pathname.split('/');
+        const recipeId = pathParts[pathParts.length - 1];
+        
+        // Send the reply to the server
+        fetch("/add_reply", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                review_id: reviewId,
+                recipe_id: recipeId,
+                reply_text: replyText
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Create and append the new reply element
+                const repliesContainer = document.getElementById(`replies-${reviewId}`);
+                
+                const replyElement = document.createElement('div');
+                replyElement.classList.add('reply-item');
+                replyElement.innerHTML = `
+                    <p>${data.reply.text}</p>
+                    <p class="author">By: ${data.reply.author}</p>
+                `;
+                
+                repliesContainer.appendChild(replyElement);
+                
+                // Clear the reply form and hide it
+                document.getElementById(`reply-text-${reviewId}`).value = "";
+                document.getElementById(`reply-form-${reviewId}`).style.display = 'none';
+                
+                // Update the replies count button
+                const toggleButton = document.querySelector(`.review-item[data-review-id="${reviewId}"] .toggle-replies-button`);
+                if (toggleButton) {
+                    const replyCount = repliesContainer.querySelectorAll('.reply-item').length;
+                    toggleButton.textContent = `Hide Replies`;
+                    
+                    // Show the replies container
+                    repliesContainer.style.display = 'block';
+                }
+            } else {
+                alert(data.message || "Error adding reply");
+            }
+        })
+        .catch(error => {
+            console.error("Error submitting reply:", error);
+            alert("An error occurred while submitting your reply");
+        });
+    }
+    
+    function toggleReplies(reviewId) {
+        const repliesDiv = document.getElementById('replies-' + reviewId);
+        const toggleButton = document.querySelector(`.review-item[data-review-id="${reviewId}"] .toggle-replies-button`);
+        
+        if (!repliesDiv || !toggleButton) return;
+        
+        const replyCount = repliesDiv.querySelectorAll('.reply-item').length;
+        
+        if (repliesDiv.style.display === 'none') {
+            // Show replies
+            repliesDiv.style.display = 'block';
+            toggleButton.textContent = 'Hide Replies';
+        } else {
+            // Hide replies
+            repliesDiv.style.display = 'none';
+            if (replyCount === 0) {
+                toggleButton.textContent = 'No Replies';
+            } else {
+                toggleButton.textContent = `See ${replyCount} Replies`;
+            }
+        }
+    }
+    
+    // Function to handle image downloads
+    
+    function setupImageDownload() {
+    const downloadButtons = [
+        document.getElementById('download-image-btn'),  // from description
+        document.getElementById('recipe-action-btn-image') // from ingredients section
+    ];
+
+    downloadButtons.forEach(btn => {
+        if (btn) {
+            btn.addEventListener('click', downloadRecipeImage);
         }
     });
 }
+
     
     </script>
   
