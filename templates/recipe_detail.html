@@ -1063,7 +1063,7 @@
         if (navigator.share) {
             navigator.share({
                 title: recipeTitle,
-                text: Check out this recipe for ${recipeTitle}!,
+                text: `Check out this recipe for ${recipeTitle}!`,
                 url: window.location.href
             })
             .then(() => console.log('Successful share'))
@@ -1156,27 +1156,27 @@
         });
         
         // Format the email body
-        let emailBody = Check out this recipe for ${recipeTitle}!\n\n;
-        emailBody += Description: ${recipeDescription}\n\n;
+        let emailBody = `Check out this recipe for ${recipeTitle}!\n\n`;
+        emailBody += `Description: ${recipeDescription}\n\n`;
         
         emailBody += "Ingredients:\n";
         ingredients.forEach((ingredient, index) => {
-            emailBody += - ${ingredient}\n;
+            emailBody += `- ${ingredient}\n`;
         });
         
         emailBody += "\nInstructions:\n";
         instructions.forEach((instruction, index) => {
-            emailBody += ${index + 1}. ${instruction}\n;
+            emailBody += `${index + 1}. ${instruction}\n`;
         });
         
         emailBody += "\n\nShared from the Recipe App";
         
         // Encode the subject and body for mailto link
-        const subject = encodeURIComponent(Recipe: ${recipeTitle});
+        const subject = encodeURIComponent(`Recipe: ${recipeTitle}`);
         const body = encodeURIComponent(emailBody);
         
         // Create and open the mailto link
-        const mailtoLink = mailto:?subject=${subject}&body=${body};
+        const mailtoLink = `mailto:?subject=${subject}&body=${body}`;
         window.location.href = mailtoLink;
     }
     // Function to download the recipe as image
@@ -1214,7 +1214,7 @@
             const imageURL = canvas.toDataURL('image/jpeg', 0.9);
             const link = document.createElement('a');
             link.href = imageURL;
-            link.download = ${document.querySelector('h1').textContent.trim()}.jpg;
+            link.download = `${document.querySelector('h1').textContent.trim()}.jpg`;
             link.click();
             
             // Clean up
@@ -1250,7 +1250,7 @@
             
             // Update UI to reflect the current scale
             scaleButtons.forEach(button => button.classList.remove('active'));
-            const activeButton = document.getElementById(scale-${scale}x);
+            const activeButton = document.getElementById(`scale-${scale}x`);
             if (activeButton) {
                 activeButton.classList.add('active');
             }
@@ -1266,7 +1266,7 @@
         function updateIngredientList() {
             const recipeId = window.location.pathname.split('/').pop(); // Extract recipe ID from URL
             
-            fetch(/recipe/${recipeId}/scale?scale=${currentScale})
+            fetch(`/recipe/${recipeId}/scale?scale=${currentScale}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -1418,14 +1418,14 @@
                 if (replyCount === 0) {
                     toggleButton.textContent = 'No Replies';
                 } else {
-                    toggleButton.textContent = See ${replyCount} Replies;
+                    toggleButton.textContent = `See ${replyCount} Replies`;
                 }
             }
         });
     }
     
     function showReplyForm(reviewId) {
-        const replyForm = document.getElementById(reply-form-${reviewId});
+        const replyForm = document.getElementById(`reply-form-${reviewId}`);
         
         // Toggle the form visibility
         if (replyForm.style.display === 'block') {
@@ -1436,7 +1436,7 @@
     }
     
     function submitReply(reviewId) {
-        const replyText = document.getElementById(reply-text-${reviewId}).value;
+        const replyText = document.getElementById(`reply-text-${reviewId}`).value;
         
         if (!replyText.trim()) {
             alert("Reply text is required!");
@@ -1461,7 +1461,7 @@
         .then(data => {
             if (data.success) {
                 // Create and append the new reply element
-                const repliesContainer = document.getElementById(replies-${reviewId});
+                const repliesContainer = document.getElementById(`replies-${reviewId}`);
                 
                 const replyElement = document.createElement('div');
                 replyElement.classList.add('reply-item');
@@ -1473,14 +1473,14 @@
                 repliesContainer.appendChild(replyElement);
                 
                 // Clear the reply form and hide it
-                document.getElementById(reply-text-${reviewId}).value = "";
-                document.getElementById(reply-form-${reviewId}).style.display = 'none';
+                document.getElementById(`reply-text-${reviewId}`).value = "";
+                document.getElementById(`reply-form-${reviewId}`).style.display = 'none';
                 
                 // Update the replies count button
-                const toggleButton = document.querySelector(.review-item[data-review-id="${reviewId}"] .toggle-replies-button);
+                const toggleButton = document.querySelector(`.review-item[data-review-id="${reviewId}"] .toggle-replies-button`);
                 if (toggleButton) {
                     const replyCount = repliesContainer.querySelectorAll('.reply-item').length;
-                    toggleButton.textContent = Hide Replies;
+                    toggleButton.textContent = `Hide Replies`;
                     
                     // Show the replies container
                     repliesContainer.style.display = 'block';
@@ -1497,7 +1497,7 @@
     
     function toggleReplies(reviewId) {
         const repliesDiv = document.getElementById('replies-' + reviewId);
-        const toggleButton = document.querySelector(.review-item[data-review-id="${reviewId}"] .toggle-replies-button);
+        const toggleButton = document.querySelector(`.review-item[data-review-id="${reviewId}"] .toggle-replies-button`);
         
         if (!repliesDiv || !toggleButton) return;
         
@@ -1513,7 +1513,7 @@
             if (replyCount === 0) {
                 toggleButton.textContent = 'No Replies';
             } else {
-                toggleButton.textContent = See ${replyCount} Replies;
+                toggleButton.textContent = `See ${replyCount} Replies`;
             }
         }
     }
@@ -1536,7 +1536,6 @@
     
     </script>
   
-
 </body>
 
 </html>
