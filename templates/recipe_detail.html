@@ -231,23 +231,55 @@
             color: #fff;
         }
         .ingredients-section {
-  grid-column: span 2;
-}
+            grid-column: span 2;
+        }
 
 
-        /* Ingredient and instruction sections styling */
+        /* Ingredient and instruction sections styling - MODIFIED */
         .ingredients-section,
         .instructions-section {
             height: 400px; /* Fixed equal height */
             overflow-y: auto; /* Enable vertical scrolling */
-            padding: 20px;
             background-color: #f9f9f9;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            position: relative; /* Added for sticky header positioning */
         }
 
         #ingredients-container {
             width: 100%;
+            padding: 0 20px 20px 20px; /* Add padding to container */
+        }
+
+        /* MODIFIED - Recipe section header to be sticky and have proper background */
+        .recipe-section-header {
+            position: sticky;
+            top: 0;
+            background-color: #f9f9f9; /* Match section background */
+            z-index: 100;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        /* MODIFIED - Fixed Instructions section header */
+        .instructions-section h3 {
+            position: sticky;
+            top: 0;
+            background-color: #f9f9f9;
+            z-index: 100;
+            padding: 20px;
+            width: 100%;
+            margin: 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        /* Added for instructions container padding */
+        #instructions-container {
+            padding: 0 20px 20px 20px;
         }
 
         .ingredient-list {
@@ -299,90 +331,91 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
-        /* Enhanced styling for the review textarea */
-        #review-text {
-            width: 100%;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            min-height: 120px;
-            font-family: Arial, sans-serif;
-            font-size: 1rem;
-            resize: vertical;
-            transition: border 0.3s ease;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
+        .rating-review-section {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    margin-top: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: space-around;
+}
 
-        #review-text:focus {
-            border-color: #000;
-            outline: none;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 5px rgba(0, 0, 0, 0.2);
-        }
+/* Titles */
+.section-title {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center;
+}
 
-        /* Star rating styling */
-        .star-rating {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 15px;
-        }
+/* Rating Box */
+.rating-box {
+    flex: 1 1 300px;
+    text-align: center;
+}
 
-        .star {
-            font-size: 2rem;
-            color: #ddd;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
+/* Star Rating */
+.star-rating {
+    font-size: 30px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
 
-        .star:hover,
-        .star.active {
-            color: black;
-        }
+.star {
+    color: #ccc;
+    transition: color 0.3s;
+}
 
-        .star:hover ~ .star {
-            color: black;
-        }
+.star.active, 
+.star:hover, 
+.star:hover ~ .star {
+    color: #f7c948;
+}
 
-        .rating-instructions {
-            text-align: center;
-            margin-top: 10px;
-            color: #666;
-            font-style: italic;
-        }
+/* Average Rating */
+.average-rating {
+    font-size: 16px;
+    color: #555;
+}
 
-        /* Buttons styling */
-        .submit-button, .action-button, .save-button, .back-link {
-            background-color: #000;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 1rem;
-        }
+/* Review Box */
+.review-box {
+    flex: 1 1 300px;
+}
 
-        .submit-button:hover, .action-button:hover, .save-button:hover, .back-link:hover {
-            background-color: #333;
-            transform: translateY(-2px);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
+/* Review Form */
+#review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
 
-        /* Button container */
-        .button-container, .action-buttons {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
+#review-text {
+    height: 150px;
+    padding: 15px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: vertical;
+}
 
-        .back-link {
-            margin-top: 30px;
-        }
+.submit-button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: black;
+}
 
         /* For smaller screens, make buttons more mobile-friendly */
         @media (max-width: 768px) {
@@ -646,6 +679,76 @@
             align-items: center;
             margin-bottom: 15px;
         }
+        .home-button {
+  display: block;
+  margin: 20px auto 0;
+  text-align: center;
+}
+
+.home-button a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+  transition: transform 0.2s;
+}
+
+.home-button a:hover {
+  transform: scale(1.1);
+}
+
+.home-icon {
+  background-color: black;
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.home-icon i {
+  font-size: 24px;
+  color: white; /* Explicitly set icon color to white */
+}
+
+.home-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+.section-divider {
+    border: none;
+    border-top: 2px solid #ccc;
+    margin: 20px 0;
+}
+
+.recipe-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.recipe-action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.recipe-action-btn {
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.recipe-action-btn:hover {
+    background: #e0e0e0;
+}
     </style>
 </head>
 
@@ -658,8 +761,8 @@
                 <h3 class="description-title">Description</h3>
                 <div class="description-wrapper">
                     <p class="recipe-text">This is the most delicious salad - fresh and wonderful-tasting. FYI, lettuce can very much be a part of any greek salad - if you want it to. We like lettuce in my family and I often add it. It would not be 'authentic' in a Horiatiki (village) salad, but who cares?</p>
-                    <button id="download-image-btn" class="icon-btn" title="Download Image">
-                        <i class="bi bi-download"></i>
+                    <!--<button id="download-image-btn" class="icon-btn" title="Download Image">
+                        <i class="bi bi-download"></i>-->
                     </button>
                 </div>
             </div>
@@ -697,43 +800,39 @@
                 <div class="ingredients-section">
                     <div class="recipe-section-header">
                         <h3>Ingredients</h3>
-                        <!-- Added action buttons for ingredients section -->
+                        <!-- Action buttons inside the header -->
                         <div class="recipe-action-buttons">
-                            <!-- Ingredients Section Action Buttons -->
-<div class="recipe-action-buttons">
-    <button id="recipe-action-btn-image" class="recipe-action-btn image-btn" title="Download Image">
-        <i class="bi bi-download"></i>
-    </button>
-    <button class="recipe-action-btn print-btn" title="Print Recipe">
-        <i class="bi bi-printer"></i> Print
-    </button>
-    <button class="recipe-action-btn share-btn" title="Share Recipe">
-        <i class="bi bi-share"></i> Share
-    </button>
-</div>
-
+                            <button id="recipe-action-btn-image" class="recipe-action-btn image-btn" title="Download Image">
+                                <i class="bi bi-download"></i>
+                            </button>
+                            <button class="recipe-action-btn print-btn" title="Print Recipe">
+                                <i class="bi bi-printer"></i> Print
+                            </button>
+                            <button class="recipe-action-btn share-btn" title="Share Recipe">
+                                <i class="bi bi-share"></i> Share
+                            </button>
                         </div>
                     </div>
-                    <div>
+                
+                    <div id="ingredients-container">
                         <p>Serving Size: <span id="serving-size">4</span> servings</p>
                         <div class="scale-controls">
                             <button onclick="setScale(1)" id="scale-1x" class="scale-btn active">1x</button>
                             <button onclick="setScale(2)" id="scale-2x" class="scale-btn">2x</button>
                             <button onclick="setScale(4)" id="scale-4x" class="scale-btn">4x</button>
                         </div>
-                    </div>
-                    <div id="ingredients-container">
                         <ul class="ingredient-list" id="ingredient-list">
                             {% for ingredient in ingredients %}
-                            <li>{{ ingredient }}</li>
+                                <li>{{ ingredient }}</li>
                             {% endfor %}
                         </ul>
                     </div>
                 </div>
-
-                <!-- Instructions Section -->
                 <div class="instructions-section">
-                    <h3>Instructions</h3>
+                    
+                        <h3>Instructions</h3>
+                    
+                    
                     <div id="instructions-container">
                         <ol class="instruction-list">
                             {% for instruction in recipe.instructions.split('.') %}
@@ -744,32 +843,33 @@
                         </ol>
                     </div>
                 </div>
-            </div>
-            
-
-            <!-- Rating Section -->
-            <div class="rating-section" id="rating-section">
-                <h2>Rate this Recipe</h2>
-                <div class="star-rating" data-recipe="{{ recipe._id }}">
-                    {% for i in range(1, 6) %}
-                        <span class="star {% if recipe.get('average_rating', 0) >= i %}active{% endif %}" data-value="{{ i }}">
-                            &#9733;
-                        </span>
-                    {% endfor %}
                 </div>
-                <p class="average-rating">
-                    Average Rating: {{ "%.1f"|format(recipe.get('average_rating', 0)) if recipe.get('average_rating', 0) else "No ratings yet" }}
-                </p>
-            </div>
+                
 
-            <!-- Review Form -->
-            <div id="review-form-container" class="form-container">
-                <h3>Write Your Review</h3>
-                <form id="review-form" action="{{ url_for('add_review', recipe_id=recipe._id) }}" method="post">
-                    <textarea id="review-text" name="review_text" placeholder="Share your thoughts about this recipe" required></textarea>
-                    <button type="submit" class="submit-button">Submit Review</button>
-                </form>
-            </div>
+<!-- Rating and Review Section -->
+<section class="rating-review-section">
+    <div class="rating-box">
+        <h2 class="section-title">⭐ Rate this Recipe</h2>
+        <div class="star-rating" data-recipe="{{ recipe._id }}">
+            {% for i in range(1, 6) %}
+                <span class="star {% if recipe.get('average_rating', 0) >= i %}active{% endif %}" data-value="{{ i }}">
+                    &#9733;
+                </span>
+            {% endfor %}
+        </div>
+        <p class="average-rating">
+            {{ "Average Rating: {:.1f}".format(recipe.get('average_rating', 0)) if recipe.get('average_rating', 0) else "No ratings yet" }}
+        </p>
+    </div>
+
+    <div class="review-box">
+        <h3 class="section-title">📝 Write Your Review</h3>
+        <form id="review-form" action="{{ url_for('add_review', recipe_id=recipe._id) }}" method="post">
+            <textarea id="review-text" name="review_text" placeholder="Share your thoughts..." required></textarea>
+            <button type="submit" class="submit-button">Submit</button>
+        </form>
+    </div>
+</section>
             
             <!-- Review List -->
             <div class="review-list">
@@ -812,11 +912,17 @@
             </div>
 
             <!-- Back to Home Link -->
-            <div class="home-button">
-                <a href="{{ url_for('index') }}" class="back-link">Back to Home</a>
-            </div>
+            
         </div>
     </div>
+   <div class="home-button">
+  <a href="{{ url_for('index') }}">
+    <div class="home-icon">
+      <i class="bi bi-house-fill"></i>
+    </div>
+    <span class="home-text">Back to Home</span>
+  </a>
+</div>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
     // Document ready event listener to ensure all elements are loaded
@@ -1029,14 +1135,13 @@
             }
         }
     }
-    
     // Function to share recipe via email
     function shareViaEmail() {
         // Get recipe title
         const recipeTitle = document.querySelector('h1').textContent.trim();
         
         // Get recipe description
-        const recipeDescription = document.querySelector('.recipe-text').textContent.trim();
+        const recipeDescription = document.querySelector('.recipe-description p').textContent.trim();
         
         // Get ingredients list
         const ingredients = [];
@@ -1074,7 +1179,6 @@
         const mailtoLink = `mailto:?subject=${subject}&body=${body}`;
         window.location.href = mailtoLink;
     }
-    
     // Function to download the recipe as image
     function downloadRecipeImage() {
         // Create a clean version of the recipe for capture
