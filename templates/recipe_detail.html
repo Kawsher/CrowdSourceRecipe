@@ -646,6 +646,116 @@
             align-items: center;
             margin-bottom: 15px;
         }
+        .home-button {
+  display: block;
+  margin: 20px auto 0;
+  text-align: center;
+}
+
+.home-button a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+  transition: transform 0.2s;
+}
+
+.home-button a:hover {
+  transform: scale(1.1);
+}
+
+.home-icon {
+  background-color: black;
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.home-icon i {
+  font-size: 24px;
+  color: white; /* Explicitly set icon color to white */
+}
+
+.home-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+.section-divider {
+    border: none;
+    border-top: 2px solid #ccc;
+    margin: 20px 0;
+}
+
+.recipe-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.recipe-action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.recipe-action-btn {
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.recipe-action-btn:hover {
+    background: #e0e0e0;
+}
+  /* Make the recipe section headers sticky */
+  .recipe-section-header {
+    position: sticky;
+    top: 0;
+    background-color: white; /* Ensure the header has a background */
+    z-index: 100; /* Make sure it stays above other content */
+    padding: 10px 0; /* Add some padding for spacing */
+    width: 100%; /* Full width */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Add shadow effect when sticky to distinguish it from content */
+  .recipe-section-header.is-sticky {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Also make the instructions header sticky */
+  .instructions-section h3 {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 100;
+    padding: 10px 0;
+    width: 100%;
+    margin: 0;
+  }
+  
+  /* Ensure the divider sticks with the header */
+  hr.section-divider {
+    margin-top: 0;
+  }
+  
+  /* Add a scrollable container for the content */
+  #ingredients-container, #instructions-container {
+    max-height: calc(100vh - 200px); /* Adjust based on your layout */
+    overflow-y: auto;
+  }
+
     </style>
 </head>
 
@@ -658,8 +768,8 @@
                 <h3 class="description-title">Description</h3>
                 <div class="description-wrapper">
                     <p class="recipe-text">This is the most delicious salad - fresh and wonderful-tasting. FYI, lettuce can very much be a part of any greek salad - if you want it to. We like lettuce in my family and I often add it. It would not be 'authentic' in a Horiatiki (village) salad, but who cares?</p>
-                    <button id="download-image-btn" class="icon-btn" title="Download Image">
-                        <i class="bi bi-download"></i>
+                    <!--<button id="download-image-btn" class="icon-btn" title="Download Image">
+                        <i class="bi bi-download"></i>-->
                     </button>
                 </div>
             </div>
@@ -697,23 +807,23 @@
                 <div class="ingredients-section">
                     <div class="recipe-section-header">
                         <h3>Ingredients</h3>
-                        <!-- Added action buttons for ingredients section -->
+                        <!-- Action buttons inside the header -->
                         <div class="recipe-action-buttons">
-                            <!-- Ingredients Section Action Buttons -->
-<div class="recipe-action-buttons">
-    <button id="recipe-action-btn-image" class="recipe-action-btn image-btn" title="Download Image">
-        <i class="bi bi-download"></i>
-    </button>
-    <button class="recipe-action-btn print-btn" title="Print Recipe">
-        <i class="bi bi-printer"></i> Print
-    </button>
-    <button class="recipe-action-btn share-btn" title="Share Recipe">
-        <i class="bi bi-share"></i> Share
-    </button>
-</div>
-
+                            <button id="recipe-action-btn-image" class="recipe-action-btn image-btn" title="Download Image">
+                                <i class="bi bi-download"></i>
+                            </button>
+                            <button class="recipe-action-btn print-btn" title="Print Recipe">
+                                <i class="bi bi-printer"></i> Print
+                            </button>
+                            <button class="recipe-action-btn share-btn" title="Share Recipe">
+                                <i class="bi bi-share"></i> Share
+                            </button>
                         </div>
                     </div>
+                
+                    <!-- ✅ Add divider *after* header section -->
+                    <hr class="section-divider">
+                
                     <div>
                         <p>Serving Size: <span id="serving-size">4</span> servings</p>
                         <div class="scale-controls">
@@ -721,19 +831,19 @@
                             <button onclick="setScale(2)" id="scale-2x" class="scale-btn">2x</button>
                             <button onclick="setScale(4)" id="scale-4x" class="scale-btn">4x</button>
                         </div>
-                    </div>
+                    </div>              
                     <div id="ingredients-container">
                         <ul class="ingredient-list" id="ingredient-list">
                             {% for ingredient in ingredients %}
-                            <li>{{ ingredient }}</li>
+                                <li>{{ ingredient }}</li>
                             {% endfor %}
                         </ul>
                     </div>
                 </div>
-
                 <!-- Instructions Section -->
                 <div class="instructions-section">
                     <h3>Instructions</h3>
+                    <hr class="section-divider">
                     <div id="instructions-container">
                         <ol class="instruction-list">
                             {% for instruction in recipe.instructions.split('.') %}
@@ -746,7 +856,6 @@
                 </div>
             </div>
             
-
             <!-- Rating Section -->
             <div class="rating-section" id="rating-section">
                 <h2>Rate this Recipe</h2>
@@ -812,11 +921,17 @@
             </div>
 
             <!-- Back to Home Link -->
-            <div class="home-button">
-                <a href="{{ url_for('index') }}" class="back-link">Back to Home</a>
-            </div>
+            
         </div>
     </div>
+   <div class="home-button">
+  <a href="{{ url_for('index') }}">
+    <div class="home-icon">
+      <i class="bi bi-house-fill"></i>
+    </div>
+    <span class="home-text">Back to Home</span>
+  </a>
+</div>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
     // Document ready event listener to ensure all elements are loaded
@@ -1029,14 +1144,13 @@
             }
         }
     }
-    
     // Function to share recipe via email
     function shareViaEmail() {
         // Get recipe title
         const recipeTitle = document.querySelector('h1').textContent.trim();
         
         // Get recipe description
-        const recipeDescription = document.querySelector('.recipe-text').textContent.trim();
+        const recipeDescription = document.querySelector('.recipe-description p').textContent.trim();
         
         // Get ingredients list
         const ingredients = [];
@@ -1074,7 +1188,6 @@
         const mailtoLink = `mailto:?subject=${subject}&body=${body}`;
         window.location.href = mailtoLink;
     }
-    
     // Function to download the recipe as image
     function downloadRecipeImage() {
         // Create a clean version of the recipe for capture
