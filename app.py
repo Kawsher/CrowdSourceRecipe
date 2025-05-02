@@ -408,40 +408,70 @@ def simplify_quantity(value):
         return f"{whole} {Fraction(remainder, frac.denominator)}"
     return str(frac)
 
-#Route to display favorite recipes.
 @app.route('/favourite_recipes', methods=['GET'])
 @login_required
 def favourite_recipes():
-    recipe_ids = [ObjectId(recipe_id) for recipe_id in current_user.saved_recipes]
+    user = mongo.db.users.find_one({"_id": ObjectId(current_user.id)})
+    saved_recipe_ids = user.get('saved_recipes', [])
+
+    # Convert string IDs to ObjectId for querying
+    try:
+        recipe_ids = [ObjectId(rid) for rid in saved_recipe_ids]
+    except:
+        recipe_ids = []
+
     favorite_recipes = list(
         mongo.db.recipes.find({"_id": {"$in": recipe_ids}}).sort("_id", -1)
     )
     return render_template('home.html', recipes=favorite_recipes)
 
 
-# Route to save a recipe as a favorite.
+
+from bson import ObjectId
+from flask_login import login_user  # Add this if not already
+
+from flask import jsonify
+from bson import ObjectId
+from flask_login import login_user, login_required, current_user
 @app.route('/save_recipe/<recipe_id>', methods=['POST'])
 @login_required
 def save_recipe(recipe_id):
-    recipe = mongo.db.recipes.find_one({"_id": ObjectId(recipe_id)})
-    if recipe:
-        # Add the recipe to the user's saved recipes if not already saved
-        existing_save = mongo.db.users.find_one(
-            {"_id": ObjectId(current_user.id), "saved_recipes": ObjectId(recipe_id)}
+    user_id = ObjectId(current_user.id)
+    
+    user = mongo.db.users.find_one({"_id": user_id})
+    if not user:
+        return jsonify({"success": False, "message": "User not found"}), 404
+
+    saved_recipes = user.get('saved_recipes', [])
+
+    if recipe_id in saved_recipes:
+        mongo.db.users.update_one(
+            {"_id": user_id},
+            {"$pull": {"saved_recipes": recipe_id}}
         )
-        if not existing_save:
-            mongo.db.users.update_one(
-                {"_id": ObjectId(current_user.id)},
-                {"$addToSet": {"saved_recipes": ObjectId(recipe_id)}}
-            )
-            flash("Recipe saved successfully!", "success")
-            return redirect(request.referrer or url_for('home'))
-        else:
-            flash("Recipe already saved.", "info")
-            return redirect(request.referrer or url_for('home'))
+        action = "removed"
     else:
-        flash("Recipe not found.", "error")
-        return redirect(request.referrer or url_for('home'))
+        mongo.db.users.update_one(
+            {"_id": user_id},
+            {"$addToSet": {"saved_recipes": recipe_id}}
+        )
+        action = "saved"
+
+    # Get updated user data
+    updated_user_data = mongo.db.users.find_one({"_id": user_id})
+    
+    # Create new User instance with updated saved_recipes
+    user_instance = User(
+        user_id=str(updated_user_data["_id"]),
+        username=updated_user_data["username"],
+        password=updated_user_data["password"],
+        saved_recipes=updated_user_data.get('saved_recipes', [])
+    )
+    
+    # Update the session
+    login_user(user_instance)
+
+    return jsonify({"success": True, "action": action})
     
 @app.route('/cuisine/<cuisine>')
 def filter_by_cuisine(cuisine):

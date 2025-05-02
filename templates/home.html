@@ -374,7 +374,7 @@
       display: block;
     }
 
-    /* Rating filter form */
+   
     /* Rating filter form */
 .rating-filter-form {
     display: flex;
@@ -669,7 +669,6 @@
               <a href="{{ url_for('index') }}">
                 <img src="{{ url_for('static', filename='images/Logo.jpeg') }}" alt="Recipe Hub Logo" class="logo-img" width="70" height="70">
             </a>
-            
           </div>
   
         <div class="hamburger-menu">
@@ -705,7 +704,6 @@
                   </svg>
                 </button>
               </form>
-             
             </div>
             
             <div class="dropdown">
@@ -780,7 +778,7 @@
             </form>
 
             <!-- THE MEALDBAPI (Suprise me test) -->
-            <a href="/surprise-me" class="filter-button">🎲 Surprise Me!</a>
+            <a href="/surprise-me" class="filter-button">Recipe Roulette!</a>
             
             <form action="{{ url_for('home') }}" method="GET" class="reset-button">
               <button type="submit" class="nav-button">Reset All</button>
@@ -805,12 +803,6 @@
 </div>
       </nav>
     </header>
-
-    
-
-
-
-
     <section>
       <h2>Try our recipes today</h2>
       <!-- Swiper JS -->
@@ -1045,7 +1037,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 </script>
-<!-- CODE BLOCK FOR DEMO SWIPES -->
+
 
 </body>
 </html>
