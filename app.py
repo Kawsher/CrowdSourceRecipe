@@ -202,7 +202,7 @@ def surprise_meal():
     meal = get_random_meal()
     return render_template('random_meal.html', meal=meal)
 
-# THEMEALDB API CODE BLOCK
+
 
 # Route to post a new recipe.
 @app.route('/post_recipe', methods=['GET', 'POST'])
@@ -330,19 +330,25 @@ def recipe_detail(recipe_id):
 
     return render_template("recipe_detail.html", recipe=recipe, reviews=reviews,avg_rating=avg_rating)
 
-
 @app.route('/add_review/<recipe_id>', methods=['POST'])
 @login_required
 def add_review(recipe_id):
     review_text = request.form.get('review_text')
+    
     if review_text:
         review = {
             'text': review_text,
             'author': current_user.username,
-            'recipe_id': recipe_id
+            'recipe_id': recipe_id,
+            'replies': []
         }
-        mongo.db.reviews.insert_one(review)
+        result = mongo.db.reviews.insert_one(review)
+
+        # Convert ObjectId to string and add to the review object
+        review['_id'] = str(result.inserted_id)
+
         return jsonify({'success': True, 'review': review})
+
     return jsonify({'success': False, 'message': 'Review text is required'}), 400
 
 
@@ -545,39 +551,38 @@ def high_by_popular():
     return render_template('home.html', recipes=recipes,
                            username=current_user.username if current_user.is_authenticated else None)
 
-
 @app.route('/add_reply', methods=['POST'])
 @login_required
 def add_reply():
-    data = request.json
+    data = request.get_json()
     review_id = data.get('review_id')
     recipe_id = data.get('recipe_id')
     reply_text = data.get('reply_text')
-    
+
     if not all([review_id, recipe_id, reply_text]):
         return jsonify({'success': False, 'message': 'Missing required data'}), 400
-    
-    # Create the reply object
+
+    try:
+        review_obj_id = ObjectId(review_id)
+    except Exception:
+        return jsonify({'success': False, 'message': 'Invalid review ID'}), 400
+
     reply = {
         'text': reply_text,
         'author': current_user.username,
         'created_at': datetime.datetime.now()
     }
-    
-    # Update the review document by adding the reply to its replies array
+
     result = mongo.db.reviews.update_one(
-        {'_id': ObjectId(review_id)},
+        {'_id': review_obj_id},
         {'$push': {'replies': reply}}
     )
-    
+
     if result.modified_count > 0:
-        return jsonify({
-            'success': True,
-            'reply': reply
-        })
+        return jsonify({'success': True, 'reply': reply})
     else:
         return jsonify({'success': False, 'message': 'Could not add reply'}), 500
-    
+
 # Profile page route - displays user info and posted recipes
 @app.route('/profile', methods=['GET'])
 @login_required
