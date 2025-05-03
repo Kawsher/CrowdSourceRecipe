@@ -1286,6 +1286,24 @@
             alert('There was an error generating the image. Please try again.');
         });
     }
+     // Function to handle image downloads
+     function setupImageDownload() {
+    const downloadButtons = [
+        document.getElementById('download-image-btn'),  // from description
+        document.getElementById('recipe-action-btn-image') // from ingredients section
+    ];
+
+    downloadButtons.forEach(btn => {
+        if (btn) {
+            btn.addEventListener('click', downloadRecipeImage);
+        }
+    });
+}
+// Script to manage favorite recipe functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Setup click handlers for all heart icons
+    setupFavoriteButtons();
+});
     
     // Function to setup scale controls for ingredients
     function setupScaleControls() {
@@ -1353,6 +1371,151 @@
         }
     }
     
+
+function setupFavoriteButtons() {
+    // Find all heart icons/buttons on the page
+    const heartButtons = document.querySelectorAll('.favorite-btn, .heart-icon');
+    
+    heartButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const recipeId = this.getAttribute('data-recipe-id');
+            if (!recipeId) {
+                console.error('No recipe ID found on heart button');
+                return;
+            }
+            
+            // Check current state before toggling
+            const wasActive = this.classList.contains('active');
+            const willBeActive = !wasActive;
+            
+            // Toggle active class immediately for visual feedback
+            this.classList.toggle('active');
+            
+            // Update all heart icons for this recipe ID (in case there are multiple on the page)
+            const allHeartIcons = document.querySelectorAll(`.favorite-btn[data-recipe-id="${recipeId}"], .heart-icon[data-recipe-id="${recipeId}"]`);
+            allHeartIcons.forEach(icon => {
+                // Update class
+                if (willBeActive) {
+                    icon.classList.add('active');
+                } else {
+                    icon.classList.remove('active');
+                }
+                
+                // Update icon appearance
+                updateHeartIconAppearance(icon, willBeActive);
+            });
+            
+            // Send AJAX request to save/unsave recipe
+            saveRecipe(recipeId, willBeActive);
+        });
+    });
+}
+
+function updateHeartIconAppearance(heartElement, isActive) {
+    // Handle both SVG and icon font cases
+    const svgHeart = heartElement.querySelector('svg');
+    const iconHeart = heartElement.querySelector('i');
+    
+    if (svgHeart) {
+        // SVG heart
+        svgHeart.style.fill = isActive ? '#000' : 'none';
+        
+        // Also update any path elements in the SVG
+        const paths = svgHeart.querySelectorAll('path');
+        paths.forEach(path => {
+            path.style.fill = isActive ? '#000' : 'none';
+        });
+    } 
+    
+    if (iconHeart) {
+        // Bootstrap icon heart
+        if (isActive) {
+            iconHeart.classList.remove('bi-heart');
+            iconHeart.classList.add('bi-heart-fill');
+        } else {
+            iconHeart.classList.remove('bi-heart-fill');
+            iconHeart.classList.add('bi-heart');
+        }
+    }
+}
+
+function saveRecipe(recipeId, isActive) {
+    fetch(`/save_recipe/${recipeId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Show appropriate success message based on action
+            showToast(isActive ? 'Recipe saved to favorites!' : 'Recipe removed from favorites');
+        } else {
+            // Revert UI changes on error
+            const allHeartIcons = document.querySelectorAll(`.favorite-btn[data-recipe-id="${recipeId}"], .heart-icon[data-recipe-id="${recipeId}"]`);
+            allHeartIcons.forEach(icon => {
+                // Revert class
+                icon.classList.toggle('active');
+                // Revert appearance
+                updateHeartIconAppearance(icon, !isActive);
+            });
+            
+            showToast('Error updating favorites');
+        }
+    })
+    .catch(error => {
+        console.error('Error saving recipe:', error);
+        showToast('Error updating favorites');
+        
+        // Revert UI changes on error
+        const allHeartIcons = document.querySelectorAll(`.favorite-btn[data-recipe-id="${recipeId}"], .heart-icon[data-recipe-id="${recipeId}"]`);
+        allHeartIcons.forEach(icon => {
+            // Revert class
+            icon.classList.toggle('active');
+            // Revert appearance
+            updateHeartIconAppearance(icon, !isActive);
+        });
+    });
+}
+
+function showToast(message) {
+    // Create toast element if it doesn't exist
+    let toast = document.getElementById('toast-notification');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast-notification';
+        toast.style.position = 'fixed';
+        toast.style.bottom = '20px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        toast.style.backgroundColor = '#333';
+        toast.style.color = 'white';
+        toast.style.padding = '10px 20px';
+        toast.style.borderRadius = '5px';
+        toast.style.zIndex = '1000';
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s ease-in-out';
+        document.body.appendChild(toast);
+    }
+    
+    // Set message and show toast
+    toast.textContent = message;
+    toast.style.opacity = '1';
+    
+    // Hide toast after 3 seconds
+    setTimeout(() => {
+        toast.style.opacity = '0';
+    }, 3000);
+}
     // Function to setup review system
     function setupReviewSystem() {
         const reviewForm = document.getElementById('review-form');
@@ -1580,170 +1743,7 @@
         }
     }
     
-    // Function to handle image downloads
-    
-    function setupImageDownload() {
-    const downloadButtons = [
-        document.getElementById('download-image-btn'),  // from description
-        document.getElementById('recipe-action-btn-image') // from ingredients section
-    ];
-
-    downloadButtons.forEach(btn => {
-        if (btn) {
-            btn.addEventListener('click', downloadRecipeImage);
-        }
-    });
-}
-// Script to manage favorite recipe functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Setup click handlers for all heart icons
-    setupFavoriteButtons();
-});
-
-function setupFavoriteButtons() {
-    // Find all heart icons/buttons on the page
-    const heartButtons = document.querySelectorAll('.favorite-btn, .heart-icon');
-    
-    heartButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const recipeId = this.getAttribute('data-recipe-id');
-            if (!recipeId) {
-                console.error('No recipe ID found on heart button');
-                return;
-            }
-            
-            // Check current state before toggling
-            const wasActive = this.classList.contains('active');
-            const willBeActive = !wasActive;
-            
-            // Toggle active class immediately for visual feedback
-            this.classList.toggle('active');
-            
-            // Update all heart icons for this recipe ID (in case there are multiple on the page)
-            const allHeartIcons = document.querySelectorAll(`.favorite-btn[data-recipe-id="${recipeId}"], .heart-icon[data-recipe-id="${recipeId}"]`);
-            allHeartIcons.forEach(icon => {
-                // Update class
-                if (willBeActive) {
-                    icon.classList.add('active');
-                } else {
-                    icon.classList.remove('active');
-                }
-                
-                // Update icon appearance
-                updateHeartIconAppearance(icon, willBeActive);
-            });
-            
-            // Send AJAX request to save/unsave recipe
-            saveRecipe(recipeId, willBeActive);
-        });
-    });
-}
-
-function updateHeartIconAppearance(heartElement, isActive) {
-    // Handle both SVG and icon font cases
-    const svgHeart = heartElement.querySelector('svg');
-    const iconHeart = heartElement.querySelector('i');
-    
-    if (svgHeart) {
-        // SVG heart
-        svgHeart.style.fill = isActive ? '#000' : 'none';
-        
-        // Also update any path elements in the SVG
-        const paths = svgHeart.querySelectorAll('path');
-        paths.forEach(path => {
-            path.style.fill = isActive ? '#000' : 'none';
-        });
-    } 
-    
-    if (iconHeart) {
-        // Bootstrap icon heart
-        if (isActive) {
-            iconHeart.classList.remove('bi-heart');
-            iconHeart.classList.add('bi-heart-fill');
-        } else {
-            iconHeart.classList.remove('bi-heart-fill');
-            iconHeart.classList.add('bi-heart');
-        }
-    }
-}
-
-function saveRecipe(recipeId, isActive) {
-    fetch(`/save_recipe/${recipeId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        credentials: 'same-origin'
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            // Show appropriate success message based on action
-            showToast(isActive ? 'Recipe saved to favorites!' : 'Recipe removed from favorites');
-        } else {
-            // Revert UI changes on error
-            const allHeartIcons = document.querySelectorAll(`.favorite-btn[data-recipe-id="${recipeId}"], .heart-icon[data-recipe-id="${recipeId}"]`);
-            allHeartIcons.forEach(icon => {
-                // Revert class
-                icon.classList.toggle('active');
-                // Revert appearance
-                updateHeartIconAppearance(icon, !isActive);
-            });
-            
-            showToast('Error updating favorites');
-        }
-    })
-    .catch(error => {
-        console.error('Error saving recipe:', error);
-        showToast('Error updating favorites');
-        
-        // Revert UI changes on error
-        const allHeartIcons = document.querySelectorAll(`.favorite-btn[data-recipe-id="${recipeId}"], .heart-icon[data-recipe-id="${recipeId}"]`);
-        allHeartIcons.forEach(icon => {
-            // Revert class
-            icon.classList.toggle('active');
-            // Revert appearance
-            updateHeartIconAppearance(icon, !isActive);
-        });
-    });
-}
-
-function showToast(message) {
-    // Create toast element if it doesn't exist
-    let toast = document.getElementById('toast-notification');
-    if (!toast) {
-        toast = document.createElement('div');
-        toast.id = 'toast-notification';
-        toast.style.position = 'fixed';
-        toast.style.bottom = '20px';
-        toast.style.left = '50%';
-        toast.style.transform = 'translateX(-50%)';
-        toast.style.backgroundColor = '#333';
-        toast.style.color = 'white';
-        toast.style.padding = '10px 20px';
-        toast.style.borderRadius = '5px';
-        toast.style.zIndex = '1000';
-        toast.style.opacity = '0';
-        toast.style.transition = 'opacity 0.3s ease-in-out';
-        document.body.appendChild(toast);
-    }
-    
-    // Set message and show toast
-    toast.textContent = message;
-    toast.style.opacity = '1';
-    
-    // Hide toast after 3 seconds
-    setTimeout(() => {
-        toast.style.opacity = '0';
-    }, 3000);
-}
+   
 
     </script>
   
