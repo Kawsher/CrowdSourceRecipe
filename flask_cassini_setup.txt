@@ -1,0 +1,124 @@
+
+#  Copy GitHub Project to Cassini Server, Access via Codespaces, and Run Flask App
+
+## 1. Copy GitHub Project to Remote Server (Cassini)
+
+### A. SSH into Cassini from your laptop:
+```
+ssh crowdrecipe@cassini.cs.kent.edu
+# Password: crowdrecipe1
+```
+
+### B. Clone the GitHub repository:
+```
+git clone git@github.com:Kawsher/CrowdSourceRecipe.git
+cd CrowdSourceRecipe
+```
+
+If using HTTPS:
+```
+git clone https://github.com/Kawsher/CrowdSourceRecipe.git
+```
+
+---
+
+## 2. Access Cassini from GitHub Codespaces
+
+### A. In Codespaces, generate an SSH key:
+```
+ssh-keygen -t rsa -b 4096 -C "codespace@cassini"
+cat ~/.ssh/id_rsa.pub
+```
+
+### B. SSH into Cassini from your laptop and add the key:
+```
+ssh crowdrecipe@cassini.cs.kent.edu
+cd ~/.ssh
+nano authorized_keys
+# Paste the public key from Codespaces (all on one line)
+chmod 700 ~/.ssh
+chmod 600 authorized_keys
+```
+
+### C. From Codespaces, test the SSH connection:
+```
+ssh -i ~/.ssh/id_rsa crowdrecipe@cassini.cs.kent.edu
+```
+
+---
+
+## 3. Run the Flask Web App on Cassini
+
+### A. Go to your project directory:
+```
+cd ~/CrowdSourceRecipe
+```
+
+### B. Check if Flask is installed:
+```
+python3 -m flask --version
+```
+
+If Flask is installed system-wide, skip virtualenv. Otherwise install requirements locally:
+```
+pip install --user -r requirements.txt
+```
+
+### C. Run the Flask app in the background using nohup:
+```
+nohup flask run --host=0.0.0.0 --port=8000 &
+```
+
+### D. Verify it's running:
+```
+ps aux | grep flask
+tail -n 30 nohup.out
+```
+
+---
+
+## 4. Access the App from Browser
+
+### A. Try this URL:
+```
+http://cassini.cs.kent.edu:8000
+```
+
+If the site does not load, port 8000 may be blocked by a firewall.
+
+---
+
+## 5. Optional: Use screen to Keep Flask Running in Background
+
+### A. Start a screen session:
+```
+screen -S flaskapp
+```
+
+### B. Run your app:
+```
+flask run --host=0.0.0.0 --port=8000
+```
+
+### C. Detach the screen:
+```
+Ctrl + A, then D
+```
+
+### D. Reattach later:
+```
+screen -r flaskapp
+```
+
+---
+
+## 6. Optional: Use Nginx to Expose Your App on Port 80
+
+Only if you have `sudo` access. Ask the admin to help if needed.
+
+---
+
+That's it! You now know how to:
+- Copy a GitHub project to your server
+- Access it from GitHub Codespaces
+- Run a persistent Flask server on Cassini

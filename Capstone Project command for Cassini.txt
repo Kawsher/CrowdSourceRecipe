@@ -1,0 +1,65 @@
+You can use putty software to get access to the server
+
+ssh crowdrecipe@cassini.cs.kent.edu
+
+
+crowdrecipe@cassini.cs.kent.edu
+Password:crowdrecipe1
+
+then run this command 
+
+cd CrowdSourceRecipe
+
+
+export FLASK_APP=app.py
+export FLASK_ENV=development
+flask run --host=0.0.0.0 --port=8925
+
+if dose not work then run this command
+pip install --user flask_pymongo
+pip install --user flask_bcrypt
+pip install --user flask_login
+
+then again run this command  
+
+flask run --host=0.0.0.0 --port=8925 
+
+now copy the below link and paste in a browser then you can see the project
+
+http://cassini.cs.kent.edu:8925
+
+http://crowdreciepe.cassini.org/
+
+
+synchronize changes
+
+cd ~/CrowdSourceRecipe
+git pull origin main
+
+
+cd ~/CrowdSourceRecipe
+
+# See what changed
+git status
+
+# Add specific file or all files
+git add .
+
+# Commit with a message
+git commit -m "Updated Flask route and config"
+
+
+git push origin main
+
+
+npx kill-port 8000
+git fetch origin
+git checkout main
+git pull
+  
+screen -ls
+screen -r recipe
+screen -S recipe
+
+screen -S 2680755.recipe -X quit
+
